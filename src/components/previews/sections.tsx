@@ -3,11 +3,17 @@ import type { RefObject } from 'react';
 import type { Palette } from '../../data/themes';
 import { wedding } from '../../data/wedding';
 import type { Tokens } from './tokens';
+import type { RevealKind } from './motion';
 import { useCountdown, useNextEventIso } from './hooks';
 import { Reveal, Rule } from './motion';
 import { downloadIcs, googleCalendarUrl } from '../../lib/calendar';
 
-type Look = { p: Palette; t: Tokens; root: RefObject<HTMLDivElement | null> };
+type Look = {
+  p: Palette;
+  t: Tokens;
+  root: RefObject<HTMLDivElement | null>;
+  reveal: RevealKind;
+};
 
 export function useSlideShow(count: number, interval = 4200) {
   const [index, setIndex] = useState(0);
@@ -48,7 +54,7 @@ export function useSectionNav(ids: string[]) {
   return { ref, active, goTo, onScroll };
 }
 
-export function SectionLabel({ index, children, p, t }: Omit<Look, 'root'> & { index: number; children: string }) {
+export function SectionLabel({ index, children, p, t }: Pick<Look, 'p' | 't'> & { index: number; children: string }) {
   return (
     <h2 className={t.label} style={{ color: p.accent }}>
       {t.numbered ? `${String(index).padStart(2, '0')} — ` : ''}
@@ -97,10 +103,10 @@ export function Countdown({ p, t, root }: Look) {
   );
 }
 
-export function Opening({ p, t, root }: Look) {
+export function Opening({ p, t, root, reveal }: Look) {
   return (
     <section className={`${t.sectionPad} ${t.align}`}>
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <p className={t.small} style={{ color: p.accent }}>
           {wedding.salam}
         </p>
@@ -126,7 +132,7 @@ export function Opening({ p, t, root }: Look) {
   );
 }
 
-export function Couple({ p, t, root }: Look) {
+export function Couple({ p, t, root, reveal }: Look) {
   const people = [
     { person: wedding.couple.groom, role: 'Mempelai Pria' },
     { person: wedding.couple.bride, role: 'Mempelai Wanita' },
@@ -134,14 +140,14 @@ export function Couple({ p, t, root }: Look) {
 
   return (
     <section id="profil" className={t.sectionPad}>
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <SectionLabel index={1} p={p} t={t}>
           Mempelai
         </SectionLabel>
       </Reveal>
 
       {t.couple === 'monogram' ? (
-        <Reveal kind={t.reveal} root={root} delay={0.08} className="mt-5">
+        <Reveal kind={reveal} root={root} delay={0.08} className="mt-5">
           <p className={t.title} style={{ color: p.accent }}>
             {wedding.initials}
           </p>
@@ -173,7 +179,7 @@ export function Couple({ p, t, root }: Look) {
           {people.map(({ person, role }, index) => (
             <Reveal
               key={person.fullName}
-              kind={t.reveal}
+              kind={reveal}
               root={root}
               delay={0.08 + index * 0.09}
               className={t.align}
@@ -224,12 +230,12 @@ export function Couple({ p, t, root }: Look) {
   );
 }
 
-export function Schedule({ p, t, root }: Look) {
+export function Schedule({ p, t, root, reveal }: Look) {
   const [primary] = wedding.events;
 
   return (
     <section id="acara" className={t.sectionPad}>
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <SectionLabel index={2} p={p} t={t}>
           Acara
         </SectionLabel>
@@ -237,7 +243,7 @@ export function Schedule({ p, t, root }: Look) {
 
       <div className="mt-4 space-y-3">
         {wedding.events.map((event, index) => (
-          <Reveal key={event.title} kind={t.reveal} root={root} delay={0.06 + index * 0.08}>
+          <Reveal key={event.title} kind={reveal} root={root} delay={0.06 + index * 0.08}>
             <div
               className={`${t.card} ${t.radius}`}
               style={{ borderColor: p.line, background: p.paper }}
@@ -281,7 +287,7 @@ export function Schedule({ p, t, root }: Look) {
         ))}
       </div>
 
-      <Reveal kind={t.reveal} root={root} delay={0.1} className="mt-3">
+      <Reveal kind={reveal} root={root} delay={0.1} className="mt-3">
         <div className={`${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
           <p className={t.label} style={{ color: p.accent }}>
             Lokasi
@@ -348,7 +354,7 @@ export function Schedule({ p, t, root }: Look) {
         </div>
       </Reveal>
 
-      <Reveal kind={t.reveal} root={root} delay={0.12} className="mt-4">
+      <Reveal kind={reveal} root={root} delay={0.12} className="mt-4">
         <p className={t.small} style={{ color: p.soft }}>
           Turut mengundang
         </p>
@@ -358,10 +364,10 @@ export function Schedule({ p, t, root }: Look) {
   );
 }
 
-export function Story({ p, t, root }: Look) {
+export function Story({ p, t, root, reveal }: Look) {
   return (
     <section id="cerita" className={t.sectionPad} style={{ background: p.paper }}>
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <SectionLabel index={3} p={p} t={t}>
           Cerita
         </SectionLabel>
@@ -371,7 +377,7 @@ export function Story({ p, t, root }: Look) {
         <ol className="mt-5 space-y-6">
           {wedding.story.map((item, index) => (
             <li key={item.year} className="border-l pl-4" style={{ borderColor: p.line }}>
-              <Reveal kind={t.reveal} root={root} delay={index * 0.07}>
+              <Reveal kind={reveal} root={root} delay={index * 0.07}>
                 <span className={`${t.small} tabular-nums`} style={{ color: p.accent }}>
                   {item.year}
                 </span>
@@ -392,7 +398,7 @@ export function Story({ p, t, root }: Look) {
               className={`${t.align} ${t.ornament ? '' : 'border-t pt-5'}`}
               style={{ borderColor: p.line }}
             >
-              <Reveal kind={t.reveal} root={root} delay={index * 0.07}>
+              <Reveal kind={reveal} root={root} delay={index * 0.07}>
                 <span className={`${t.label} tabular-nums`} style={{ color: p.accent }}>
                   {item.year}
                 </span>
@@ -410,15 +416,10 @@ export function Story({ p, t, root }: Look) {
   );
 }
 
-export function Gallery({
-  p,
-  t,
-  root,
-  onOpen,
-}: Look & { onOpen: (index: number) => void }) {
+export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index: number) => void }) {
   return (
     <section id="galeri" className={t.sectionPad} style={{ background: p.paper }}>
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <SectionLabel index={4} p={p} t={t}>
           Galeri
         </SectionLabel>
@@ -428,7 +429,7 @@ export function Gallery({
         {wedding.gallery.map((photo, index) => (
           <Reveal
             key={photo.title}
-            kind={t.reveal}
+            kind={reveal}
             root={root}
             delay={Math.min(index, 3) * 0.06}
             className={`overflow-hidden ${t.radius}`}
@@ -459,7 +460,7 @@ export function Gallery({
         ))}
       </div>
 
-      <Reveal kind={t.reveal} root={root} delay={0.1} className="mt-5">
+      <Reveal kind={reveal} root={root} delay={0.1} className="mt-5">
         <a
           href={wedding.video.url}
           target="_blank"
@@ -482,10 +483,10 @@ export function Gallery({
   );
 }
 
-export function Gift({ p, t, root, label }: Look & { label: string }) {
+export function Gift({ p, t, root, reveal, label }: Look & { label: string }) {
   return (
     <section id="hadiah" className={t.sectionPad}>
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <SectionLabel index={5} p={p} t={t}>
           {label}
         </SectionLabel>
@@ -511,7 +512,7 @@ export function Gift({ p, t, root, label }: Look & { label: string }) {
   );
 }
 
-function Rsvp({ p, t, guest }: Omit<Look, 'root'> & { guest: string }) {
+function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
   const [attendance, setAttendance] = useState<'hadir' | 'tidak' | ''>('');
   const [pax, setPax] = useState(2);
   const [saved, setSaved] = useState(false);
@@ -610,7 +611,7 @@ function Rsvp({ p, t, guest }: Omit<Look, 'root'> & { guest: string }) {
   );
 }
 
-export function Wishes({ p, t, root, guest }: Look & { guest: string }) {
+export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) {
   const [wishes, setWishes] = useState(() =>
     wedding.wishes.map((wish, index) => ({ ...wish, id: `seed-${index}` }))
   );
@@ -631,17 +632,17 @@ export function Wishes({ p, t, root, guest }: Look & { guest: string }) {
 
   return (
     <section id="ucapan" className={t.sectionPad}>
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <SectionLabel index={6} p={p} t={t}>
           Ucapan
         </SectionLabel>
       </Reveal>
 
-      <Reveal kind={t.reveal} root={root} delay={0.06}>
+      <Reveal kind={reveal} root={root} delay={0.06}>
         <Rsvp p={p} t={t} guest={guest} />
       </Reveal>
 
-      <Reveal kind={t.reveal} root={root} delay={0.1}>
+      <Reveal kind={reveal} root={root} delay={0.1}>
         <form
           onSubmit={submit}
           className={`mt-3 ${t.card} ${t.radius}`}
@@ -702,13 +703,13 @@ export function Wishes({ p, t, root, guest }: Look & { guest: string }) {
   );
 }
 
-export function Footer({ p, t, root }: Look) {
+export function Footer({ p, t, root, reveal }: Look) {
   return (
     <footer
       className={`${t.sectionPad} pb-20 ${t.align}`}
       style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}
     >
-      <Reveal kind={t.reveal} root={root}>
+      <Reveal kind={reveal} root={root}>
         <p className={t.label} style={{ color: p.accent }}>
           Terima kasih
         </p>

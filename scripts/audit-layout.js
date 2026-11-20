@@ -12,6 +12,7 @@
     lowContrast: [],
     coverCta: null,
     revealNodes: 0,
+    nestedReveals: 0,
     fonts: {},
   };
 
@@ -214,6 +215,8 @@
 
   // 5. Motion must actually be wired up on every template.
   report.revealNodes = document.querySelectorAll('[data-reveal]').length;
+  // Two reveals on the same subtree means two writers for one transform: they fight.
+  report.nestedReveals = document.querySelectorAll('[data-reveal] [data-reveal]').length;
 
   // 6. The cover gate's primary action must be fully visible without scrolling.
   const cta = [...document.querySelectorAll('button')].find((el) =>

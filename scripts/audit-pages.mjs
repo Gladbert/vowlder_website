@@ -60,6 +60,7 @@ for (const [label, width, height] of [
         lowContrast: report.lowContrast,
         coverCta: report.coverCta && !report.coverCta.visible ? report.coverCta : [],
         reveal: route !== '/' && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
+        nested: report.nestedReveals > 0 ? { nested: report.nestedReveals } : [],
         fonts: Object.entries(report.fonts).filter(([, ok]) => !ok),
       };
       const count = Object.values(problems).reduce((n, list) => n + list.length, 0);

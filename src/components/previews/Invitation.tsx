@@ -4,7 +4,8 @@ import type { Theme } from '../../data/themes';
 import { wedding } from '../../data/wedding';
 import { useGuestName, useInvitationAudio } from './hooks';
 import { variants } from './tokens';
-import { EASE, coverExits } from './motion';
+import { EASE, coverExits, heroMotions } from './motion';
+import type { ThemeMotion } from '../../data/themes';
 import {
   Countdown,
   Couple,
@@ -36,6 +37,15 @@ const nav = [
 export default function Invitation({ theme }: { theme: Theme }) {
   const t = variants[theme.variant];
   const p = theme.palette;
+
+  // Templates may share a layout, never a motion signature.
+  const motionSet: ThemeMotion = theme.motion ?? {
+    reveal: t.reveal,
+    hero: 'drift',
+    nav: 'underline',
+    coverExit: t.coverExit,
+  };
+  const hero = heroMotions[motionSet.hero];
 
   const [guest] = useGuestName();
   const [opened, setOpened] = useState(false);
@@ -96,10 +106,15 @@ export default function Invitation({ theme }: { theme: Theme }) {
                     key={slide}
                     src={wedding.heroSlides[slide].src}
                     alt={wedding.heroSlides[slide].location}
-                    initial={{ opacity: 0, scale: 1 }}
-                    animate={{ opacity: 1, scale: 1.06 }}
+                    initial={{ opacity: 0, scale: 1, x: 0, y: 0 }}
+                    animate={{ opacity: 1, ...hero.to }}
                     exit={{ opacity: 0 }}
-                    transition={{ opacity: { duration: 0.9 }, scale: { duration: 7, ease: 'linear' } }}
+                    transition={{
+                      opacity: { duration: 0.9 },
+                      scale: { duration: hero.duration, ease: 'linear' },
+                      x: { duration: hero.duration, ease: 'linear' },
+                      y: { duration: hero.duration, ease: 'linear' },
+                    }}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </AnimatePresence>
@@ -129,10 +144,15 @@ export default function Invitation({ theme }: { theme: Theme }) {
                     key={slide}
                     src={wedding.heroSlides[slide].src}
                     alt={wedding.heroSlides[slide].location}
-                    initial={{ opacity: 0, scale: 1 }}
-                    animate={{ opacity: 1, scale: 1.06 }}
+                    initial={{ opacity: 0, scale: 1, x: 0, y: 0 }}
+                    animate={{ opacity: 1, ...hero.to }}
                     exit={{ opacity: 0 }}
-                    transition={{ opacity: { duration: 0.9 }, scale: { duration: 7, ease: 'linear' } }}
+                    transition={{
+                      opacity: { duration: 0.9 },
+                      scale: { duration: hero.duration, ease: 'linear' },
+                      x: { duration: hero.duration, ease: 'linear' },
+                      y: { duration: hero.duration, ease: 'linear' },
+                    }}
                     className="absolute inset-0 h-full w-full object-cover"
                   />
                 </AnimatePresence>
@@ -174,7 +194,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 </>
               )}
 
-              <Countdown p={p} t={t} root={navState.ref} />
+              <Countdown p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
 
               <p className={`mt-4 ${t.body}`} style={{ color: p.soft }}>
                 Kepada Bapak/Ibu/Saudara/i
@@ -186,9 +206,9 @@ export default function Invitation({ theme }: { theme: Theme }) {
             </div>
           </section>
 
-          <Opening p={p} t={t} root={navState.ref} />
-          <Couple p={p} t={t} root={navState.ref} />
-          <Schedule p={p} t={t} root={navState.ref} />
+          <Opening p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
+          <Couple p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
+          <Schedule p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
 
           {t.ornament && (
             <div className="px-5">
@@ -196,11 +216,11 @@ export default function Invitation({ theme }: { theme: Theme }) {
             </div>
           )}
 
-          <Story p={p} t={t} root={navState.ref} />
-          <Gallery p={p} t={t} root={navState.ref} onOpen={setLightbox} />
-          <Gift p={p} t={t} root={navState.ref} label={theme.giftLabel ?? 'Hadiah'} />
-          <Wishes p={p} t={t} root={navState.ref} guest={guest} />
-          <Footer p={p} t={t} root={navState.ref} />
+          <Story p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
+          <Gallery p={p} t={t} root={navState.ref} reveal={motionSet.reveal} onOpen={setLightbox} />
+          <Gift p={p} t={t} root={navState.ref} reveal={motionSet.reveal} label={theme.giftLabel ?? 'Hadiah'} />
+          <Wishes p={p} t={t} root={navState.ref} reveal={motionSet.reveal} guest={guest} />
+          <Footer p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
         </div>
 
         <a
@@ -231,30 +251,46 @@ export default function Invitation({ theme }: { theme: Theme }) {
           style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}
         >
           <ul className="grid grid-cols-6">
-            {nav.map((item) => (
-              <li key={item.id} className="relative">
-                <button
-                  type="button"
-                  onClick={() => navState.goTo(item.id)}
-                  aria-current={navState.active === item.id ? 'true' : undefined}
-                  className={`min-h-[44px] w-full py-3.5 text-[10px] tracking-[0.08em] uppercase ${
-                    navState.active === item.id ? t.navActive : ''
-                  }`}
-                  style={{ color: navState.active === item.id ? p.accent : p.soft }}
-                >
-                  {item.label}
-                </button>
-                {navState.active === item.id && (
-                  <motion.span
-                    layoutId="nav-underline"
-                    aria-hidden="true"
-                    className="absolute inset-x-3 bottom-1 h-[2px] rounded-full"
-                    style={{ background: p.accent }}
-                    transition={{ duration: 0.3, ease: EASE }}
-                  />
-                )}
-              </li>
-            ))}
+            {nav.map((item) => {
+              const active = navState.active === item.id;
+              const sliding = motionSet.nav !== 'pill';
+              const indicator =
+                motionSet.nav === 'dot'
+                  ? 'absolute bottom-1.5 left-1/2 -ml-0.5 h-1 w-1 rounded-full'
+                  : 'absolute inset-x-3 bottom-1 h-[2px] rounded-full';
+
+              return (
+                <li key={item.id} className="relative">
+                  {/*
+                    pill = the button paints its own fill (one indicator, no second layer).
+                    underline / dot = one sliding span shared across tabs via layoutId.
+                  */}
+                  {active && sliding && (
+                    <motion.span
+                      layoutId={`nav-${motionSet.nav}`}
+                      aria-hidden="true"
+                      className={indicator}
+                      style={{ background: p.accent }}
+                      transition={{ duration: 0.32, ease: EASE }}
+                    />
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => navState.goTo(item.id)}
+                    aria-current={active ? 'true' : undefined}
+                    className={`relative z-10 min-h-[44px] w-full py-3.5 text-[10px] tracking-[0.08em] uppercase ${
+                      active ? t.navActive : ''
+                    } ${motionSet.nav === 'pill' ? 'm-1 rounded-full transition-colors duration-200' : ''}`}
+                    style={{
+                      background: motionSet.nav === 'pill' && active ? p.ink : 'transparent',
+                      color: active ? (motionSet.nav === 'pill' ? p.bg : p.accent) : p.soft,
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -263,7 +299,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
           {!opened && (
             <motion.div
               initial={{ opacity: 1 }}
-              exit={{ ...coverExits[t.coverExit], transition: { duration: 0.55, ease: EASE } }}
+              exit={{ ...coverExits[motionSet.coverExit], transition: { duration: 0.55, ease: EASE } }}
               className={`absolute inset-0 z-40 flex flex-col ${
                 t.cover === 'plain' ? 'justify-center' : t.coverJustify
               } ${t.align}`}
