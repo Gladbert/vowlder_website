@@ -1,0 +1,67 @@
+---
+import type { Theme } from '../data/themes';
+
+interface Props {
+  theme: Theme;
+  class?: string;
+}
+
+const { theme, class: className = '' } = Astro.props;
+const { palette, type, couple, category } = theme;
+const [firstEvent] = theme.events;
+---
+
+<div
+  class={`relative flex flex-col overflow-hidden rounded-[1.6rem] ${className}`}
+  style={`background:${palette.bg};color:${palette.ink};border:1px solid ${palette.line}`}
+  aria-hidden="true"
+>
+  {
+    theme.photo && (
+      <div class="relative h-[46%] shrink-0 overflow-hidden">
+        <img src={theme.photo} alt="" loading="lazy" class="h-full w-full object-cover" />
+      </div>
+    )
+  }
+
+  <div class="flex min-h-0 flex-1 flex-col justify-between p-4">
+    <div
+      class="flex items-center justify-between text-[9px] tracking-[0.2em] uppercase"
+      style={`color:${palette.accent}`}
+    >
+      <span>{category}</span>
+      <span>{theme.tier}</span>
+    </div>
+
+    <div class="py-3 text-center">
+      {
+        !theme.photo && (
+          <>
+            <p class="text-[9px] tracking-[0.28em] uppercase opacity-60">The Wedding Of</p>
+            <p
+              class="mt-2 text-[2rem] leading-none"
+              style={`font-family:${type.heading};font-weight:${type.weight}`}
+            >
+              {couple.initials}
+            </p>
+            <span class="mx-auto mt-3 block h-px w-8" style={`background:${palette.accent}`} />
+          </>
+        )
+      }
+      <p
+        class="mt-3 text-[11px] tracking-[0.12em] opacity-80"
+        style={theme.photo ? `font-family:${type.heading};font-size:1.05rem` : undefined}
+      >
+        {couple.groom} &amp; {couple.bride}
+      </p>
+    </div>
+
+    <div class="text-center">
+      <p class="text-[9px] tracking-[0.14em] uppercase opacity-55">{firstEvent.date}</p>
+      <span
+        class="mt-2 inline-block rounded-full px-3 py-1.5 text-[9px] tracking-[0.16em] uppercase"
+        style={`border:1px solid ${palette.line};color:${palette.accent}`}>Buka Undangan</span
+      >
+    </div>
+  </div>
+</div>

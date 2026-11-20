@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+import GuestInvitation from '../../components/previews/GuestInvitation';
+import ThemeWrapper from '../../components/previews/ThemeWrapper';
+import ThemeThumb from '../../components/ThemeThumb.astro';
+import { rupiah, themes, waLink } from '../../data/themes';
+
+export function getStaticPaths() {
+  return themes.map((theme) => ({ params: { slug: theme.slug }, props: { theme } }));
+}
+
+const { theme } = Astro.props;
+const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
+const others = themes.filter((item) => item.slug !== theme.slug).slice(0, 3);
+---
+
+<Base
+  bare
+  title={`${theme.name} — undangan pernikahan digital | Vowlder`}
+  description={theme.blurb}
+  image={`/og/${theme.slug}.png`}
+>
+  <div class="min-h-[100svh] bg-cream">
+    <div class="sticky top-0 z-40 border-b border-line bg-cream/90 backdrop-blur">
+      <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">
+        <a href="/" class="flex items-center gap-2 text-sm text-ink-soft hover:text-ink">
+          <span aria-hidden="true">←</span> Katalog
+        </a>
+        <p class="truncate text-sm font-medium">{theme.name}</p>
+        <a
+          href={waLink(theme, previewUrl)}
+          target="_blank"
+          rel="noopener"
+          class="shrink-0 rounded-full bg-ink px-3.5 py-1.5 text-xs font-medium text-cream hover:bg-ink-soft"
+        >
+          Pesan
+        </a>
+      </div>
+    </div>
+
+    <main
+      class="mx-auto max-w-6xl px-0 pt-0 pb-16 sm:px-8 sm:pt-8 lg:grid lg:grid-cols-[420px_minmax(0,1fr)] lg:items-start lg:gap-14"
+    >
+      <div
+        class="relative mx-auto w-full overflow-hidden bg-paper sm:max-w-[420px] sm:rounded-[2rem] sm:border sm:border-line sm:shadow-[0_30px_80px_-50px_rgba(43,35,32,0.6)] lg:h-[calc(100svh-9rem)] lg:max-w-none"
+      >
+        {
+          theme.renderer === 'guest' ? (
+            <GuestInvitation theme={theme} client:load />
+          ) : (
+            <ThemeWrapper theme={theme} client:load />
+          )
+        }
+      </div>
+
+      <aside class="px-5 pt-10 sm:px-0 lg:pt-2">
+        <p class="eyebrow">{theme.category} · {theme.tier}</p>
+        <h1 class="mt-2 font-display text-3xl leading-tight font-medium sm:text-4xl">{theme.name}</h1>
+        <p class="mt-3 max-w-md text-sm leading-relaxed text-ink-soft">{theme.blurb}</p>
+
+        <p class="mt-5 font-display text-2xl">{rupiah(theme.price)}</p>
+        <p class="mt-1 text-xs text-ink-soft">Sekali bayar. Aktif 12 bulan. Revisi 2 kali.</p>
+
+        <ul class="mt-6 grid gap-2 text-sm sm:grid-cols-2">
+          {
+            theme.features.map((feature) => (
+              <li class="flex items-start gap-2 leading-relaxed">
+                <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-brass" />
+                {feature}
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href={waLink(theme, previewUrl)}
+            target="_blank"
+            rel="noopener"
+            class="rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream hover:bg-ink-soft"
+          >
+            Pesan tema ini
+          </a>
+          <a
+            href="/"
+            class="rounded-full border border-ink/20 px-5 py-3 text-sm font-medium hover:border-ink/50"
+          >
+            Lihat tema lain
+          </a>
+        </div>
+
+        <p class="mt-6 max-w-sm rounded-xl border border-line bg-paper/70 p-3.5 text-xs leading-relaxed text-ink-soft">
+          Ketuk <span class="font-medium text-ink">Buka Undangan</span> di preview, lalu isi nama Anda pada
+          bar <span class="font-medium text-ink">Coba nama tamu</span>. Tautannya bisa disalin dan dikirim
+          ke pasangan Anda.
+        </p>
+
+        <div class="mt-10 hidden lg:block">
+          <p class="eyebrow">Tema lain</p>
+          <div class="mt-4 grid grid-cols-3 gap-4">
+            {
+              others.map((item) => (
+                <a href={`/preview/${item.slug}/`} class="group">
+                  <ThemeThumb theme={item} class="aspect-[9/16]" />
+                  <p class="mt-2 text-xs leading-tight group-hover:underline">{item.name}</p>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+</Base>
