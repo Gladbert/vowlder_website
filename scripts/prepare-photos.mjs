@@ -29,7 +29,7 @@ for (const [name, file] of Object.entries(files)) {
   const out = join(OUT, `${name}.webp`);
   const info = await sharp(join(SRC, file))
     .resize({ width: 1080, withoutEnlargement: true })
-    .webp({ quality: 78 })
+    .webp({ quality: 74, effort: 6 })
     .toFile(out);
   console.log(`${name}.webp  ${Math.round(info.size / 1024)} KB  ${info.width}x${info.height}`);
 }
