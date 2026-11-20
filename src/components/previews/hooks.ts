@@ -64,6 +64,19 @@ export function useInvitationAudio(src?: string) {
   return { ref, src, muted, unlock, toggle };
 }
 
+/**
+ * A countdown to a past date is four zeros. Pick the next ceremony that has not
+ * happened yet, and show nothing once the whole weekend is over.
+ */
+export function useNextEventIso(dates: string[]) {
+  const [iso, setIso] = useState<string | null>(null);
+  useEffect(() => {
+    const now = Date.now();
+    setIso(dates.find((date) => new Date(date).getTime() > now) ?? null);
+  }, [dates.join('|')]);
+  return iso;
+}
+
 export function useCountdown(iso: string) {
   const target = new Date(iso).getTime();
   const [now, setNow] = useState<number | null>(null);

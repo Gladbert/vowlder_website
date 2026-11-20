@@ -25,6 +25,7 @@ export type Tokens = {
   heroOverlay: boolean;
   couple: 'stack' | 'columns' | 'monogram';
   photoRatio: string;
+  photoShape: 'square' | 'circle';
   story: 'timeline' | 'centered';
   button: string;
   buttonGhost: string;
@@ -55,6 +56,7 @@ export const variants: Record<Variant, Tokens> = {
     heroOverlay: false,
     couple: 'stack',
     photoRatio: 'aspect-3/4',
+    photoShape: 'square',
     story: 'timeline',
     button: 'rounded-xl px-4 py-3.5 text-[11px] font-semibold tracking-[0.18em] uppercase',
     buttonGhost: 'rounded-xl border px-4 py-2.5 text-[11px] tracking-[0.14em] uppercase',
@@ -83,6 +85,7 @@ export const variants: Record<Variant, Tokens> = {
     heroOverlay: false,
     couple: 'stack',
     photoRatio: 'aspect-3/4',
+    photoShape: 'square',
     story: 'centered',
     button: 'border px-5 py-3 text-[10px] tracking-[0.24em] uppercase',
     buttonGhost: 'border px-4 py-2.5 text-[10px] tracking-[0.18em] uppercase',
@@ -111,6 +114,7 @@ export const variants: Record<Variant, Tokens> = {
     heroOverlay: false,
     couple: 'columns',
     photoRatio: 'aspect-3/4',
+    photoShape: 'square',
     story: 'timeline',
     button: 'rounded-full px-5 py-3 text-[10px] tracking-[0.2em] uppercase',
     buttonGhost: 'rounded-full border px-4 py-2.5 text-[10px] tracking-[0.16em] uppercase',
@@ -139,6 +143,7 @@ export const variants: Record<Variant, Tokens> = {
     heroOverlay: false,
     couple: 'columns',
     photoRatio: 'aspect-3/4',
+    photoShape: 'square',
     story: 'centered',
     button: 'rounded-full px-5 py-3 text-[11px] tracking-[0.16em] uppercase',
     buttonGhost: 'rounded-full border px-4 py-2.5 text-[11px] tracking-[0.14em] uppercase',
@@ -167,6 +172,7 @@ export const variants: Record<Variant, Tokens> = {
     heroOverlay: false,
     couple: 'stack',
     photoRatio: 'aspect-square',
+    photoShape: 'square',
     story: 'timeline',
     button: 'px-6 py-3.5 text-[10px] font-semibold tracking-[0.24em] uppercase',
     buttonGhost: 'border px-5 py-2.5 text-[10px] tracking-[0.2em] uppercase',
@@ -195,6 +201,7 @@ export const variants: Record<Variant, Tokens> = {
     heroOverlay: true,
     couple: 'stack',
     photoRatio: 'aspect-4/5',
+    photoShape: 'square',
     story: 'centered',
     button: 'border px-5 py-3 text-[10px] tracking-[0.26em] uppercase',
     buttonGhost: 'border px-4 py-2.5 text-[10px] tracking-[0.2em] uppercase',
@@ -223,6 +230,7 @@ export const variants: Record<Variant, Tokens> = {
     heroOverlay: false,
     couple: 'monogram',
     photoRatio: 'aspect-3/4',
+    photoShape: 'square',
     story: 'timeline',
     button: 'rounded-lg px-4 py-3 text-[10px] font-semibold tracking-[0.16em] uppercase',
     buttonGhost: 'rounded-lg border px-3.5 py-2 text-[10px] tracking-[0.14em] uppercase',
@@ -232,5 +240,34 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: false,
+  },
+  /** Soft and romantic: circular portraits, italic display type, square gallery. */
+  medallion: {
+    align: 'text-center',
+    label: 'text-[10px] tracking-[0.26em] uppercase',
+    title: 'font-display text-[2.3rem] italic leading-none',
+    sectionTitle: 'font-display text-[1.7rem] italic leading-tight',
+    body: 'text-[12px] leading-relaxed',
+    small: 'text-[10px] tracking-[0.14em] uppercase',
+    radius: 'rounded-[1.5rem]',
+    card: 'border p-4',
+    sectionPad: 'px-5 py-11',
+    cover: 'plain',
+    coverBand: false,
+    coverJustify: 'justify-center',
+    heroRatio: 'aspect-[4/3]',
+    heroOverlay: false,
+    couple: 'columns',
+    photoRatio: 'aspect-square',
+    photoShape: 'circle',
+    story: 'centered',
+    button: 'rounded-full px-5 py-3 text-[11px] tracking-[0.16em] uppercase',
+    buttonGhost: 'rounded-full border px-4 py-2.5 text-[11px] tracking-[0.14em] uppercase',
+    gallery: 'grid grid-cols-2 gap-2.5',
+    galleryRatio: 'aspect-square',
+    galleryCaptions: true,
+    navActive: 'font-semibold',
+    numbered: false,
+    ornament: true,
   },
 };

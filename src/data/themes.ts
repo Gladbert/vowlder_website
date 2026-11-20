@@ -4,7 +4,18 @@ export type Category = 'Adat' | 'Minimalis' | 'Floral' | 'Syari' | 'Oriental' | 
 export type Tier = 'Basic' | 'Premium' | 'Signature';
 
 /** Layout shell. Colours always come from the palette. */
-export type Variant = 'faithful' | 'classic' | 'editorial' | 'split' | 'poster' | 'spotlight' | 'compact';
+export type Variant =
+  | 'faithful'
+  | 'classic'
+  | 'editorial'
+  | 'split'
+  | 'poster'
+  | 'spotlight'
+  | 'compact'
+  | 'medallion';
+
+/** Catalogue tag, the way template galleries label a mood. */
+export type Mood = 'Elegan' | 'Romantis' | 'Natural' | 'Mewah' | 'Hangat' | 'Bold' | 'Tenang';
 
 export type Palette = {
   bg: string;
@@ -27,6 +38,7 @@ export type Theme = {
   palette: Palette;
   type: { heading: string; weight: number; tracking: string; caps: boolean };
   variant: Variant;
+  mood: Mood;
   /** Card thumbnail photo. Omit for a purely typographic card. */
   photo?: string;
   /** Path to a loopable track. Leave undefined and the music control stays hidden. */
@@ -50,12 +62,12 @@ const serif = "'Cormorant Garamond Variable', Georgia, serif";
 export const includedFeatures = [
   'Empat foto bergilir di pembuka',
   'Hitung mundur ke hari H',
+  'Dua rangkaian acara dan lokasi',
+  'Peta, Waze, dan simpan tanggal',
   'Profil mempelai dan Instagram',
   'Cerita dalam empat babak',
-  'Peta, Waze, dan simpan tanggal',
   'Galeri delapan foto, bisa diperbesar',
-  'Konfirmasi kehadiran',
-  'Buku ucapan tamu',
+  'Konfirmasi kehadiran, hadiah, dan buku ucapan',
 ];
 
 export const themes: Theme[] = [
@@ -78,6 +90,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
     variant: 'faithful',
+    mood: 'Hangat',
     photo: '/photos/cover.webp',
   },
   {
@@ -99,6 +112,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
     variant: 'editorial',
+    mood: 'Tenang',
     photo: '/photos/kyoto.webp',
   },
   {
@@ -120,6 +134,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 600, tracking: '0.04em', caps: false },
     variant: 'classic',
+    mood: 'Mewah',
     photo: '/photos/couple.webp',
   },
   {
@@ -141,6 +156,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'split',
+    mood: 'Natural',
     photo: '/photos/bamboo.webp',
   },
   {
@@ -162,6 +178,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.02em', caps: false },
     variant: 'split',
+    mood: 'Tenang',
     photo: '/photos/shrine.webp',
   },
   {
@@ -183,6 +200,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 600, tracking: '0.06em', caps: false },
     variant: 'classic',
+    mood: 'Mewah',
     photo: '/photos/candid.webp',
   },
   {
@@ -204,6 +222,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.08em', caps: true },
     variant: 'editorial',
+    mood: 'Bold',
     photo: '/photos/hero1.webp',
   },
   {
@@ -225,6 +244,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'split',
+    mood: 'Romantis',
     photo: '/photos/lake.webp',
   },
   {
@@ -246,6 +266,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 400, tracking: '-0.01em', caps: false },
     variant: 'editorial',
+    mood: 'Elegan',
     photo: '/photos/shibuya.webp',
   },
   {
@@ -267,6 +288,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.02em', caps: true },
     variant: 'faithful',
+    mood: 'Natural',
     photo: '/photos/fuji.webp',
   },
   {
@@ -288,6 +310,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
     variant: 'poster',
+    mood: 'Bold',
     photo: '/photos/groom.webp',
   },
   {
@@ -309,6 +332,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.05em', caps: false },
     variant: 'spotlight',
+    mood: 'Elegan',
     photo: '/photos/bride.webp',
   },
   {
@@ -330,6 +354,95 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'compact',
+    mood: 'Tenang',
+  },
+  {
+    slug: 'temu-rasa',
+    name: 'Temu Rasa',
+    category: 'Floral',
+    tier: 'Premium',
+    price: 425_000,
+    blurb:
+      'Foto mempelai bundar, huruf miring, dan kartu lembut. Paling pas untuk akad pagi atau resepsi di rumah.',
+    palette: {
+      bg: '#FBF3F4',
+      paper: '#FFF9FA',
+      ink: '#33262A',
+      soft: '#6F585E',
+      accent: '#A34A5E',
+      line: '#F0DCE0',
+      on: '#FFF7F9',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
+    variant: 'medallion',
+    mood: 'Romantis',
+    photo: '/photos/bride.webp',
+  },
+  {
+    slug: 'pusaka',
+    name: 'Pusaka',
+    category: 'Adat',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Hijau tua dan emas tua, foto bundar, huruf miring. Untuk acara adat yang tetap ingin terasa tenang.',
+    palette: {
+      bg: '#12211C',
+      paper: '#172B24',
+      ink: '#F0EAD8',
+      soft: '#C4CDBE',
+      accent: '#CFAE63',
+      line: '#2C443A',
+      on: '#12211C',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.03em', caps: false },
+    variant: 'medallion',
+    mood: 'Mewah',
+    photo: '/photos/shrine.webp',
+  },
+  {
+    slug: 'minang-gadang',
+    name: 'Minang Gadang',
+    category: 'Adat',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Marun dan kuning tua, bingkai ganda, kapital lebar. Untuk baralek dengan susunan acara panjang.',
+    palette: {
+      bg: '#2B120F',
+      paper: '#3A1A15',
+      ink: '#F7E7D6',
+      soft: '#DCBCA9',
+      accent: '#D9A45B',
+      line: '#5A2A22',
+      on: '#2B120F',
+    },
+    type: { heading: serif, weight: 600, tracking: '0.05em', caps: false },
+    variant: 'classic',
+    mood: 'Mewah',
+    photo: '/photos/couple.webp',
+  },
+  {
+    slug: 'pantai-sore',
+    name: 'Pantai Sore',
+    category: 'Minimalis',
+    tier: 'Premium',
+    price: 425_000,
+    blurb:
+      'Hijau laut dan pasir, foto penuh, galeri satu kolom. Untuk akad di pantai atau villa dekat laut.',
+    palette: {
+      bg: '#F6F1E7',
+      paper: '#FFFCF5',
+      ink: '#23302F',
+      soft: '#5A6A67',
+      accent: '#2F6B6A',
+      line: '#DFD9CC',
+      on: '#F7FAF8',
+    },
+    type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
+    variant: 'poster',
+    mood: 'Natural',
+    photo: '/photos/lake.webp',
   },
 ];
 

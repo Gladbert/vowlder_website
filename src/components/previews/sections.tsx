@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { Palette } from '../../data/themes';
 import { wedding } from '../../data/wedding';
 import type { Tokens } from './tokens';
-import { useCountdown } from './hooks';
+import { useCountdown, useNextEventIso } from './hooks';
 import { downloadIcs, googleCalendarUrl } from '../../lib/calendar';
 
 type Look = { p: Palette; t: Tokens };
@@ -65,9 +65,12 @@ export function Ornament({ p }: { p: Palette }) {
   );
 }
 
-export function Countdown({ iso, p, t }: Look & { iso: string }) {
-  const countdown = useCountdown(iso);
+export function Countdown({ p, t }: Look) {
+  const iso = useNextEventIso(wedding.events.map((event) => event.iso));
+  const countdown = useCountdown(iso ?? '');
   const units = ['hari', 'jam', 'menit', 'detik'] as const;
+
+  if (iso === null) return null;
 
   return (
     <div className="mx-auto mt-5 grid max-w-[19rem] grid-cols-4 gap-1.5">
@@ -89,6 +92,31 @@ export function Countdown({ iso, p, t }: Look & { iso: string }) {
   );
 }
 
+export function Opening({ p, t }: Look) {
+  return (
+    <section className={`${t.sectionPad} ${t.align}`}>
+      <p className={t.small} style={{ color: p.accent }}>
+        {wedding.salam}
+      </p>
+      <p
+        className={`mt-2 max-w-[21rem] ${t.body} ${t.align === 'text-center' ? 'mx-auto' : ''}`}
+        style={{ color: p.soft }}
+      >
+        {wedding.greeting}
+      </p>
+      <figure
+        className={`mt-5 border-t pt-4 ${t.align === 'text-center' ? 'mx-auto max-w-[19rem]' : ''}`}
+        style={{ borderColor: p.line }}
+      >
+        <blockquote className={`font-display text-[1.05rem] leading-snug italic`}>{wedding.quote.text}</blockquote>
+        <figcaption className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
+          {wedding.quote.by}
+        </figcaption>
+      </figure>
+    </section>
+  );
+}
+
 export function Couple({ p, t }: Look) {
   const people = [
     { person: wedding.couple.groom, role: 'Mempelai Pria' },
@@ -96,13 +124,10 @@ export function Couple({ p, t }: Look) {
   ];
 
   return (
-    <section id="mempelai" className={t.sectionPad}>
+    <section id="profil" className={t.sectionPad}>
       <SectionLabel index={1} p={p} t={t}>
         Mempelai
       </SectionLabel>
-      <p className={`mt-2 max-w-[22rem] ${t.body} ${t.align === 'text-center' ? 'mx-auto' : ''}`} style={{ color: p.soft }}>
-        {wedding.greeting}
-      </p>
 
       {t.couple === 'monogram' ? (
         <div className="mt-5">
@@ -117,7 +142,7 @@ export function Couple({ p, t }: Look) {
                 </p>
                 <h3 className={`mt-0.5 ${t.sectionTitle}`}>{person.fullName}</h3>
                 <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
-                  {person.parents}
+                  {person.birthOrder} dari {person.parents}
                 </p>
                 <a
                   href={person.instagram}
@@ -137,7 +162,9 @@ export function Couple({ p, t }: Look) {
           {people.map(({ person, role }) => (
             <div key={person.fullName} className={t.align}>
               <div
-                className={`mx-auto w-full overflow-hidden ${t.radius} ${t.photoRatio}`}
+                className={`mx-auto w-full overflow-hidden ${
+                  t.photoShape === 'circle' ? 'rounded-full' : t.radius
+                } ${t.photoRatio}`}
                 style={{ background: p.line }}
               >
                 <img
@@ -154,7 +181,7 @@ export function Couple({ p, t }: Look) {
                 {person.fullName}
               </h3>
               <p className={`mt-1.5 ${t.couple === 'columns' ? 'text-[11px] leading-relaxed' : t.body}`} style={{ color: p.soft }}>
-                {person.parents}
+                {person.birthOrder} dari {person.parents}
               </p>
               <a
                 href={person.instagram}
@@ -176,7 +203,7 @@ export function Couple({ p, t }: Look) {
 export function Story({ p, t }: Look) {
   return (
     <section id="cerita" className={t.sectionPad} style={{ background: p.paper }}>
-      <SectionLabel index={2} p={p} t={t}>
+      <SectionLabel index={3} p={p} t={t}>
         Cerita
       </SectionLabel>
 
@@ -219,44 +246,72 @@ export function Story({ p, t }: Look) {
   );
 }
 
-export function Event({ p, t }: Look) {
-  const event = wedding.event;
-  const rows = [
-    { label: 'Tanggal', value: event.dateLabel },
-    { label: 'Waktu', value: event.timeLabel },
-    { label: 'Tempat', value: `${event.venue}\n${event.address}, ${event.city}` },
-    { label: 'Dress code', value: event.dressCode },
-  ];
+export function Schedule({ p, t }: Look) {
+  const [primary] = wedding.events;
 
   return (
     <section id="acara" className={t.sectionPad}>
-      <SectionLabel index={3} p={p} t={t}>
+      <SectionLabel index={2} p={p} t={t}>
         Acara
       </SectionLabel>
 
-      <div className={`mt-4 ${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
-        <p className={t.label} style={{ color: p.accent }}>
-          {event.label}
-        </p>
-        <h3 className={`mt-1 ${t.sectionTitle}`}>{event.title}</h3>
-        <p className={t.small} style={{ color: p.soft }}>
-          {event.subtitle}
-        </p>
+      <div className="mt-4 space-y-3">
+        {wedding.events.map((event) => (
+          <div
+            key={event.title}
+            className={`${t.card} ${t.radius}`}
+            style={{ borderColor: p.line, background: p.paper }}
+          >
+            <p className={t.label} style={{ color: p.accent }}>
+              {event.label}
+            </p>
+            <h3 className={`mt-1 ${t.sectionTitle}`}>{event.title}</h3>
+            <p className={t.small} style={{ color: p.soft }}>
+              {event.subtitle}
+            </p>
 
-        <dl className={`mt-4 space-y-2.5 ${t.align}`}>
-          {rows.map((row) => (
-            <div key={row.label}>
-              <dt className={t.small} style={{ color: p.soft }}>
-                {row.label}
-              </dt>
-              <dd className={`mt-0.5 whitespace-pre-line ${t.body}`}>{row.value}</dd>
+            <div className={`mt-3 flex items-end gap-3 ${t.align === 'text-center' ? 'justify-center' : ''}`}>
+              <p className="font-display text-[2.6rem] leading-none tabular-nums" style={{ color: p.accent }}>
+                {event.dayNumber}
+              </p>
+              <div>
+                <p className={t.small}>{event.monthYear}</p>
+                <p className={`mt-0.5 ${t.small}`} style={{ color: p.soft }}>
+                  {event.dayLabel} · {event.timeLabel}
+                </p>
+              </div>
             </div>
-          ))}
-        </dl>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+            <p className={`mt-3 ${t.body}`}>
+              {event.room}
+              <br />
+              <span style={{ color: p.soft }}>
+                {event.venue}, {event.city}
+              </span>
+            </p>
+            <p className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
+              {event.dressCode}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* One location for both ceremonies: same venue, so the map buttons are not repeated. */}
+      <div className={`mt-3 ${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
+        <p className={t.label} style={{ color: p.accent }}>
+          Lokasi
+        </p>
+        <p className={`mt-2 ${t.body}`}>
+          {primary.venue}
+          <br />
+          <span style={{ color: p.soft }}>
+            {primary.address}, {primary.city}
+          </span>
+        </p>
+
+        <div className="mt-3 flex flex-wrap gap-2">
           <a
-            href={event.mapsUrl}
+            href={primary.mapsUrl}
             target="_blank"
             rel="noopener"
             className={`flex-1 ${t.button} text-center`}
@@ -265,7 +320,7 @@ export function Event({ p, t }: Look) {
             Peta
           </a>
           <a
-            href={event.wazeUrl}
+            href={primary.wazeUrl}
             target="_blank"
             rel="noopener"
             className={`flex-1 ${t.buttonGhost} text-center`}
@@ -295,17 +350,52 @@ export function Event({ p, t }: Look) {
           </button>
         </div>
 
-        <div
-          className={`mt-4 space-y-1.5 border-t pt-3 ${t.body}`}
-          style={{ borderColor: p.line, color: p.soft }}
-        >
-          <p>{event.transit}</p>
-          <p>{event.parking}</p>
+        <div className={`mt-3 space-y-1.5 border-t pt-3 ${t.body}`} style={{ borderColor: p.line, color: p.soft }}>
+          <p>{primary.transit}</p>
+          <p>{primary.parking}</p>
+          {wedding.events.map((event) => (
+            <p key={event.title}>{event.note}</p>
+          ))}
         </div>
+      </div>
+
+      <div className="mt-4">
+        <p className={t.small} style={{ color: p.soft }}>
+          Turut mengundang
+        </p>
+        <p className={`mt-1 ${t.body}`}>{wedding.invited.join(' · ')}</p>
       </div>
     </section>
   );
 }
+
+export function Gift({ p, t }: Look) {
+  return (
+    <section id="hadiah" className={t.sectionPad}>
+      <SectionLabel index={5} p={p} t={t}>
+        Hadiah
+      </SectionLabel>
+
+      <div className={`mt-4 ${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
+        <p className={t.body} style={{ color: p.soft }}>
+          {wedding.gift.note}
+        </p>
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {wedding.gift.channels.map((channel) => (
+            <li
+              key={channel}
+              className={`border px-2.5 py-1 text-[10px] tracking-[0.1em] uppercase ${t.radius}`}
+              style={{ borderColor: p.line, color: p.accent }}
+            >
+              {channel}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 
 export function Gallery({ p, t, onOpen }: Look & { onOpen: (index: number) => void }) {
   return (
@@ -487,7 +577,7 @@ export function Wishes({ p, t, guest }: Look & { guest: string }) {
 
   return (
     <section id="ucapan" className={t.sectionPad}>
-      <SectionLabel index={5} p={p} t={t}>
+      <SectionLabel index={6} p={p} t={t}>
         Ucapan
       </SectionLabel>
 

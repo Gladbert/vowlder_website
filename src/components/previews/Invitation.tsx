@@ -7,10 +7,12 @@ import { variants } from './tokens';
 import {
   Countdown,
   Couple,
-  Event,
   Footer,
   Gallery,
+  Gift,
+  Opening,
   Ornament,
+  Schedule,
   Story,
   Wishes,
   useSectionNav,
@@ -18,10 +20,11 @@ import {
 } from './sections';
 
 const nav = [
-  { id: 'mempelai', label: 'Mempelai' },
-  { id: 'cerita', label: 'Cerita' },
+  { id: 'profil', label: 'Profil' },
   { id: 'acara', label: 'Acara' },
+  { id: 'cerita', label: 'Cerita' },
   { id: 'galeri', label: 'Galeri' },
+  { id: 'hadiah', label: 'Hadiah' },
   { id: 'ucapan', label: 'Ucapan' },
 ];
 
@@ -143,7 +146,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
               </>
             )}
 
-            <Countdown iso={wedding.event.iso} p={p} t={t} />
+            <Countdown p={p} t={t} />
 
             <p className={`mt-4 ${t.body}`} style={{ color: p.soft }}>
               Kepada Bapak/Ibu/Saudara/i
@@ -155,9 +158,9 @@ export default function Invitation({ theme }: { theme: Theme }) {
           </div>
         </section>
 
+        <Opening p={p} t={t} />
         <Couple p={p} t={t} />
-        <Story p={p} t={t} />
-        <Event p={p} t={t} />
+        <Schedule p={p} t={t} />
 
         {t.ornament && (
           <div className="px-5">
@@ -165,10 +168,21 @@ export default function Invitation({ theme }: { theme: Theme }) {
           </div>
         )}
 
+        <Story p={p} t={t} />
         <Gallery p={p} t={t} onOpen={setLightbox} />
+        <Gift p={p} t={t} />
         <Wishes p={p} t={t} guest={guest} />
         <Footer p={p} t={t} />
       </div>
+
+      <a
+        href="/"
+        aria-label="Kembali ke katalog tema"
+        className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm"
+        style={{ background: p.ink, color: p.bg }}
+      >
+        <span aria-hidden="true">←</span> Katalog
+      </a>
 
       {audio.src && (
         <button
@@ -176,7 +190,8 @@ export default function Invitation({ theme }: { theme: Theme }) {
           onClick={audio.toggle}
           aria-pressed={!audio.muted}
           aria-label={audio.muted ? 'Nyalakan musik' : 'Matikan musik'}
-          className="absolute top-3 right-3 z-20 rounded-full bg-black/35 px-3 py-2 text-[10px] tracking-[0.14em] uppercase text-white backdrop-blur"
+          className="absolute top-3 right-3 z-20 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm"
+          style={{ background: p.ink, color: p.bg }}
         >
           {audio.muted ? 'Musik off' : 'Musik on'}
         </button>
@@ -187,7 +202,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
         className="absolute inset-x-0 bottom-0 z-30"
         style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}
       >
-        <ul className="grid grid-cols-5">
+        <ul className="grid grid-cols-6">
           {nav.map((item) => (
             <li key={item.id}>
               <button
