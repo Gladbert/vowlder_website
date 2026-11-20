@@ -1,9 +1,9 @@
 ---
 import Base from '../../layouts/Base.astro';
-import GuestInvitation from '../../components/previews/GuestInvitation';
-import ThemeWrapper from '../../components/previews/ThemeWrapper';
+import Invitation from '../../components/previews/Invitation';
 import ThemeThumb from '../../components/ThemeThumb.astro';
-import { rupiah, themes, waLink } from '../../data/themes';
+import { includedFeatures, rupiah, themes, waLink } from '../../data/themes';
+import { wedding } from '../../data/wedding';
 
 export function getStaticPaths() {
   return themes.map((theme) => ({ params: { slug: theme.slug }, props: { theme } }));
@@ -44,13 +44,7 @@ const others = themes.filter((item) => item.slug !== theme.slug).slice(0, 3);
       <div
         class="relative mx-auto w-full overflow-hidden bg-paper sm:max-w-[420px] sm:rounded-[2rem] sm:border sm:border-line sm:shadow-[0_30px_80px_-50px_rgba(43,35,32,0.6)] lg:h-[calc(100svh-9rem)] lg:max-w-none"
       >
-        {
-          theme.renderer === 'guest' ? (
-            <GuestInvitation theme={theme} client:load />
-          ) : (
-            <ThemeWrapper theme={theme} client:load />
-          )
-        }
+        <Invitation theme={theme} client:load />
       </div>
 
       <aside class="px-5 pt-10 sm:px-0 lg:pt-2">
@@ -61,9 +55,15 @@ const others = themes.filter((item) => item.slug !== theme.slug).slice(0, 3);
         <p class="mt-5 font-display text-2xl">{rupiah(theme.price)}</p>
         <p class="mt-1 text-xs text-ink-soft">Sekali bayar. Aktif 12 bulan. Revisi 2 kali.</p>
 
-        <ul class="mt-6 grid gap-2 text-sm sm:grid-cols-2">
+        <p class="mt-6 text-sm leading-relaxed text-ink-soft">
+          Isi undangan sama untuk semua tema — {wedding.couple.groom.nickname} &amp;
+          {wedding.couple.bride.nickname}, {wedding.event.dateLabel}, {wedding.event.venue}. Yang berubah
+          hanya desainnya.
+        </p>
+
+        <ul class="mt-5 grid gap-2 text-sm sm:grid-cols-2">
           {
-            theme.features.map((feature) => (
+            includedFeatures.map((feature) => (
               <li class="flex items-start gap-2 leading-relaxed">
                 <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-brass" />
                 {feature}

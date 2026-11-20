@@ -1,7 +1,6 @@
-// The real wedding from Wedding-inv, ported as the flagship catalogue theme.
-// Photos are pre-sized WebP in /public/photos (see scripts/prepare-photos.mjs).
-export const guestInvitation = {
-  slug: 'gladbert-monica',
+// One wedding, every template. Design lives in themes.ts; this file is the content.
+// Source: the real Gladbert & Monica invitation (Wedding-inv repo), photos in /public/photos.
+export const wedding = {
   couple: {
     groom: {
       nickname: 'Gladbert',
@@ -18,11 +17,15 @@ export const guestInvitation = {
       photo: '/photos/bride.webp',
     },
   },
+  initials: 'G & M',
+  dateLabel: 'Sabtu, 19 Desember 2026',
+  shortDate: '19 . 12 . 2026',
+  hashtag: '#GladbertMonica',
   heroSlides: [
-    { src: '/photos/hero1.webp', tag: 'Kawagoe', location: 'Kawagoe, Japan' },
-    { src: '/photos/couple.webp', tag: 'Kawaguchiko', location: 'Kawaguchiko, Japan' },
-    { src: '/photos/kyoto.webp', tag: 'Gion', location: 'Kyoto, Japan' },
-    { src: '/photos/fuji.webp', tag: 'Shimoyoshida', location: 'Yamanashi, Japan' },
+    { src: '/photos/hero1.webp', location: 'Kawagoe, Japan' },
+    { src: '/photos/couple.webp', location: 'Kawaguchiko, Japan' },
+    { src: '/photos/kyoto.webp', location: 'Gion, Kyoto' },
+    { src: '/photos/fuji.webp', location: 'Shimoyoshida, Japan' },
   ],
   event: {
     label: 'Resepsi',
@@ -35,15 +38,17 @@ export const guestInvitation = {
     address: 'Jl. Bangka No. 8-18, Gubeng',
     city: 'Surabaya, Jawa Timur 60281',
     mapsUrl: 'https://maps.app.goo.gl/uSyZmd2mfscrhwoMA',
-    dressCode: 'Pria: jas dan dasi (tanpa batik). Wanita: gaun malam.',
+    wazeUrl: 'https://waze.com/ul?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya',
+    transit: 'Dari Stasiun Surabaya Gubeng (Pintu Timur). Drop-off tamu di grand lobby hotel.',
     parking: 'Parkir tamu tersedia di basement hotel.',
+    dressCode: 'Pria: jas dan dasi (tanpa batik). Wanita: gaun malam.',
   },
   story: [
     {
       year: '2016',
       title: 'Our First Page',
       subtitle: 'Where Our Paths Met',
-      narrative: 'Sebuah hari yang jadi bagian dari cerita kami.',
+      narrative: 'Sebuah hari di Surabaya yang jadi halaman pertama cerita kami.',
       photo: '/photos/couple.webp',
     },
     {
@@ -91,9 +96,43 @@ export const guestInvitation = {
       title: 'The Road We Choose',
       caption: 'There may be many ways forward. I would still choose this one with you.',
       location: 'Kawaguchiko, Japan',
+      photo: '/photos/fuji.webp',
+    },
+    {
+      title: 'Under the Blossoms',
+      caption: 'Some seasons pass, some moments stay with us.',
+      location: 'Gion, Kyoto',
+      photo: '/photos/kyoto.webp',
+    },
+    {
+      title: 'A Place of Our Own',
+      caption: "Perhaps home isn't where we are, but who we're with.",
+      location: 'Shibuya, Japan',
       photo: '/photos/shrine.webp',
     },
+    {
+      title: 'A Passing Frame',
+      caption: 'A moment that lasted only seconds, but somehow stayed.',
+      location: 'Heritage District, Kyoto',
+      photo: '/photos/cover.webp',
+    },
+    {
+      title: 'Us, Along the Way',
+      caption: 'Not every memory needs a reason to be worth keeping.',
+      location: 'Shimoyoshida, Japan',
+      photo: '/photos/couple.webp',
+    },
+  ],
+  video: {
+    title: 'Gladbert & Monica: An Eternal Promise',
+    subtitle: 'Prewedding film, Kyoto & Mount Fuji',
+    url: 'https://www.youtube.com/shorts/3QU6E5Mc33c',
+  },
+  wishes: [
+    { name: 'Rina', message: 'Selamat menempuh hidup baru, Gladbert & Monica. Bahagia selalu.' },
+    { name: 'Dwi', message: 'Turut berbahagia. Semoga semua lancar sampai hari H.' },
+    { name: 'Keluarga Siauw', message: 'Doa terbaik untuk kalian berdua. Sampai jumpa di Surabaya.' },
   ],
 };
 
-export type GuestInvitation = typeof guestInvitation;
+export type Wedding = typeof wedding;

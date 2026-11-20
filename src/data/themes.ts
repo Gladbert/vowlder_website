@@ -1,15 +1,20 @@
-import { guestInvitation } from './guest-invitation';
-
-export type Category = 'Adat' | 'Minimalis' | 'Floral' | 'Syari' | 'Oriental';
+// Design only. Content comes from wedding.ts — every template shows the same wedding.
+export type Category = 'Adat' | 'Minimalis' | 'Floral' | 'Syari' | 'Oriental' | 'Klasik';
 
 export type Tier = 'Basic' | 'Premium' | 'Signature';
 
-export type ThemeEvent = {
-  label: string;
-  date: string;
-  time: string;
-  place: string;
-  address: string;
+/** Layout shell. Colours always come from the palette. */
+export type Variant = 'faithful' | 'classic' | 'editorial' | 'split';
+
+export type Palette = {
+  bg: string;
+  paper: string;
+  ink: string;
+  soft: string;
+  accent: string;
+  line: string;
+  /** Text colour on top of `accent`. */
+  on: string;
 };
 
 export type Theme = {
@@ -19,166 +24,229 @@ export type Theme = {
   tier: Tier;
   price: number;
   blurb: string;
-  /** Palette drives the card thumbnail and the live preview. Single source of truth. */
-  palette: { bg: string; paper: string; ink: string; accent: string; line: string };
+  palette: Palette;
   type: { heading: string; weight: number; tracking: string; caps: boolean };
-  couple: { groom: string; bride: string; initials: string };
-  events: ThemeEvent[];
-  features: string[];
+  variant: Variant;
   /** Card thumbnail photo. Omit for a purely typographic card. */
   photo?: string;
-  /** 'guest' renders the full ported invitation; default is the typographic shell. */
-  renderer?: 'guest';
   /** Path to a loopable track. Leave undefined and the music control stays hidden. */
   music?: string;
 };
 
-export const categories: Category[] = ['Adat', 'Minimalis', 'Floral', 'Syari', 'Oriental'];
+export const categories: Category[] = [
+  'Adat',
+  'Minimalis',
+  'Floral',
+  'Syari',
+  'Oriental',
+  'Klasik',
+];
 
 export const WA_NUMBER = '6281234567890';
 
-const cormorant = "'Cormorant Garamond Variable', Georgia, serif";
+const serif = "'Cormorant Garamond Variable', Georgia, serif";
+
+/** Identical in every template — the design differs, the invitation does not. */
+export const includedFeatures = [
+  'Slideshow empat foto',
+  'Hitung mundur hari H',
+  'Profil mempelai & Instagram',
+  'Cerita dalam empat babak',
+  'Detail acara, peta & Waze',
+  'Galeri delapan foto',
+  'Buku ucapan tamu',
+  'Nama tamu dari tautan',
+];
 
 export const themes: Theme[] = [
   {
-    slug: guestInvitation.slug,
+    slug: 'gladbert-monica',
     name: 'Gladbert & Monica',
     category: 'Minimalis',
     tier: 'Signature',
-    price: 550_000,
+    price: 650_000,
     blurb:
-      'Undangan lengkap yang sudah dipakai: slideshow, hitung mundur, peta, galeri, dan buku ucapan.',
-    palette: { bg: '#F3EFEA', paper: '#FAF8F5', ink: '#1C1714', accent: '#8A5C2E', line: '#E1D5C2' },
-    type: { heading: cormorant, weight: 500, tracking: '-0.01em', caps: false },
-    couple: {
-      groom: guestInvitation.couple.groom.nickname,
-      bride: guestInvitation.couple.bride.nickname,
-      initials: 'G & M',
+      'Tema yang dipakai di acara aslinya: krem, emas, dan burgundy, dengan alur yang sudah diuji di lapangan.',
+    palette: {
+      bg: '#F3EFEA',
+      paper: '#FAF8F5',
+      ink: '#1C1714',
+      soft: '#6B5A4D',
+      accent: '#8A5C2E',
+      line: '#E1D5C2',
+      on: '#FCF9F5',
     },
-    events: [
-      {
-        label: 'Resepsi',
-        date: guestInvitation.event.dateLabel,
-        time: guestInvitation.event.timeLabel,
-        place: guestInvitation.event.venue,
-        address: guestInvitation.event.city,
-      },
-    ],
-    features: ['Slideshow foto', 'Hitung mundur', 'Galeri + buku ucapan', 'Peta lokasi'],
+    type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
+    variant: 'faithful',
     photo: '/photos/cover.webp',
-    renderer: 'guest',
+  },
+  {
+    slug: 'kyoto-sepia',
+    name: 'Kyoto Sepia',
+    category: 'Minimalis',
+    tier: 'Premium',
+    price: 425_000,
+    blurb:
+      'Editorial kiri-rata: nomor bagian, huruf besar, foto sebagai pita. Untuk pasangan yang tidak suka ornamen.',
+    palette: {
+      bg: '#F5F0E8',
+      paper: '#FBF7F1',
+      ink: '#241F1A',
+      soft: '#6E6154',
+      accent: '#7A5232',
+      line: '#E2D8C9',
+      on: '#FCF8F2',
+    },
+    type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
+    variant: 'editorial',
+    photo: '/photos/kyoto.webp',
   },
   {
     slug: 'javanese-royal',
     name: 'Javanese Royal',
     category: 'Adat',
     tier: 'Signature',
-    price: 550_000,
-    blurb: 'Motif batik parang, aksara Jawa, dan urutan prosesi siraman sampai panggih.',
-    palette: { bg: '#1E1712', paper: '#2A211A', ink: '#F3E7D3', accent: '#C9A227', line: '#4A3A28' },
-    type: { heading: cormorant, weight: 600, tracking: '0.04em', caps: false },
-    couple: { groom: 'Bagas', bride: 'Sekar', initials: 'B & S' },
-    events: [
-      {
-        label: 'Akad Nikah',
-        date: 'Sabtu, 14 Maret 2026',
-        time: '08.00 – 10.00 WIB',
-        place: 'Pendopo Agung Dalem Ngabean',
-        address: 'Jl. Kadipaten No. 12, Yogyakarta',
-      },
-      {
-        label: 'Resepsi',
-        date: 'Sabtu, 14 Maret 2026',
-        time: '11.00 – 15.00 WIB',
-        place: 'Pendopo Agung Dalem Ngabean',
-        address: 'Jl. Kadipaten No. 12, Yogyakarta',
-      },
-    ],
-    features: ['Prosesi panggih & siraman', 'Peta lokasi', 'Amplop digital', 'RSVP WhatsApp'],
+    price: 650_000,
+    blurb:
+      'Cokelat tua dan emas, bingkai ganda, huruf kapital berspasi lebar. Untuk prosesi adat dan panggih.',
+    palette: {
+      bg: '#1E1712',
+      paper: '#2A211A',
+      ink: '#F3E7D3',
+      soft: '#CDBBA0',
+      accent: '#D9B34A',
+      line: '#4A3A28',
+      on: '#1E1712',
+    },
+    type: { heading: serif, weight: 600, tracking: '0.04em', caps: false },
+    variant: 'classic',
+    photo: '/photos/couple.webp',
   },
   {
     slug: 'floral-garden',
     name: 'Floral Garden',
     category: 'Floral',
     tier: 'Premium',
-    price: 325_000,
-    blurb: 'Ilustrasi bunga air-brush, palet sage, cocok untuk acara taman atau villa.',
-    palette: { bg: '#F2F5EE', paper: '#FBFCF9', ink: '#2C3A2E', accent: '#566E4F', line: '#D3DCCB' },
-    type: { heading: cormorant, weight: 500, tracking: '0.01em', caps: false },
-    couple: { groom: 'Fajar', bride: 'Nadia', initials: 'F & N' },
-    events: [
-      {
-        label: 'Akad Nikah',
-        date: 'Sabtu, 22 Agustus 2026',
-        time: '08.30 – 10.30 WIB',
-        place: 'Villa Garden Cisarua',
-        address: 'Jl. Raya Puncak Km. 84, Bogor',
-      },
-      {
-        label: 'Garden Party',
-        date: 'Sabtu, 22 Agustus 2026',
-        time: '11.00 – 15.00 WIB',
-        place: 'Villa Garden Cisarua',
-        address: 'Jl. Raya Puncak Km. 84, Bogor',
-      },
-    ],
-    features: ['Galeri foto', 'Dress code', 'Peta lokasi', 'RSVP WhatsApp'],
+    price: 425_000,
+    blurb:
+      'Sage dan putih, kartu membulat, foto mempelai berdampingan. Untuk akad di taman atau villa.',
+    palette: {
+      bg: '#F2F5EE',
+      paper: '#FBFCF9',
+      ink: '#263322',
+      soft: '#57684F',
+      accent: '#4F6A48',
+      line: '#D3DCCB',
+      on: '#F7FAF4',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
+    variant: 'split',
+    photo: '/photos/bamboo.webp',
   },
   {
     slug: 'islamic-syari',
     name: 'Islamic Syari',
     category: 'Syari',
     tier: 'Premium',
-    price: 325_000,
-    blurb: 'Nuansa geometris tanpa musik default, lengkap dengan catatan adab dan pemisahan tamu.',
-    palette: { bg: '#0F2A24', paper: '#153A31', ink: '#F1EAD9', accent: '#BFA36A', line: '#2B5648' },
-    type: { heading: cormorant, weight: 500, tracking: '0.02em', caps: false },
-    couple: { groom: 'Ilham', bride: 'Aisyah', initials: 'I & A' },
-    events: [
-      {
-        label: 'Akad Nikah',
-        date: 'Sabtu, 3 Oktober 2026',
-        time: '07.30 – 09.30 WIB',
-        place: 'Masjid Al-Azhar BSD',
-        address: 'Jl. Puspitaloka Raya, BSD, Tangerang Selatan',
-      },
-      {
-        label: 'Walimah',
-        date: 'Sabtu, 3 Oktober 2026',
-        time: '10.00 – 14.00 WIB',
-        place: 'Gedung Serbaguna Al-Azhar',
-        address: 'Jl. Puspitaloka Raya, BSD, Tangerang Selatan',
-      },
-    ],
-    features: ['Tanpa musik (default)', 'Catatan adab tamu', 'Pintu tamu terpisah', 'RSVP WhatsApp'],
+    price: 425_000,
+    blurb:
+      'Hijau tua dan emas pucat, tanpa musik sebagai bawaan, dengan catatan adab tamu di bagian acara.',
+    palette: {
+      bg: '#0F2A24',
+      paper: '#153A31',
+      ink: '#F1EAD9',
+      soft: '#C6D0C0',
+      accent: '#D5BC86',
+      line: '#2B5648',
+      on: '#0F2A24',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.02em', caps: false },
+    variant: 'split',
+    photo: '/photos/shrine.webp',
   },
   {
     slug: 'oriental-red-gold',
     name: 'Oriental Red Gold',
     category: 'Oriental',
     tier: 'Signature',
-    price: 550_000,
-    blurb: 'Merah tua dan emas, dengan rangkaian teapai, sangjit, dan susunan meja tamu.',
-    palette: { bg: '#2A0E0E', paper: '#3A1414', ink: '#FBEEE0', accent: '#D9A54A', line: '#5C2222' },
-    type: { heading: cormorant, weight: 600, tracking: '0.06em', caps: false },
-    couple: { groom: 'Kevin', bride: 'Melissa', initials: 'K & M' },
-    events: [
-      {
-        label: 'Teapai',
-        date: 'Jumat, 28 November 2026',
-        time: '09.00 – 11.00 WIB',
-        place: 'Rumah keluarga mempelai wanita',
-        address: 'Jl. Pantai Indah Utara Blok A3, Jakarta Utara',
-      },
-      {
-        label: 'Reception',
-        date: 'Sabtu, 29 November 2026',
-        time: '17.00 – 21.00 WIB',
-        place: 'Grand Ballroom Studio 88',
-        address: 'Jl. Pangeran Tubagus Angke No. 88, Jakarta Barat',
-      },
-    ],
-    features: ['Rundown teapai & sangjit', 'Peta lokasi', 'Amplop digital', 'RSVP WhatsApp'],
+    price: 650_000,
+    blurb:
+      'Merah tua dan emas, bingkai ganda, kapital berjarak lebar. Untuk teapai, sangjit, dan resepsi malam.',
+    palette: {
+      bg: '#2A0E0E',
+      paper: '#3A1414',
+      ink: '#FBEEE0',
+      soft: '#DDBEAB',
+      accent: '#DDA94F',
+      line: '#5C2222',
+      on: '#2A0E0E',
+    },
+    type: { heading: serif, weight: 600, tracking: '0.06em', caps: false },
+    variant: 'classic',
+    photo: '/photos/candid.webp',
+  },
+  {
+    slug: 'art-deco',
+    name: 'Art Deco',
+    category: 'Klasik',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Hitam dan kuning tua, garis tipis, nomor bagian besar. Untuk resepsi hotel dengan tata lampu rendah.',
+    palette: {
+      bg: '#111110',
+      paper: '#1A1A18',
+      ink: '#F4EFE4',
+      soft: '#BEB6A5',
+      accent: '#C9A961',
+      line: '#3A3A34',
+      on: '#111110',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.08em', caps: true },
+    variant: 'editorial',
+    photo: '/photos/hero1.webp',
+  },
+  {
+    slug: 'cotton-blush',
+    name: 'Cotton Blush',
+    category: 'Floral',
+    tier: 'Premium',
+    price: 425_000,
+    blurb:
+      'Merah muda pucat dan terracotta, kartu membulat, banyak ruang kosong. Untuk akad pagi dan resepsi intim.',
+    palette: {
+      bg: '#FBF1EE',
+      paper: '#FFF9F6',
+      ink: '#33231F',
+      soft: '#6E5651',
+      accent: '#96483F',
+      line: '#EFD9D2',
+      on: '#FFF7F4',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
+    variant: 'split',
+    photo: '/photos/lake.webp',
+  },
+  {
+    slug: 'midnight-noir',
+    name: 'Midnight Noir',
+    category: 'Klasik',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Biru arang dan perak, tipografi editorial, tanpa hiasan. Untuk pasangan yang mau undangan nyaris tanpa warna.',
+    palette: {
+      bg: '#101418',
+      paper: '#181D22',
+      ink: '#EAE7E1',
+      soft: '#AEB6BE',
+      accent: '#9FB6C6',
+      line: '#2C343C',
+      on: '#101418',
+    },
+    type: { heading: serif, weight: 400, tracking: '-0.01em', caps: false },
+    variant: 'editorial',
+    photo: '/photos/shibuya.webp',
   },
   {
     slug: 'sunda-sekar',
@@ -186,20 +254,20 @@ export const themes: Theme[] = [
     category: 'Adat',
     tier: 'Basic',
     price: 175_000,
-    blurb: 'Satu halaman, tiga bagian. Untuk akad kecil di rumah dengan prosesi sawer yang singkat.',
-    palette: { bg: '#F6F1E6', paper: '#FFFDF8', ink: '#2B2A22', accent: '#7F6229', line: '#E0D6C2' },
-    type: { heading: cormorant, weight: 500, tracking: '0.02em', caps: true },
-    couple: { groom: 'Adit', bride: 'Rani', initials: 'A & R' },
-    events: [
-      {
-        label: 'Akad & Sawer',
-        date: 'Minggu, 12 April 2026',
-        time: '09.00 – 12.00 WIB',
-        place: 'Kediaman keluarga',
-        address: 'Jl. Cigadung Raya Tengah No. 4, Bandung',
-      },
-    ],
-    features: ['Satu halaman', 'Peta lokasi', 'RSVP WhatsApp'],
+    blurb:
+      'Krem dan kuning tua, rapi dan sederhana. Versi paling ringan dari susunan yang sama.',
+    palette: {
+      bg: '#F6F1E6',
+      paper: '#FFFDF8',
+      ink: '#2B2A22',
+      soft: '#655D48',
+      accent: '#7F6229',
+      line: '#E0D6C2',
+      on: '#FFFDF8',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.02em', caps: true },
+    variant: 'faithful',
+    photo: '/photos/fuji.webp',
   },
 ];
 

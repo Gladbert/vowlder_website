@@ -46,8 +46,13 @@ Do instead: real content from `src/data/`, editorial typography, hairline rules,
 
 ## Architecture invariants
 
-- `src/data/themes.ts` is the single source of truth: slug, price, palette, copy, events, features. Cards, previews, WhatsApp messages, and OG images all read from it. Never hardcode a theme fact in a component.
-- `src/data/guest-invitation.ts` holds the real Gladbert & Monica data used by the flagship theme (`renderer: 'guest'`).
+Two data files, one rule: **content and design never mix.**
+
+- `src/data/wedding.ts` — the wedding itself (couple, dates, venue, story, gallery, video, wishes). It is identical in **every** template. Adding or editing a fact happens here, once. Never invent a wedding fact in a component or in `themes.ts`.
+- `src/data/themes.ts` — design only: slug, name, category, tier, price, blurb, `palette`, type, `variant`, card `photo`, optional `music`, plus `includedFeatures` (shared by all templates).
+- `src/components/previews/tokens.ts` — the four layout variants (`faithful`, `classic`, `editorial`, `split`) as class-token sets. **`Invitation.tsx` is the only renderer**; `sections.tsx` holds the section bodies. A new template = a `themes.ts` entry, nothing else. Only add a variant when the *layout* genuinely differs.
+- Every template must stay at feature parity: slideshow, countdown, couple + Instagram, story, event (maps/Waze/dress code/transit/parking), gallery with lightbox, wishes, footer, bottom nav, guest-name bar. A new template that drops a section is a regression, not a variation.
+- Palette contrast is not negotiable: ink, soft text, and accent must clear WCAG AA (4.5:1) on both `bg` and `paper`, and `on` must clear 4.5:1 on `accent`. `scripts/audit-pages.mjs` enforces it — check new palettes there before shipping.
 - **OG tags are static, per theme.** `src/pages/preview/[slug].astro` renders `og:*` at build time and `src/pages/og/[slug].png.ts` renders the card. WhatsApp must get a thumbnail without running JS — never move this to client code.
 - **Audio never autoplays.** `<audio preload="none">` plus `play()` inside the "Buka Undangan" click (`useInvitationAudio`). iOS and Android both block anything else. No `music` field means no control is shown — do not ship a fake music button.
 - **`?to=` guest name**: read on mount, write back with `history.replaceState` (`useGuestName`). Default is `Tamu Undangan`.
@@ -58,5 +63,5 @@ Do instead: real content from `src/data/`, editorial typography, hairline rules,
 ## Conventions
 
 - UI copy is Indonesian; code, comments, and identifiers are English.
-- Keep theme skins data-driven (`ThemeWrapper.tsx`). A new typographic theme is a `themes.ts` entry, not a new component. Only build a bespoke renderer when the layout genuinely differs — that is what `renderer: 'guest'` is for.
+- Keep templates data-driven. A new skin is a `themes.ts` entry; the renderer stays shared. Bespoke code is only justified when the layout, not the colour, changes — then add a variant to `tokens.ts`.
 - Match the existing Tailwind idiom (arbitrary values for palette colours inline, utility classes elsewhere). Do not introduce a CSS-in-JS layer or a component library.

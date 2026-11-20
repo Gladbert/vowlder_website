@@ -1,5 +1,6 @@
 ---
 import type { Theme } from '../data/themes';
+import { wedding } from '../data/wedding';
 
 interface Props {
   theme: Theme;
@@ -7,8 +8,8 @@ interface Props {
 }
 
 const { theme, class: className = '' } = Astro.props;
-const { palette, type, couple, category } = theme;
-const [firstEvent] = theme.events;
+const { palette, type } = theme;
+const { groom, bride } = wedding.couple;
 ---
 
 <div
@@ -29,7 +30,7 @@ const [firstEvent] = theme.events;
       class="flex items-center justify-between text-[9px] tracking-[0.2em] uppercase"
       style={`color:${palette.accent}`}
     >
-      <span>{category}</span>
+      <span>{theme.category}</span>
       <span>{theme.tier}</span>
     </div>
 
@@ -42,7 +43,7 @@ const [firstEvent] = theme.events;
               class="mt-2 text-[2rem] leading-none"
               style={`font-family:${type.heading};font-weight:${type.weight}`}
             >
-              {couple.initials}
+              {wedding.initials}
             </p>
             <span class="mx-auto mt-3 block h-px w-8" style={`background:${palette.accent}`} />
           </>
@@ -52,12 +53,12 @@ const [firstEvent] = theme.events;
         class="mt-3 text-[11px] tracking-[0.12em] opacity-80"
         style={theme.photo ? `font-family:${type.heading};font-size:1.05rem` : undefined}
       >
-        {couple.groom} &amp; {couple.bride}
+        {groom.nickname} &amp; {bride.nickname}
       </p>
     </div>
 
     <div class="text-center">
-      <p class="text-[9px] tracking-[0.14em] uppercase opacity-55">{firstEvent.date}</p>
+      <p class="text-[9px] tracking-[0.14em] uppercase opacity-55">{wedding.shortDate}</p>
       <span
         class="mt-2 inline-block rounded-full px-3 py-1.5 text-[9px] tracking-[0.16em] uppercase"
         style={`border:1px solid ${palette.line};color:${palette.accent}`}>Buka Undangan</span

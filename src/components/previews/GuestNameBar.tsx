@@ -1,23 +1,36 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  /** Bar is the inverse of the template palette so it never disappears into a dark theme. */
+  ink: string;
+  paper: string;
 }
 
 /**
  * Portfolio-only affordance, not part of the invitation: lets a prospective client
- * type their own name and see (and share) the personalised link.
+ * type their own name and share the personalised link.
  */
-export default function GuestNameBar({ value, onChange, className = 'bottom-3' }: Props) {
+export default function GuestNameBar({ value, onChange, className = 'bottom-3', ink, paper }: Props) {
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const id = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(id);
+  }, [copied]);
 
   return (
     <div
       className={`pointer-events-none absolute inset-x-0 z-20 flex justify-center px-3 ${className}`}
     >
-      <div className="pointer-events-auto w-full max-w-[20rem] overflow-hidden rounded-xl bg-[#1c1714]/90 text-[#f7f3ec] shadow-lg backdrop-blur">
+      <div
+        className="pointer-events-auto w-full max-w-[20rem] overflow-hidden rounded-xl shadow-lg"
+        style={{ background: ink, color: paper }}
+      >
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
@@ -29,8 +42,11 @@ export default function GuestNameBar({ value, onChange, className = 'bottom-3' }
         </button>
 
         {open && (
-          <div className="border-t border-white/15 px-3 pt-2 pb-3">
-            <label className="block text-[10px] tracking-[0.12em] uppercase opacity-70" htmlFor="guest-name-input">
+          <div className="px-3 pt-2 pb-3" style={{ borderTop: `1px solid ${paper}33` }}>
+            <label
+              className="block text-[10px] tracking-[0.12em] uppercase opacity-70"
+              htmlFor="guest-name-input"
+            >
               Nama tamu
             </label>
             <input
@@ -39,16 +55,21 @@ export default function GuestNameBar({ value, onChange, className = 'bottom-3' }
               onChange={(event) => onChange(event.target.value)}
               maxLength={40}
               placeholder="Tamu Undangan"
-              className="mt-1.5 w-full rounded-lg border border-white/25 bg-white/10 px-2.5 py-2 text-[13px] text-[#f7f3ec] placeholder:text-white/40"
+              className="mt-1.5 w-full rounded-lg px-2.5 py-2 text-[13px]"
+              style={{ border: `1px solid ${paper}44`, background: `${paper}1a`, color: paper }}
             />
             <button
               type="button"
               onClick={() => {
-                void navigator.clipboard?.writeText(window.location.href).catch(() => {});
+                navigator.clipboard?.writeText(window.location.href).then(
+                  () => setCopied(true),
+                  () => setCopied(false)
+                );
               }}
-              className="mt-2 w-full rounded-lg bg-[#f7f3ec] px-3 py-2 text-[11px] font-medium text-[#1c1714]"
+              className="mt-2 w-full rounded-lg px-3 py-2 text-[11px] font-medium"
+              style={{ background: paper, color: ink }}
             >
-              Salin link preview
+              {copied ? 'Link tersalin' : 'Salin link preview'}
             </button>
           </div>
         )}
