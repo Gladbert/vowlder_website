@@ -11,6 +11,7 @@
     clipped: [],
     lowContrast: [],
     coverCta: null,
+    revealNodes: 0,
     fonts: {},
   };
 
@@ -107,9 +108,19 @@
     return false;
   };
 
-  // 1. Horizontal overflow past the viewport (scrollable strips excluded)
+  // An ancestor that clips means the overflow is contained by design (a Ken Burns
+  // image inside overflow-hidden is not a bug). Real page overflow is checked
+  // separately via documentElement.scrollWidth in the harness.
+  const contained = (el) => {
+    for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+      if (getComputedStyle(node).overflowX !== 'visible') return true;
+    }
+    return false;
+  };
+
+  // 1. Horizontal overflow past the viewport (scrollable strips and clipped boxes excluded)
   for (const el of document.querySelectorAll('body *')) {
-    if (!visible(el) || inScroller(el)) continue;
+    if (!visible(el) || inScroller(el) || contained(el)) continue;
     const r = el.getBoundingClientRect();
     if (r.width && (r.right > vw + 1 || r.left < -1)) {
       report.hOverflow.push({ el: label(el), left: Math.round(r.left), right: Math.round(r.right) });
@@ -201,7 +212,10 @@
     if (report.lowContrast.length > 6) break;
   }
 
-  // 5. The cover gate's primary action must be fully visible without scrolling.
+  // 5. Motion must actually be wired up on every template.
+  report.revealNodes = document.querySelectorAll('[data-reveal]').length;
+
+  // 6. The cover gate's primary action must be fully visible without scrolling.
   const cta = [...document.querySelectorAll('button')].find((el) =>
     (el.textContent || '').includes('Buka Undangan')
   );

@@ -65,6 +65,7 @@ Two data files, one rule: **content and design never mix.**
 - `src/data/themes.ts` — design only: slug, name, category, tier, price, blurb, `palette`, type, `variant`, card `photo`, optional `music`, plus `includedFeatures` (shared by all templates).
 - `src/components/previews/tokens.ts` — the eight layout variants (`faithful`, `classic`, `editorial`, `split`, `poster`, `spotlight`, `compact`, `medallion`) as class-token sets. **`Invitation.tsx` is the only renderer**; `sections.tsx` holds the section bodies. A new template = a `themes.ts` entry, nothing else. Only add a variant when the *layout* genuinely differs — a colour change is a palette, not a variant.
 - The guest-name tester lives in the page chrome (`src/components/GuestTester.astro`), **not** inside the phone shell: an input fixed inside a 100svh scroller gets buried by the mobile keyboard. It writes `?to=` and dispatches `vowlder:guest`, which `hooks.ts` listens to. Keep it that way.
+- Chinese-Indonesian templates (`oriental-red-gold`, `sino-angpao`, `imlek-modern`, `teapai-emas`) may override two things only: `giftLabel: 'Angpao'` and a `glyph` (囍 / 福) rendered on the cover and footer. Nothing else changes per culture — same wedding, same sections.
 - Every template must stay at feature parity, in this order: hero slideshow and countdown → opening (salam, greeting, couple quote) → couple + parents + Instagram → schedule with **both** ceremonies and one location block (maps/Waze/calendar/transit/parking/notes) → turut mengundang → story → gallery with lightbox and film → hadiah → RSVP, wishes → footer. That order is the Indonesian market convention (checked against Akanikah, Wevitation, Menica, Sebarundangan). A template that drops a section is a regression, not a variation.
 - Countdown always targets the **next** ceremony that has not passed (`useNextEventIso`). Never render four zeros, and never hardcode the event index.
 - Every viewer route needs a way back to the catalogue: the in-frame "← Katalog" chip, the page header, and the sidebar link. If you add a route, wire all three.
@@ -76,6 +77,18 @@ Two data files, one rule: **content and design never mix.**
 - **Mobile first.** Base styles target a 390px phone; add `sm:` / `lg:` only to widen. Preview screens are app-like: fixed `100svh` shell with an internal scroll container, so floating bars and the cover gate stay put.
 - **Assets**: photos go to `/public/photos` as WebP, max 1080px, quality ~78, under ~150 KB each. Preview payload stays under ~1.5 MB total. Move to R2 before the repo passes ~150 MB.
 - Fonts are self-hosted via `@fontsource-variable` (`Inter Variable` for UI, `Cormorant Garamond Variable` for display). No external font/CDN requests.
+
+## Motion
+
+`src/components/previews/motion.tsx` is the only place motion is defined.
+
+- **Transform and opacity only.** Never animate height, width, top/left, filter, or box-shadow. `scaleX` on a hairline is fine; `width` on one is not.
+- `Reveal` wraps section content; `Rule` draws a hairline; `coverExits` maps a variant to its gate exit (`fade`, `rise`, `curtain`, `zoom`). Each variant picks `reveal` + `coverExit` in `tokens.ts` — that is how templates feel different without new components.
+- Every reveal carries `data-reveal`. The layout audit counts those nodes and fails a template with fewer than five, so motion cannot silently disappear from a template.
+- `viewport: { root }` is mandatory: the invitation scrolls inside its own container, so a reveal without an explicit root never fires.
+- `once: true` everywhere. No loops, no attention-seeking motion, no bounce, no spin, no parallax tied to scroll.
+- One easing curve (`EASE`), 0.25–0.7 s, delays capped at ~0.15 s per group. `MotionConfig reducedMotion="user"` is set at the island root — respect it, never override with `transition` on a transform you want to force.
+- Hero slideshow: crossfade + a slow scale drift on the image. Never animate the image's layout box.
 
 ## Conventions
 

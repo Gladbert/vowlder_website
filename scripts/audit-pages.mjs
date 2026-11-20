@@ -49,7 +49,7 @@ for (const [label, width, height] of [
     for (const step of states) {
       if (step > 0) {
         evalJs(`(()=>{const c=document.querySelector('.overflow-y-auto');if(c)c.scrollTop=${step}*760;return 'ok'})()`);
-        execFileSync('sleep', ['0.5']);
+        execFileSync('sleep', ['1']);
       }
       const raw = execFileSync('agent-browser', ['eval', '--stdin'], { input: auditScript, encoding: 'utf8' });
       const report = JSON.parse(JSON.parse(raw.trim()));
@@ -59,6 +59,7 @@ for (const [label, width, height] of [
         clipped: report.clipped,
         lowContrast: report.lowContrast,
         coverCta: report.coverCta && !report.coverCta.visible ? report.coverCta : [],
+        reveal: route !== '/' && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
         fonts: Object.entries(report.fonts).filter(([, ok]) => !ok),
       };
       const count = Object.values(problems).reduce((n, list) => n + list.length, 0);

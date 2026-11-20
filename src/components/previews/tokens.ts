@@ -35,6 +35,10 @@ export type Tokens = {
   navActive: string;
   numbered: boolean;
   ornament: boolean;
+  /** Scroll-reveal feel for this template. */
+  reveal: 'rise' | 'fade' | 'soft' | 'slide' | 'drop';
+  /** How the cover gate leaves when the guest taps "Buka Undangan". */
+  coverExit: 'fade' | 'rise' | 'curtain' | 'zoom';
 };
 
 export const variants: Record<Variant, Tokens> = {
@@ -66,6 +70,8 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: false,
+    reveal: 'rise',
+    coverExit: 'fade',
   },
   /** Ornate dark: plain cover, double frame, wide-spaced capitals, square cards. */
   classic: {
@@ -95,6 +101,8 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: true,
+    reveal: 'fade',
+    coverExit: 'curtain',
   },
   /** Left-aligned magazine: numbered sections, hairline cards, photo strip hero. */
   editorial: {
@@ -124,6 +132,8 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: true,
     ornament: false,
+    reveal: 'slide',
+    coverExit: 'rise',
   },
   /** Symmetric and soft: rounded cards, couple side by side, ornament rules. */
   split: {
@@ -153,6 +163,8 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: true,
+    reveal: 'soft',
+    coverExit: 'zoom',
   },
   /** Full-bleed poster: hard colour band under the photo, huge type, one-column gallery. */
   poster: {
@@ -182,6 +194,8 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: true,
     ornament: false,
+    reveal: 'drop',
+    coverExit: 'rise',
   },
   /** Names sit on the photo; thin square frame, letterspaced capitals. */
   spotlight: {
@@ -211,6 +225,8 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: true,
+    reveal: 'fade',
+    coverExit: 'zoom',
   },
   /** Dense and quiet: monogram instead of portraits, three-column thumbnails. */
   compact: {
@@ -240,6 +256,8 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: false,
+    reveal: 'rise',
+    coverExit: 'fade',
   },
   /** Soft and romantic: circular portraits, italic display type, square gallery. */
   medallion: {
@@ -269,5 +287,38 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: true,
+    reveal: 'soft',
+    coverExit: 'zoom',
+  },
+  /** Gold seal, double rule, deep vermilion: Chinese-Indonesian wedding house. */
+  seal: {
+    align: 'text-center',
+    label: 'text-[9px] tracking-[0.3em] uppercase',
+    title: 'font-display text-[2.4rem] leading-none tracking-[0.02em]',
+    sectionTitle: 'font-display text-[1.8rem] leading-tight',
+    body: 'text-[12px] leading-relaxed',
+    small: 'text-[9px] tracking-[0.2em] uppercase',
+    radius: 'rounded-none',
+    card: 'border p-5',
+    sectionPad: 'px-5 py-11',
+    cover: 'plain',
+    coverBand: false,
+    coverJustify: 'justify-center',
+    heroRatio: 'aspect-[3/2]',
+    heroOverlay: false,
+    couple: 'stack',
+    photoRatio: 'aspect-4/5',
+    photoShape: 'square',
+    story: 'centered',
+    button: 'border px-6 py-3 text-[10px] tracking-[0.26em] uppercase',
+    buttonGhost: 'border px-4 py-2.5 text-[10px] tracking-[0.2em] uppercase',
+    gallery: 'grid grid-cols-2 gap-1.5',
+    galleryRatio: 'aspect-square',
+    galleryCaptions: true,
+    navActive: 'font-semibold',
+    numbered: false,
+    ornament: true,
+    reveal: 'fade',
+    coverExit: 'curtain',
   },
 };

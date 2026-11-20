@@ -12,7 +12,8 @@ export type Variant =
   | 'poster'
   | 'spotlight'
   | 'compact'
-  | 'medallion';
+  | 'medallion'
+  | 'seal';
 
 /** Catalogue tag, the way template galleries label a mood. */
 export type Mood = 'Elegan' | 'Romantis' | 'Natural' | 'Mewah' | 'Hangat' | 'Bold' | 'Tenang';
@@ -39,6 +40,10 @@ export type Theme = {
   type: { heading: string; weight: number; tracking: string; caps: boolean };
   variant: Variant;
   mood: Mood;
+  /** Section label override, e.g. "Angpao" for Chinese-Indonesian themes. */
+  giftLabel?: string;
+  /** Cultural mark rendered on the cover and footer, e.g. 囍. */
+  glyph?: string;
   /** Card thumbnail photo. Omit for a purely typographic card. */
   photo?: string;
   /** Path to a loopable track. Leave undefined and the music control stays hidden. */
@@ -443,6 +448,78 @@ export const themes: Theme[] = [
     variant: 'poster',
     mood: 'Natural',
     photo: '/photos/lake.webp',
+  },
+  {
+    slug: 'sino-angpao',
+    name: 'Sino Angpao',
+    category: 'Oriental',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Merah tua, emas, dan segel 囍. Bagian hadiah berubah jadi angpao, kapital berjarak lebar untuk teapai dan sangjit.',
+    palette: {
+      bg: '#2A0A10',
+      paper: '#3A1219',
+      ink: '#FBEEDC',
+      soft: '#E0C3B4',
+      accent: '#D9A548',
+      line: '#5E2530',
+      on: '#2A0A10',
+    },
+    type: { heading: serif, weight: 600, tracking: '0.04em', caps: false },
+    variant: 'seal',
+    mood: 'Mewah',
+    giftLabel: 'Angpao',
+    glyph: '囍',
+    photo: '/photos/candid.webp',
+  },
+  {
+    slug: 'imlek-modern',
+    name: 'Imlek Modern',
+    category: 'Minimalis',
+    tier: 'Premium',
+    price: 425_000,
+    blurb:
+      'Krem bersih dengan aksen vermilion dan satu karakter 福. Untuk pasangan yang mau nuansa Tionghoa tanpa merah penuh.',
+    palette: {
+      bg: '#FAF6EF',
+      paper: '#FFFDF8',
+      ink: '#2A2320',
+      soft: '#6A5B4F',
+      accent: '#A6321F',
+      line: '#E8DCCB',
+      on: '#FFF8F0',
+    },
+    type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
+    variant: 'editorial',
+    mood: 'Tenang',
+    giftLabel: 'Angpao',
+    glyph: '福',
+    photo: '/photos/hero1.webp',
+  },
+  {
+    slug: 'teapai-emas',
+    name: 'Teapai Emas',
+    category: 'Oriental',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Cokelat tua dan emas, foto mempelai bundar, huruf miring. Untuk rangkaian teapai dan sangjit di rumah.',
+    palette: {
+      bg: '#1C1410',
+      paper: '#261B15',
+      ink: '#F6E8D5',
+      soft: '#CDB49B',
+      accent: '#D6A756',
+      line: '#463227',
+      on: '#1C1410',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.03em', caps: false },
+    variant: 'medallion',
+    mood: 'Elegan',
+    giftLabel: 'Angpao',
+    glyph: '囍',
+    photo: '/photos/groom.webp',
   },
 ];
 
