@@ -1,31 +1,27 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import type { Palette } from '../../data/themes';
 import { wedding } from '../../data/wedding';
 import type { Tokens } from './tokens';
-import type { RevealKind } from './motion';
 import { useCountdown, useNextEventIso } from './hooks';
 import { Reveal, Rule } from './motion';
+import { HeartIcon, PlayIcon } from './icons';
 import { downloadIcs, googleCalendarUrl } from '../../lib/calendar';
 
 type Look = {
   p: Palette;
   t: Tokens;
   root: RefObject<HTMLDivElement | null>;
-  reveal: RevealKind;
+  reveal: TokenReveal;
 };
+type TokenReveal = import('./motion').RevealKind;
 
-export function useSlideShow(count: number, interval = 4200) {
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    if (count <= 1) return;
-    const id = window.setInterval(() => {
-      if (document.visibilityState === 'visible') setIndex((prev) => (prev + 1) % count);
-    }, interval);
-    return () => window.clearInterval(id);
-  }, [count, interval]);
-  return index;
-}
+export type RsvpValue = {
+  name: string;
+  phone: string;
+  attendance: 'hadir' | 'tidak';
+  pax: number;
+};
 
 export function useSectionNav(ids: string[]) {
   const ref = useRef<HTMLDivElement>(null);
@@ -65,10 +61,7 @@ export function SectionLabel({ index, children, p, t }: Pick<Look, 'p' | 't'> & 
 
 export function Ornament({ p, root, centered = true }: { p: Palette; root?: RefObject<HTMLDivElement | null>; centered?: boolean }) {
   return (
-    <div
-      className={`flex items-center gap-2 py-1 ${centered ? 'justify-center' : ''}`}
-      aria-hidden="true"
-    >
+    <div className={`flex items-center gap-2 py-1 ${centered ? 'justify-center' : ''}`} aria-hidden="true">
       <Rule root={root} color={p.line} width="w-10" />
       <span className="h-1 w-1 rotate-45" style={{ background: p.accent }} />
       <Rule root={root} color={p.line} width="w-10" delay={0.12} />
@@ -76,7 +69,7 @@ export function Ornament({ p, root, centered = true }: { p: Palette; root?: RefO
   );
 }
 
-export function Countdown({ p, t, root }: Look) {
+export function Countdown({ p, t, root }: Omit<Look, 'reveal'>) {
   const iso = useNextEventIso(wedding.events.map((event) => event.iso));
   const countdown = useCountdown(iso ?? '');
   const units = ['days', 'hours', 'mins', 'secs'] as const;
@@ -86,11 +79,7 @@ export function Countdown({ p, t, root }: Look) {
   return (
     <Reveal kind="soft" root={root} delay={0.15} className="mx-auto mt-5 grid max-w-[19rem] grid-cols-4 gap-1.5">
       {units.map((unit) => (
-        <div
-          key={unit}
-          className={`border py-2 ${t.radius}`}
-          style={{ borderColor: p.line, background: p.paper }}
-        >
+        <div key={unit} className={`border py-2 ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
           <p className="text-base font-medium tabular-nums">
             {countdown ? String(countdown[unit]).padStart(2, '0') : '—'}
           </p>
@@ -110,19 +99,14 @@ export function Opening({ p, t, root, reveal }: Look) {
         <p className={t.small} style={{ color: p.accent }}>
           {wedding.salam}
         </p>
-        <p
-          className={`mt-2 max-w-[21rem] ${t.body} ${t.align === 'text-center' ? 'mx-auto' : ''}`}
-          style={{ color: p.soft }}
-        >
+        <p className={`mt-2 max-w-[21rem] ${t.body} ${t.align === 'text-center' ? 'mx-auto' : ''}`} style={{ color: p.soft }}>
           {wedding.greeting}
         </p>
         <figure
           className={`mt-5 border-t pt-4 ${t.align === 'text-center' ? 'mx-auto max-w-[19rem]' : ''}`}
           style={{ borderColor: p.line }}
         >
-          <blockquote className="font-display text-[1.05rem] leading-snug italic">
-            {wedding.quote.text}
-          </blockquote>
+          <blockquote className="font-display text-[1.05rem] leading-snug italic">{wedding.quote.text}</blockquote>
           <figcaption className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
             {wedding.quote.by}
           </figcaption>
@@ -161,13 +145,7 @@ export function Couple({ p, t, root, reveal }: Look) {
                 <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
                   {person.birthOrder} of {person.parents}
                 </p>
-                <a
-                  href={person.instagram}
-                  target="_blank"
-                  rel="noopener"
-                  className={`mt-1 inline-block ${t.small}`}
-                  style={{ color: p.accent }}
-                >
+                <a href={person.instagram} target="_blank" rel="noopener" className={`mt-1 inline-block ${t.small}`} style={{ color: p.accent }}>
                   Instagram
                 </a>
               </div>
@@ -177,34 +155,17 @@ export function Couple({ p, t, root, reveal }: Look) {
       ) : (
         <div className={t.couple === 'columns' ? 'mt-6 grid grid-cols-2 gap-4' : 'mt-6 space-y-7'}>
           {people.map(({ person, role }, index) => (
-            <Reveal
-              key={person.fullName}
-              kind={reveal}
-              root={root}
-              delay={0.08 + index * 0.09}
-              className={t.align}
-            >
+            <Reveal key={person.fullName} kind={reveal} root={root} delay={0.08 + index * 0.09} className={t.align}>
               <div
-                className={`mx-auto w-full overflow-hidden ${
-                  t.photoShape === 'circle' ? 'rounded-full' : t.radius
-                } ${t.photoRatio}`}
+                className={`mx-auto w-full overflow-hidden ${t.photoShape === 'circle' ? 'rounded-full' : t.radius} ${t.photoRatio}`}
                 style={{ background: p.line }}
               >
-                <img
-                  src={person.photo}
-                  alt={person.fullName}
-                  loading="lazy"
-                  className="h-full w-full object-cover"
-                />
+                <img src={person.photo} alt={person.fullName} loading="lazy" className="h-full w-full object-cover" />
               </div>
               <p className={`mt-3 ${t.label}`} style={{ color: p.accent }}>
                 {role}
               </p>
-              <h3
-                className={`mt-1 ${
-                  t.couple === 'columns' ? 'font-display text-lg leading-tight' : t.sectionTitle
-                }`}
-              >
+              <h3 className={`mt-1 ${t.couple === 'columns' ? 'font-display text-lg leading-tight' : t.sectionTitle}`}>
                 {person.fullName}
               </h3>
               <p
@@ -213,13 +174,7 @@ export function Couple({ p, t, root, reveal }: Look) {
               >
                 {person.birthOrder} of {person.parents}
               </p>
-              <a
-                href={person.instagram}
-                target="_blank"
-                rel="noopener"
-                className={`mt-2 inline-block ${t.small}`}
-                style={{ color: p.accent }}
-              >
+              <a href={person.instagram} target="_blank" rel="noopener" className={`mt-2 inline-block ${t.small}`} style={{ color: p.accent }}>
                 Instagram
               </a>
             </Reveal>
@@ -230,8 +185,37 @@ export function Couple({ p, t, root, reveal }: Look) {
   );
 }
 
+function EventDetails({ event, p, t }: { event: (typeof wedding.events)[number]; p: Palette; t: Tokens }) {
+  return (
+    <>
+      <div className={`mt-3 flex items-end gap-3 ${t.align === 'text-center' ? 'justify-center' : ''}`}>
+        <p className="font-display text-[2.6rem] leading-none tabular-nums" style={{ color: p.accent }}>
+          {event.dayNumber}
+        </p>
+        <div>
+          <p className={t.small}>{event.monthYear}</p>
+          <p className={`mt-0.5 ${t.small}`} style={{ color: p.soft }}>
+            {event.dayLabel} · {event.timeLabel}
+          </p>
+        </div>
+      </div>
+      <p className={`mt-3 ${t.body}`}>
+        {event.room}
+        <br />
+        <span style={{ color: p.soft }}>
+          {event.venue}, {event.city}
+        </span>
+      </p>
+      <p className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
+        {event.dressCode}
+      </p>
+    </>
+  );
+}
+
 export function Schedule({ p, t, root, reveal }: Look) {
   const [primary] = wedding.events;
+  const [mapOpen, setMapOpen] = useState(false);
 
   return (
     <section id="acara" className={t.sectionPad}>
@@ -241,53 +225,85 @@ export function Schedule({ p, t, root, reveal }: Look) {
         </SectionLabel>
       </Reveal>
 
-      <div className="mt-4 space-y-3">
-        {wedding.events.map((event, index) => (
-          <Reveal key={event.title} kind={reveal} root={root} delay={0.06 + index * 0.08}>
-            <div
-              className={`${t.card} ${t.radius}`}
-              style={{ borderColor: p.line, background: p.paper }}
-            >
-              <p className={t.label} style={{ color: p.accent }}>
-                {event.label}
-              </p>
-              <h3 className={`mt-1 ${t.sectionTitle}`}>{event.title}</h3>
-              <p className={t.small} style={{ color: p.soft }}>
-                {event.subtitle}
-              </p>
+      {t.scheduleStyle === 'cards' && (
+        <div className="mt-4 space-y-3">
+          {wedding.events.map((event, index) => (
+            <Reveal key={event.title} kind={reveal} root={root} delay={0.06 + index * 0.08}>
+              <div className={`${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
+                <p className={t.label} style={{ color: p.accent }}>
+                  {event.label}
+                </p>
+                <h3 className={`mt-1 ${t.sectionTitle}`}>{event.title}</h3>
+                <p className={t.small} style={{ color: p.soft }}>
+                  {event.subtitle}
+                </p>
+                <EventDetails event={event} p={p} t={t} />
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      )}
 
-              <div
-                className={`mt-3 flex items-end gap-3 ${
-                  t.align === 'text-center' ? 'justify-center' : ''
-                }`}
-              >
-                <p className="font-display text-[2.6rem] leading-none tabular-nums" style={{ color: p.accent }}>
+      {t.scheduleStyle === 'timeline' && (
+        <ol className="mt-5 space-y-6">
+          {wedding.events.map((event, index) => (
+            <Reveal key={event.title} kind={reveal} root={root} delay={0.06 + index * 0.08}>
+              <li className="relative border-l pl-5" style={{ borderColor: p.line }}>
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[3px] top-1.5 h-1.5 w-1.5 rounded-full"
+                  style={{ background: p.accent }}
+                />
+                <p className={t.label} style={{ color: p.accent }}>
+                  {event.label}
+                </p>
+                <h3 className={`mt-1 ${t.sectionTitle}`}>{event.title}</h3>
+                <p className={`mt-0.5 ${t.small}`} style={{ color: p.soft }}>
+                  {event.dateLabel} · {event.timeLabel}
+                </p>
+                <p className={`mt-2 ${t.body}`}>
+                  {event.room}
+                  <br />
+                  <span style={{ color: p.soft }}>
+                    {event.venue}, {event.city}
+                  </span>
+                </p>
+                <p className={`mt-1 ${t.small}`} style={{ color: p.soft }}>
+                  {event.dressCode}
+                </p>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
+      )}
+
+      {t.scheduleStyle === 'list' && (
+        <div className="mt-4 divide-y" style={{ borderColor: p.line }}>
+          {wedding.events.map((event, index) => (
+            <Reveal key={event.title} kind={reveal} root={root} delay={0.06 + index * 0.06}>
+              <div className="grid gap-1 py-4 sm:grid-cols-[3.2rem_1fr] sm:gap-4" style={{ borderColor: p.line }}>
+                <p className="font-display text-2xl leading-none tabular-nums" style={{ color: p.accent }}>
                   {event.dayNumber}
                 </p>
                 <div>
-                  <p className={t.small}>{event.monthYear}</p>
+                  <p className={t.small} style={{ color: p.soft }}>
+                    {event.label} · {event.dayLabel}, {event.monthYear}
+                  </p>
+                  <p className="mt-0.5 text-[13px] font-medium">{event.title}</p>
                   <p className={`mt-0.5 ${t.small}`} style={{ color: p.soft }}>
-                    {event.dayLabel} · {event.timeLabel}
+                    {event.timeLabel}
+                  </p>
+                  <p className={`mt-1 ${t.body}`}>
+                    {event.room}, {event.venue}
                   </p>
                 </div>
               </div>
+            </Reveal>
+          ))}
+        </div>
+      )}
 
-              <p className={`mt-3 ${t.body}`}>
-                {event.room}
-                <br />
-                <span style={{ color: p.soft }}>
-                  {event.venue}, {event.city}
-                </span>
-              </p>
-              <p className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
-                {event.dressCode}
-              </p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-
-      <Reveal kind={reveal} root={root} delay={0.1} className="mt-3">
+      <Reveal kind={reveal} root={root} delay={0.1} className="mt-4">
         <div className={`${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
           <p className={t.label} style={{ color: p.accent }}>
             Venue
@@ -300,7 +316,27 @@ export function Schedule({ p, t, root, reveal }: Look) {
             </span>
           </p>
 
-          <div className="mt-3 flex flex-wrap gap-2">
+          {mapOpen ? (
+            <iframe
+              title={`Map to ${primary.venue}`}
+              src={primary.mapEmbedUrl}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className={`mt-3 h-44 w-full border ${t.radius}`}
+              style={{ borderColor: p.line }}
+            />
+          ) : (
+            <button
+              type="button"
+              onClick={() => setMapOpen(true)}
+              className={`mt-3 w-full ${t.buttonGhost}`}
+              style={{ borderColor: p.line, color: p.accent }}
+            >
+              Show the map
+            </button>
+          )}
+
+          <div className="mt-2 flex flex-wrap gap-2">
             <a
               href={primary.mapsUrl}
               target="_blank"
@@ -308,7 +344,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
               className={`flex-1 ${t.button} text-center`}
               style={{ background: p.accent, color: p.on }}
             >
-              Map
+              Directions
             </a>
             <a
               href={primary.wazeUrl}
@@ -341,10 +377,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
             </button>
           </div>
 
-          <div
-            className={`mt-3 space-y-1.5 border-t pt-3 ${t.body}`}
-            style={{ borderColor: p.line, color: p.soft }}
-          >
+          <div className={`mt-3 space-y-1.5 border-t pt-3 ${t.body}`} style={{ borderColor: p.line, color: p.soft }}>
             <p>{primary.transit}</p>
             <p>{primary.parking}</p>
             {wedding.events.map((event) => (
@@ -393,11 +426,7 @@ export function Story({ p, t, root, reveal }: Look) {
       ) : (
         <ol className="mt-6 space-y-7">
           {wedding.story.map((item, index) => (
-            <li
-              key={item.year}
-              className={`${t.align} ${t.ornament ? '' : 'border-t pt-5'}`}
-              style={{ borderColor: p.line }}
-            >
+            <li key={item.year} className={`${t.align} ${t.ornament ? '' : 'border-t pt-5'}`} style={{ borderColor: p.line }}>
               <Reveal kind={reveal} root={root} delay={index * 0.07}>
                 <span className={`${t.label} tabular-nums`} style={{ color: p.accent }}>
                   {item.year}
@@ -417,6 +446,41 @@ export function Story({ p, t, root, reveal }: Look) {
 }
 
 export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index: number) => void }) {
+  const [likes, setLikes] = useState<Record<number, number>>({});
+  const [liked, setLiked] = useState<Record<number, boolean>>({});
+
+  const heart = (index: number) => {
+    setLiked((prev) => ({ ...prev, [index]: !prev[index] }));
+    setLikes((prev) => ({ ...prev, [index]: (prev[index] ?? 0) + (liked[index] ? -1 : 1) }));
+  };
+
+  const caption = (index: number) => (
+    <span className="block px-2.5 py-2" style={{ background: p.paper }}>
+      <span className="block text-[11px] font-medium leading-tight">{wedding.gallery[index].title}</span>
+      <span className={`mt-0.5 block ${t.small}`} style={{ color: p.soft }}>
+        {wedding.gallery[index].location}
+      </span>
+    </span>
+  );
+
+  const heartButton = (index: number, overlay: boolean) => (
+    <button
+      type="button"
+      onClick={() => heart(index)}
+      aria-pressed={!!liked[index]}
+      aria-label={liked[index] ? `Remove your heart from ${wedding.gallery[index].title}` : `Heart ${wedding.gallery[index].title}`}
+      className={`flex items-center gap-1 text-[10px] tabular-nums ${
+        overlay
+          ? 'absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-1 text-white backdrop-blur'
+          : 'ml-2 inline-flex'
+      }`}
+      style={overlay ? undefined : { color: liked[index] ? p.accent : p.soft }}
+    >
+      <HeartIcon filled={!!liked[index]} />
+      {(likes[index] ?? 0) > 0 && <span>{likes[index]}</span>}
+    </button>
+  );
+
   return (
     <section id="galeri" className={t.sectionPad} style={{ background: p.paper }}>
       <Reveal kind={reveal} root={root}>
@@ -425,57 +489,119 @@ export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index:
         </SectionLabel>
       </Reveal>
 
-      <div className={`mt-4 ${t.gallery}`}>
-        {wedding.gallery.map((photo, index) => (
-          <Reveal
-            key={photo.title}
-            kind={reveal}
-            root={root}
-            delay={Math.min(index, 3) * 0.06}
-            className={`overflow-hidden ${t.radius}`}
-            style={{ background: p.line }}
-          >
-            <button
-              type="button"
-              onClick={() => onOpen(index)}
-              aria-label={`View photo: ${photo.title}`}
-              className="block w-full text-left"
+      {t.galleryStyle === 'grid' && (
+        <div className={`mt-4 ${t.gallery}`}>
+          {wedding.gallery.map((photo, index) => (
+            <Reveal
+              key={photo.title}
+              kind={reveal}
+              root={root}
+              delay={Math.min(index, 3) * 0.06}
+              className={`overflow-hidden ${t.radius}`}
+              style={{ background: p.line }}
             >
-              <img
-                src={photo.photo}
-                alt={photo.title}
-                loading="lazy"
-                className={`${t.galleryRatio} w-full object-cover`}
-              />
-              {t.galleryCaptions && (
-                <span className="block px-2.5 py-2" style={{ background: p.paper }}>
-                  <span className="block text-[11px] font-medium leading-tight">{photo.title}</span>
-                  <span className={`mt-0.5 block ${t.small}`} style={{ color: p.soft }}>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => onOpen(index)}
+                  aria-label={`View photo: ${photo.title}`}
+                  className="block w-full text-left"
+                >
+                  <img
+                    src={photo.photo}
+                    alt={photo.title}
+                    loading="lazy"
+                    className={`${t.galleryRatio} w-full object-cover`}
+                  />
+                </button>
+                {heartButton(index, true)}
+              </div>
+              {t.galleryCaptions && caption(index)}
+            </Reveal>
+          ))}
+        </div>
+      )}
+
+      {t.galleryStyle === 'rail' && (
+        <Reveal kind={reveal} root={root} delay={0.06} className="mt-4">
+          <div className="-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2">
+            {wedding.gallery.map((photo, index) => (
+              <figure key={photo.title} className={`w-[64%] shrink-0 snap-center overflow-hidden ${t.radius}`} style={{ background: p.line }}>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => onOpen(index)}
+                    aria-label={`View photo: ${photo.title}`}
+                    className="block w-full"
+                  >
+                    <img
+                      src={photo.photo}
+                      alt={photo.title}
+                      loading="lazy"
+                      className={`${t.galleryRatio} w-full object-cover`}
+                    />
+                  </button>
+                  {heartButton(index, true)}
+                </div>
+                <figcaption className="px-2.5 py-2" style={{ background: p.paper }}>
+                  <p className="text-[11px] font-medium leading-tight">{photo.title}</p>
+                  <p className={`mt-0.5 ${t.small}`} style={{ color: p.soft }}>
                     {photo.location}
-                  </span>
+                  </p>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p className={`mt-1 ${t.small}`} style={{ color: p.soft }}>
+            Swipe for more
+          </p>
+        </Reveal>
+      )}
+
+      {t.galleryStyle === 'full' && (
+        <div className="mt-4 space-y-2">
+          {wedding.gallery.map((photo, index) => (
+            <Reveal key={photo.title} kind={reveal} root={root} delay={Math.min(index, 2) * 0.05}>
+              <figure className="relative overflow-hidden" style={{ background: p.line }}>
+                <button
+                  type="button"
+                  onClick={() => onOpen(index)}
+                  aria-label={`View photo: ${photo.title}`}
+                  className="block w-full"
+                >
+                  <img src={photo.photo} alt={photo.title} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                </button>
+                <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/55 px-3 py-2.5 text-[11px] text-white">
+                  {photo.title}
                 </span>
-              )}
-            </button>
-          </Reveal>
-        ))}
-      </div>
+                {heartButton(index, true)}
+              </figure>
+            </Reveal>
+          ))}
+        </div>
+      )}
+
+      <p className={`mt-2 ${t.small}`} style={{ color: p.soft }}>
+        Hearts stay on this device in the preview.
+      </p>
 
       <Reveal kind={reveal} root={root} delay={0.1} className="mt-5">
         <a
           href={wedding.video.url}
           target="_blank"
           rel="noopener"
-          className={`flex items-center justify-between gap-3 ${t.card} ${t.radius}`}
-          style={{ borderColor: p.line, background: p.bg }}
+          className={`relative block overflow-hidden ${t.radius}`}
+          style={{ background: p.bg }}
         >
-          <span>
-            <span className={`block ${t.small}`} style={{ color: p.soft }}>
-              Prewedding film
-            </span>
-            <span className={`mt-0.5 block ${t.body}`}>{wedding.video.title}</span>
-          </span>
-          <span className={t.small} style={{ color: p.accent }}>
-            Watch
+          <img
+            src="/photos/cover.webp"
+            alt=""
+            loading="lazy"
+            className="aspect-[16/10] w-full object-cover opacity-85"
+          />
+          <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/55 text-white">
+            <PlayIcon />
+            <span className="text-[10px] tracking-[0.16em] uppercase">Prewedding film</span>
           </span>
         </a>
       </Reveal>
@@ -512,108 +638,17 @@ export function Gift({ p, t, root, reveal, label }: Look & { label: string }) {
   );
 }
 
-function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
-  const [attendance, setAttendance] = useState<'hadir' | 'tidak' | ''>('');
-  const [pax, setPax] = useState(2);
-  const [saved, setSaved] = useState(false);
-
-  if (saved) {
-    return (
-      <div className={`mt-4 ${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
-        <p className={t.small} style={{ color: p.accent }}>
-          RSVP
-        </p>
-        <p className={`mt-1.5 ${t.body}`}>
-          {attendance === 'hadir'
-            ? `Thank you, ${guest}. We've put down ${pax} ${pax === 1 ? 'guest' : 'guests'}. See you in ${wedding.event.cityShort}.`
-            : `Noted, we'll miss you ${guest}. Thanks for letting us know.`}
-        </p>
-        <p className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
-          This is a theme preview, so nothing is actually sent.
-        </p>
-        <button
-          type="button"
-          onClick={() => setSaved(false)}
-          className={`mt-3 ${t.buttonGhost}`}
-          style={{ borderColor: p.line, color: p.accent }}
-        >
-          Edit RSVP
-        </button>
-      </div>
-    );
-  }
-
-  return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (attendance) setSaved(true);
-      }}
-      className={`mt-4 ${t.card} ${t.radius}`}
-      style={{ borderColor: p.line, background: p.paper }}
-    >
-      <p className={t.small} style={{ color: p.accent }}>
-        RSVP
-      </p>
-      <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
-        Please let us know before {wedding.dateLabel}.
-      </p>
-
-      <div className="mt-3 flex gap-2">
-        {(['hadir', 'tidak'] as const).map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => setAttendance(option)}
-            aria-pressed={attendance === option}
-            className={`flex-1 ${t.buttonGhost}`}
-            style={{
-              borderColor: attendance === option ? p.accent : p.line,
-              background: attendance === option ? p.accent : 'transparent',
-              color: attendance === option ? p.on : p.accent,
-            }}
-          >
-            {option === 'hadir' ? 'Attending' : "Can't make it"}
-          </button>
-        ))}
-      </div>
-
-      {attendance === 'hadir' && (
-        <div className="mt-3">
-          <label className={`block ${t.small}`} style={{ color: p.soft }} htmlFor="rsvp-pax">
-            How many of you
-          </label>
-          <select
-            id="rsvp-pax"
-            value={pax}
-            onChange={(event) => setPax(Number(event.target.value))}
-            className={`mt-1 w-full border px-2.5 py-2 text-[13px] ${t.radius}`}
-            style={{ borderColor: p.line, background: p.bg, color: p.ink }}
-          >
-            {[1, 2, 3, 4].map((count) => (
-              <option key={count} value={count}>
-                {count} {count === 1 ? 'guest' : 'guests'}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      <button
-        type="submit"
-        disabled={!attendance}
-        className={`mt-3 w-full ${t.button} disabled:opacity-50`}
-        style={{ background: p.accent, color: p.on }}
-      >
-        Send RSVP
-      </button>
-    </form>
-  );
-}
-
-export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) {
+export function Wishes({
+  p,
+  t,
+  root,
+  reveal,
+  guest,
+  rsvp,
+  onOpenRsvp,
+}: Look & { guest: string; rsvp: RsvpValue | null; onOpenRsvp: () => void }) {
   const [wishes, setWishes] = useState(() =>
-    wedding.wishes.map((wish, index) => ({ ...wish, id: `seed-${index}` }))
+    wedding.wishes.map((wish, index) => ({ ...wish, id: `seed-${index}`, likes: 0, liked: false }))
   );
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
@@ -624,10 +659,20 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
     if (!message.trim()) return;
     nextId.current += 1;
     setWishes([
-      { id: `wish-${nextId.current}`, name: name.trim() || guest, message: message.trim() },
+      { id: `wish-${nextId.current}`, name: name.trim() || guest, message: message.trim(), likes: 0, liked: false },
       ...wishes,
     ]);
     setMessage('');
+  }
+
+  function like(id: string) {
+    setWishes((prev) =>
+      prev.map((wish) =>
+        wish.id === id
+          ? { ...wish, liked: !wish.liked, likes: wish.likes + (wish.liked ? -1 : 1) }
+          : wish
+      )
+    );
   }
 
   return (
@@ -639,7 +684,45 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
       </Reveal>
 
       <Reveal kind={reveal} root={root} delay={0.06}>
-        <Rsvp p={p} t={t} guest={guest} />
+        <div className={`mt-4 ${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
+          <p className={t.small} style={{ color: p.accent }}>
+            RSVP
+          </p>
+          {rsvp ? (
+            <>
+              <p className={`mt-1.5 ${t.body}`}>
+                {rsvp.attendance === 'hadir'
+                  ? `Thank you, ${rsvp.name}. We have put down ${rsvp.pax} ${rsvp.pax === 1 ? 'guest' : 'guests'}. See you in ${wedding.event.cityShort}.`
+                  : `Noted, we will miss you ${rsvp.name}. Thanks for letting us know.`}
+              </p>
+              <p className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
+                This is a theme preview, so nothing was actually sent.
+              </p>
+              <button
+                type="button"
+                onClick={onOpenRsvp}
+                className={`mt-3 ${t.buttonGhost}`}
+                style={{ borderColor: p.line, color: p.accent }}
+              >
+                Edit RSVP
+              </button>
+            </>
+          ) : (
+            <>
+              <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
+                Please let us know before {wedding.dateLabel}.
+              </p>
+              <button
+                type="button"
+                onClick={onOpenRsvp}
+                className={`mt-3 w-full ${t.button}`}
+                style={{ background: p.accent, color: p.on }}
+              >
+                Confirm attendance
+              </button>
+            </>
+          )}
+        </div>
       </Reveal>
 
       <Reveal kind={reveal} root={root} delay={0.1}>
@@ -675,11 +758,7 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
             style={{ borderColor: p.line, background: p.bg, color: p.ink }}
           />
 
-          <button
-            type="submit"
-            className={`mt-3 w-full ${t.button}`}
-            style={{ background: p.accent, color: p.on }}
-          >
+          <button type="submit" className={`mt-3 w-full ${t.button}`} style={{ background: p.accent, color: p.on }}>
             Send wishes
           </button>
         </form>
@@ -687,14 +766,25 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
 
       <ul className="mt-5 space-y-3">
         {wishes.map((wish, index) => (
-          <li
-            key={wish.id}
-            className={`border p-3 ${t.radius}`}
-            style={{ borderColor: p.line, background: p.paper }}
-          >
+          <li key={wish.id} className={`border p-3 ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
             <Reveal kind="fade" root={root} delay={Math.min(index, 2) * 0.05}>
-              <p className="text-[11px] font-semibold">{wish.name}</p>
-              <p className={`mt-1 ${t.body}`}>{wish.message}</p>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-semibold">{wish.name}</p>
+                  <p className={`mt-1 ${t.body}`}>{wish.message}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => like(wish.id)}
+                  aria-pressed={wish.liked}
+                  aria-label={wish.liked ? `Remove your heart from ${wish.name}` : `Heart the wish from ${wish.name}`}
+                  className="mt-0.5 flex shrink-0 items-center gap-1 text-[10px] tabular-nums"
+                  style={{ color: wish.liked ? p.accent : p.soft }}
+                >
+                  <HeartIcon filled={wish.liked} />
+                  {wish.likes > 0 && <span>{wish.likes}</span>}
+                </button>
+              </div>
             </Reveal>
           </li>
         ))}
@@ -705,10 +795,7 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
 
 export function Footer({ p, t, root, reveal }: Look) {
   return (
-    <footer
-      className={`${t.sectionPad} pb-20 ${t.align}`}
-      style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}
-    >
+    <footer className={`${t.sectionPad} pb-20 ${t.align}`} style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}>
       <Reveal kind={reveal} root={root}>
         <p className={t.label} style={{ color: p.accent }}>
           Thank you

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import type { Theme } from '../../data/themes';
 import { wedding } from '../../data/wedding';
@@ -6,6 +6,16 @@ import { useGuestName, useInvitationAudio } from './hooks';
 import { variants } from './tokens';
 import { EASE, coverExits, heroMotions } from './motion';
 import type { ThemeMotion } from '../../data/themes';
+import RsvpSheet from './RsvpSheet';
+import {
+  CalendarIcon,
+  CoupleIcon,
+  GalleryIcon,
+  GiftIcon,
+  MessageIcon,
+  MusicIcon,
+  StoryIcon,
+} from './icons';
 import {
   Countdown,
   Couple,
@@ -18,27 +28,28 @@ import {
   Story,
   Wishes,
   useSectionNav,
-  useSlideShow,
+  type RsvpValue,
 } from './sections';
 
+const DEFAULT_TRACK = '/audio/ceremony.mp3';
+
 const nav = [
-  { id: 'profil', label: 'Couple' },
-  { id: 'acara', label: 'Schedule' },
-  { id: 'cerita', label: 'Story' },
-  { id: 'galeri', label: 'Gallery' },
-  { id: 'hadiah', label: 'Gifts' },
-  { id: 'ucapan', label: 'Wishes' },
+  { id: 'profil', label: 'Couple', Icon: CoupleIcon },
+  { id: 'acara', label: 'Schedule', Icon: CalendarIcon },
+  { id: 'cerita', label: 'Story', Icon: StoryIcon },
+  { id: 'galeri', label: 'Gallery', Icon: GalleryIcon },
+  { id: 'hadiah', label: 'Gifts', Icon: GiftIcon },
+  { id: 'ucapan', label: 'Wishes', Icon: MessageIcon },
 ];
 
 /**
- * One renderer, every template: layout comes from `theme.variant`, colours from
- * `theme.palette`, motion from `tokens.reveal` / `tokens.coverExit`, content from wedding.ts.
+ * One renderer, every template: layout from `theme.variant`, colours from
+ * `theme.palette`, motion from `theme.motion`, content from wedding.ts.
  */
 export default function Invitation({ theme }: { theme: Theme }) {
   const t = variants[theme.variant];
   const p = theme.palette;
 
-  // Templates may share a layout, never a motion signature.
   const motionSet: ThemeMotion = theme.motion ?? {
     reveal: t.reveal,
     hero: 'drift',
@@ -50,17 +61,22 @@ export default function Invitation({ theme }: { theme: Theme }) {
   const [guest] = useGuestName();
   const [opened, setOpened] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const audio = useInvitationAudio(theme.music);
+  const [rsvpOpen, setRsvpOpen] = useState(false);
+  const [rsvp, setRsvp] = useState<RsvpValue | null>(null);
+  const audio = useInvitationAudio(theme.music ?? DEFAULT_TRACK);
   const navState = useSectionNav(nav.map((item) => item.id));
-  const slide = useSlideShow(wedding.heroSlides.length);
+  const [slide, setSlide] = useState(0);
+  const progressRef = useRef<HTMLSpanElement>(null);
 
   const { groom, bride } = wedding.couple;
 
-  // Escape closes the lightbox, and the page behind it stops scrolling.
+  // Escape closes whichever overlay is on top, and the page behind stops scrolling.
   useEffect(() => {
-    if (lightbox === null) return;
+    if (lightbox === null && !rsvpOpen) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setLightbox(null);
+      if (event.key !== 'Escape') return;
+      setLightbox(null);
+      setRsvpOpen(false);
     };
     const scroller = navState.ref.current;
     const previous = scroller?.style.overflowY;
@@ -70,11 +86,30 @@ export default function Invitation({ theme }: { theme: Theme }) {
       window.removeEventListener('keydown', onKey);
       if (scroller && previous !== undefined) scroller.style.overflowY = previous;
     };
-  }, [lightbox, navState.ref]);
+  }, [lightbox, rsvpOpen, navState.ref]);
+
+  // Two-second slideshow, advanced by a timer the markup owns.
+  useEffect(() => {
+    if (wedding.heroSlides.length <= 1) return;
+    const id = window.setInterval(() => {
+      if (document.visibilityState === 'visible') setSlide((prev) => (prev + 1) % wedding.heroSlides.length);
+    }, 2000);
+    return () => window.clearInterval(id);
+  }, []);
 
   function open() {
     setOpened(true);
     audio.unlock();
+  }
+
+  function onScroll() {
+    navState.onScroll();
+    const scroller = navState.ref.current;
+    const bar = progressRef.current;
+    if (!scroller || !bar) return;
+    const max = scroller.scrollHeight - scroller.clientHeight;
+    const ratio = max > 0 ? Math.min(1, scroller.scrollTop / max) : 0;
+    bar.style.transform = `scaleX(${ratio})`;
   }
 
   const nameLine = (
@@ -87,43 +122,78 @@ export default function Invitation({ theme }: { theme: Theme }) {
     </>
   );
 
+  const heroImage = (
+    <AnimatePresence initial={false}>
+      <motion.img
+        key={slide}
+        src={wedding.heroSlides[slide].src}
+        alt={wedding.heroSlides[slide].location}
+        initial={{ opacity: 0, scale: 1, x: 0, y: 0 }}
+        animate={{ opacity: 1, ...hero.to }}
+        exit={{ opacity: 0 }}
+        transition={{
+          opacity: { duration: 0.9 },
+          scale: { duration: hero.duration, ease: 'linear' },
+          x: { duration: hero.duration, ease: 'linear' },
+          y: { duration: hero.duration, ease: 'linear' },
+        }}
+        drag={opened ? 'x' : false}
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.12}
+        onDragEnd={(_, info) => {
+          if (info.offset.x < -40) setSlide((prev) => (prev + 1) % wedding.heroSlides.length);
+          if (info.offset.x > 40)
+            setSlide((prev) => (prev - 1 + wedding.heroSlides.length) % wedding.heroSlides.length);
+        }}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+    </AnimatePresence>
+  );
+
+  const heroDots = (
+    <div className="absolute bottom-3 right-3 flex gap-1.5" aria-hidden="true">
+      {wedding.heroSlides.map((item, index) => (
+        <span
+          key={item.src}
+          className="h-1 rounded-full transition-all duration-300"
+          style={{
+            width: index === slide ? 16 : 6,
+            background: index === slide ? p.ink : `${p.ink}59`,
+          }}
+        />
+      ))}
+    </div>
+  );
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative h-full" style={{ background: p.bg, color: p.ink }}>
         {audio.src && <audio ref={audio.ref} src={audio.src} loop preload="none" />}
 
+        {opened && (
+          <span
+            ref={progressRef}
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 z-30 h-[2px] origin-left"
+            style={{ background: p.accent, transform: 'scaleX(0)' }}
+          />
+        )}
+
         <div
           ref={navState.ref}
-          onScroll={navState.onScroll}
-          className="h-full overflow-x-hidden overflow-y-auto overscroll-auto pb-14 lg:overscroll-contain"
+          onScroll={onScroll}
+          className="h-full overflow-x-hidden overflow-y-auto overscroll-auto pb-16 lg:overscroll-contain"
         >
-          {/* Hero: crossfade slides with a slow drift, transforms only */}
+          {/* Hero */}
           <section className="relative">
             {t.heroOverlay ? (
               <div className={`relative w-full overflow-hidden ${t.heroRatio}`}>
-                <AnimatePresence initial={false}>
-                  <motion.img
-                    key={slide}
-                    src={wedding.heroSlides[slide].src}
-                    alt={wedding.heroSlides[slide].location}
-                    initial={{ opacity: 0, scale: 1, x: 0, y: 0 }}
-                    animate={{ opacity: 1, ...hero.to }}
-                    exit={{ opacity: 0 }}
-                    transition={{
-                      opacity: { duration: 0.9 },
-                      scale: { duration: hero.duration, ease: 'linear' },
-                      x: { duration: hero.duration, ease: 'linear' },
-                      y: { duration: hero.duration, ease: 'linear' },
-                    }}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                </AnimatePresence>
+                {heroImage}
                 <div
                   className="absolute inset-0"
-                  style={{
-                    background: `linear-gradient(to top, ${p.bg} 4%, ${p.bg}b3 38%, ${p.bg}00 78%)`,
-                  }}
+                  style={{ background: `linear-gradient(to top, ${p.bg} 4%, ${p.bg}b3 38%, ${p.bg}00 78%)` }}
                 />
+                {heroDots}
                 <div className={`absolute inset-x-0 bottom-0 px-5 pb-6 ${t.align}`}>
                   <p className={t.label} style={{ color: p.accent }}>
                     Wedding Invitation
@@ -135,27 +205,9 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 </div>
               </div>
             ) : (
-              <div
-                className={`relative w-full overflow-hidden ${t.heroRatio}`}
-                style={{ background: p.line }}
-              >
-                <AnimatePresence initial={false}>
-                  <motion.img
-                    key={slide}
-                    src={wedding.heroSlides[slide].src}
-                    alt={wedding.heroSlides[slide].location}
-                    initial={{ opacity: 0, scale: 1, x: 0, y: 0 }}
-                    animate={{ opacity: 1, ...hero.to }}
-                    exit={{ opacity: 0 }}
-                    transition={{
-                      opacity: { duration: 0.9 },
-                      scale: { duration: hero.duration, ease: 'linear' },
-                      x: { duration: hero.duration, ease: 'linear' },
-                      y: { duration: hero.duration, ease: 'linear' },
-                    }}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                </AnimatePresence>
+              <div className={`relative w-full overflow-hidden ${t.heroRatio}`} style={{ background: p.line }}>
+                {heroImage}
+                {heroDots}
                 <p className="absolute bottom-3 left-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white backdrop-blur">
                   {wedding.heroSlides[slide].location}
                 </p>
@@ -194,7 +246,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 </>
               )}
 
-              <Countdown p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
+              <Countdown p={p} t={t} root={navState.ref} />
 
               <p className={`mt-4 ${t.body}`} style={{ color: p.soft }}>
                 Dear
@@ -219,7 +271,15 @@ export default function Invitation({ theme }: { theme: Theme }) {
           <Story p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
           <Gallery p={p} t={t} root={navState.ref} reveal={motionSet.reveal} onOpen={setLightbox} />
           <Gift p={p} t={t} root={navState.ref} reveal={motionSet.reveal} label={theme.giftLabel ?? 'Gifts'} />
-          <Wishes p={p} t={t} root={navState.ref} reveal={motionSet.reveal} guest={guest} />
+          <Wishes
+            p={p}
+            t={t}
+            root={navState.ref}
+            reveal={motionSet.reveal}
+            guest={guest}
+            rsvp={rsvp}
+            onOpenRsvp={() => setRsvpOpen(true)}
+          />
           <Footer p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
         </div>
 
@@ -238,10 +298,10 @@ export default function Invitation({ theme }: { theme: Theme }) {
             onClick={audio.toggle}
             aria-pressed={!audio.muted}
             aria-label={audio.muted ? 'Play music' : 'Pause music'}
-            className="absolute top-14 right-3 z-20 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm sm:top-3"
+            className="absolute right-3 top-14 z-20 flex h-9 w-9 items-center justify-center rounded-full shadow-sm sm:top-3"
             style={{ background: p.ink, color: p.bg }}
           >
-            {audio.muted ? 'Music off' : 'Music on'}
+            <MusicIcon muted={audio.muted} />
           </button>
         )}
 
@@ -258,13 +318,10 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 motionSet.nav === 'dot'
                   ? 'absolute bottom-1.5 left-1/2 -ml-0.5 h-1 w-1 rounded-full'
                   : 'absolute inset-x-3 bottom-1 h-[2px] rounded-full';
+              const { Icon } = item;
 
               return (
                 <li key={item.id} className="relative">
-                  {/*
-                    pill = the button paints its own fill (one indicator, no second layer).
-                    underline / dot = one sliding span shared across tabs via layoutId.
-                  */}
                   {active && sliding && (
                     <motion.span
                       layoutId={`nav-${motionSet.nav}`}
@@ -278,7 +335,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                     type="button"
                     onClick={() => navState.goTo(item.id)}
                     aria-current={active ? 'true' : undefined}
-                    className={`relative z-10 min-h-[44px] w-full py-3.5 text-[10px] tracking-[0.08em] uppercase ${
+                    className={`relative z-10 flex min-h-[52px] w-full flex-col items-center justify-center gap-1 pb-1 text-[9px] tracking-[0.06em] uppercase ${
                       active ? t.navActive : ''
                     } ${motionSet.nav === 'pill' ? 'm-1 rounded-full transition-colors duration-200' : ''}`}
                     style={{
@@ -286,7 +343,8 @@ export default function Invitation({ theme }: { theme: Theme }) {
                       color: active ? (motionSet.nav === 'pill' ? p.bg : p.accent) : p.soft,
                     }}
                   >
-                    {item.label}
+                    <Icon />
+                    <span>{item.label}</span>
                   </button>
                 </li>
               );
@@ -319,12 +377,8 @@ export default function Invitation({ theme }: { theme: Theme }) {
                     className="absolute inset-0"
                     style={
                       t.coverBand
-                        ? {
-                            background: `linear-gradient(to top, ${p.bg} 0%, ${p.bg} 46%, ${p.bg}00 47%)`,
-                          }
-                        : {
-                            background: `linear-gradient(to top, ${p.bg} 6%, ${p.bg}e6 42%, ${p.bg}22 100%)`,
-                          }
+                        ? { background: `linear-gradient(to top, ${p.bg} 0%, ${p.bg} 46%, ${p.bg}00 47%)` }
+                        : { background: `linear-gradient(to top, ${p.bg} 6%, ${p.bg}e6 42%, ${p.bg}22 100%)` }
                     }
                   />
                 </>
@@ -361,20 +415,14 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 <motion.p
                   className={t.label}
                   style={{ color: p.accent }}
-                  variants={{
-                    hidden: { opacity: 0, y: 10 },
-                    shown: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-                  }}
+                  variants={{ hidden: { opacity: 0, y: 10 }, shown: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } } }}
                 >
                   The Wedding Of
                 </motion.p>
 
                 <motion.h2
                   className={`mt-2 ${t.title}`}
-                  variants={{
-                    hidden: { opacity: 0, y: 12 },
-                    shown: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
-                  }}
+                  variants={{ hidden: { opacity: 0, y: 12 }, shown: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } } }}
                 >
                   {nameLine}
                 </motion.h2>
@@ -382,10 +430,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 <motion.p
                   className={`mt-2.5 ${t.small}`}
                   style={{ color: p.soft }}
-                  variants={{
-                    hidden: { opacity: 0 },
-                    shown: { opacity: 1, transition: { duration: 0.6 } },
-                  }}
+                  variants={{ hidden: { opacity: 0 }, shown: { opacity: 1, transition: { duration: 0.6 } } }}
                 >
                   {wedding.dateLabel}
                 </motion.p>
@@ -399,22 +444,12 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 <motion.div
                   className={`mx-auto mt-5 max-w-[19rem] border px-4 py-3 ${t.radius}`}
                   style={{ borderColor: p.line, background: p.paper }}
-                  variants={{
-                    hidden: { opacity: 0, y: 10 },
-                    shown: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-                  }}
+                  variants={{ hidden: { opacity: 0, y: 10 }, shown: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } } }}
                 >
-                  <p
-                    className={`${t.small} ${t.align === 'text-left' ? '' : 'text-center'}`}
-                    style={{ color: p.accent }}
-                  >
+                  <p className={`${t.small} ${t.align === 'text-left' ? '' : 'text-center'}`} style={{ color: p.accent }}>
                     To
                   </p>
-                  <p
-                    className={`mt-1 text-[15px] font-medium ${
-                      t.align === 'text-left' ? '' : 'text-center'
-                    }`}
-                  >
+                  <p className={`mt-1 text-[15px] font-medium ${t.align === 'text-left' ? '' : 'text-center'}`}>
                     {guest}
                   </p>
                 </motion.div>
@@ -425,10 +460,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                   whileTap={{ scale: 0.97 }}
                   className={`mx-auto mt-4 flex min-h-[48px] w-full max-w-[19rem] items-center justify-center ${t.button}`}
                   style={{ background: p.accent, color: p.on }}
-                  variants={{
-                    hidden: { opacity: 0, y: 10 },
-                    shown: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-                  }}
+                  variants={{ hidden: { opacity: 0, y: 10 }, shown: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } } }}
                 >
                   Open Invitation
                 </motion.button>
@@ -485,6 +517,23 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 </p>
               </motion.div>
             </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {rsvpOpen && (
+            <RsvpSheet
+              key="rsvp"
+              p={p}
+              t={t}
+              guest={guest}
+              initial={rsvp}
+              onClose={() => setRsvpOpen(false)}
+              onSave={(value) => {
+                setRsvp(value);
+                setRsvpOpen(false);
+              }}
+            />
           )}
         </AnimatePresence>
       </div>

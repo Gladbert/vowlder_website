@@ -50,6 +50,8 @@ export const wedding = {
       city: 'Surabaya, East Java 60281',
       cityShort: 'Surabaya',
       mapsUrl: 'https://maps.app.goo.gl/uSyZmd2mfscrhwoMA',
+      mapEmbedUrl:
+        'https://maps.google.com/maps?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya&t=&z=16&ie=UTF8&iwloc=&output=embed',
       wazeUrl: 'https://waze.com/ul?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya',
       transit: 'From Surabaya Gubeng station (East exit), about six minutes by car.',
       parking: 'Guest parking is in the hotel basement.',
@@ -72,6 +74,8 @@ export const wedding = {
       city: 'Surabaya, East Java 60281',
       cityShort: 'Surabaya',
       mapsUrl: 'https://maps.app.goo.gl/uSyZmd2mfscrhwoMA',
+      mapEmbedUrl:
+        'https://maps.google.com/maps?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya&t=&z=16&ie=UTF8&iwloc=&output=embed',
       wazeUrl: 'https://waze.com/ul?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya',
       transit: 'From Surabaya Gubeng station (East exit). Drop-off is at the hotel lobby.',
       parking: 'Guest parking is in the hotel basement.',
@@ -96,6 +100,8 @@ export const wedding = {
     city: 'Surabaya, East Java 60281',
     cityShort: 'Surabaya',
     mapsUrl: 'https://maps.app.goo.gl/uSyZmd2mfscrhwoMA',
+    mapEmbedUrl:
+      'https://maps.google.com/maps?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya&t=&z=16&ie=UTF8&iwloc=&output=embed',
     wazeUrl: 'https://waze.com/ul?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya',
     transit: 'From Surabaya Gubeng station (East exit). Drop-off is at the hotel lobby.',
     parking: 'Guest parking is in the hotel basement.',

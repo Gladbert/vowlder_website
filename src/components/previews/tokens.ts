@@ -27,6 +27,8 @@ export type Tokens = {
   photoRatio: string;
   photoShape: 'square' | 'circle';
   story: 'timeline' | 'centered';
+  scheduleStyle: 'cards' | 'timeline' | 'list';
+  galleryStyle: 'grid' | 'rail' | 'full';
   button: string;
   buttonGhost: string;
   gallery: string;
@@ -72,6 +74,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: false,
     reveal: 'rise',
     coverExit: 'fade',
+    scheduleStyle: 'cards',
+    galleryStyle: 'grid',
   },
   /** Ornate dark: plain cover, double frame, wide-spaced capitals, square cards. */
   classic: {
@@ -103,6 +107,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: true,
     reveal: 'fade',
     coverExit: 'curtain',
+    scheduleStyle: 'timeline',
+    galleryStyle: 'grid',
   },
   /** Left-aligned magazine: numbered sections, hairline cards, photo strip hero. */
   editorial: {
@@ -134,6 +140,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: false,
     reveal: 'slide',
     coverExit: 'rise',
+    scheduleStyle: 'list',
+    galleryStyle: 'grid',
   },
   /** Symmetric and soft: rounded cards, couple side by side, ornament rules. */
   split: {
@@ -165,6 +173,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: true,
     reveal: 'soft',
     coverExit: 'zoom',
+    scheduleStyle: 'cards',
+    galleryStyle: 'rail',
   },
   /** Full-bleed poster: hard colour band under the photo, huge type, one-column gallery. */
   poster: {
@@ -196,6 +206,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: false,
     reveal: 'drop',
     coverExit: 'rise',
+    scheduleStyle: 'list',
+    galleryStyle: 'full',
   },
   /** Names sit on the photo; thin square frame, letterspaced capitals. */
   spotlight: {
@@ -227,6 +239,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: true,
     reveal: 'fade',
     coverExit: 'zoom',
+    scheduleStyle: 'timeline',
+    galleryStyle: 'grid',
   },
   /** Dense and quiet: monogram instead of portraits, three-column thumbnails. */
   compact: {
@@ -258,6 +272,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: false,
     reveal: 'rise',
     coverExit: 'fade',
+    scheduleStyle: 'list',
+    galleryStyle: 'grid',
   },
   /** Soft and romantic: circular portraits, italic display type, square gallery. */
   medallion: {
@@ -289,6 +305,8 @@ export const variants: Record<Variant, Tokens> = {
     ornament: true,
     reveal: 'soft',
     coverExit: 'zoom',
+    scheduleStyle: 'timeline',
+    galleryStyle: 'grid',
   },
   /** Gold seal, double rule, deep vermilion: Chinese-Indonesian wedding house. */
   seal: {
@@ -318,6 +336,74 @@ export const variants: Record<Variant, Tokens> = {
     navActive: 'font-semibold',
     numbered: false,
     ornament: true,
+    reveal: 'fade',
+    coverExit: 'curtain',
+    scheduleStyle: 'cards',
+    galleryStyle: 'full',
+  },
+  /** Left rail layout: a single column of content with a hairline spine. */
+  rail: {
+    align: 'text-left',
+    label: 'text-[10px] tracking-[0.2em] uppercase',
+    title: 'font-display text-[2.4rem] leading-[0.98] tracking-tight',
+    sectionTitle: 'font-display text-[1.8rem] leading-tight',
+    body: 'text-[12.5px] leading-relaxed',
+    small: 'text-[10px] tracking-[0.14em] uppercase',
+    radius: 'rounded-xl',
+    card: 'border p-4',
+    sectionPad: 'px-5 py-9',
+    cover: 'photo',
+    coverBand: false,
+    coverJustify: 'justify-end',
+    heroRatio: 'aspect-[4/5]',
+    heroOverlay: false,
+    couple: 'columns',
+    photoRatio: 'aspect-square',
+    photoShape: 'circle',
+    story: 'timeline',
+    scheduleStyle: 'cards',
+    galleryStyle: 'rail',
+    button: 'rounded-xl px-4 py-3 text-[10px] font-semibold tracking-[0.16em] uppercase',
+    buttonGhost: 'rounded-xl border px-4 py-2.5 text-[10px] tracking-[0.14em] uppercase',
+    gallery: 'flex gap-3 overflow-x-auto snap-x snap-mandatory',
+    galleryRatio: 'aspect-[3/4]',
+    galleryCaptions: true,
+    navActive: 'font-semibold',
+    numbered: false,
+    ornament: false,
+    reveal: 'slide',
+    coverExit: 'rise',
+  },
+  /** Ledger: tight rows, full-bleed photographs, everything on a hairline grid. */
+  ledger: {
+    align: 'text-left',
+    label: 'text-[9px] tracking-[0.26em] uppercase tabular-nums',
+    title: 'font-display text-[2.5rem] leading-[0.95]',
+    sectionTitle: 'font-display text-[1.7rem] leading-tight',
+    body: 'text-[12px] leading-relaxed',
+    small: 'text-[9px] tracking-[0.16em] uppercase',
+    radius: 'rounded-none',
+    card: 'border-t pt-4',
+    sectionPad: 'px-4 py-8',
+    cover: 'plain',
+    coverBand: false,
+    coverJustify: 'justify-center',
+    heroRatio: 'aspect-[16/9]',
+    heroOverlay: false,
+    couple: 'monogram',
+    photoRatio: 'aspect-3/4',
+    photoShape: 'square',
+    story: 'timeline',
+    scheduleStyle: 'list',
+    galleryStyle: 'full',
+    button: 'px-5 py-3 text-[10px] tracking-[0.2em] uppercase',
+    buttonGhost: 'border px-4 py-2.5 text-[9px] tracking-[0.16em] uppercase',
+    gallery: 'grid grid-cols-1 gap-2',
+    galleryRatio: 'aspect-[4/3]',
+    galleryCaptions: false,
+    navActive: 'font-semibold',
+    numbered: true,
+    ornament: false,
     reveal: 'fade',
     coverExit: 'curtain',
   },

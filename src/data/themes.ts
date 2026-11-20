@@ -14,7 +14,9 @@ export type Variant =
   | 'spotlight'
   | 'compact'
   | 'medallion'
-  | 'seal';
+  | 'seal'
+  | 'rail'
+  | 'ledger';
 
 /** Catalogue tag, the way template galleries label a mood. */
 export type Mood = 'Elegant' | 'Romantic' | 'Natural' | 'Luxe' | 'Warm' | 'Bold' | 'Calm';
@@ -528,6 +530,52 @@ export const themes: Theme[] = [
     giftLabel: 'Angpao',
     glyph: '囍',
     photo: '/photos/groom.webp',
+  },
+  {
+    slug: 'sinar',
+    name: 'Sinar',
+    category: 'Minimalist',
+    tier: 'Premium',
+    price: 425_000,
+    blurb:
+      'A rail down the page: round portraits, a swipeable gallery, cards that stay out of the way. For a small ceremony that still wants photographs.',
+    palette: {
+      bg: '#FAF7F1',
+      paper: '#FFFFFF',
+      ink: '#201E1A',
+      soft: '#5C574E',
+      accent: '#7A6A3F',
+      line: '#E4DDD0',
+      on: '#FFFDF7',
+    },
+    type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
+    variant: 'rail',
+    mood: 'Warm',
+    motion: { reveal: 'right', hero: 'pan', nav: 'underline', coverExit: 'rise' },
+    photo: '/photos/shibuya.webp',
+  },
+  {
+    slug: 'lontar',
+    name: 'Lontar',
+    category: 'Traditional',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Indigo and copper, a ledger of rows instead of cards, full-bleed photographs. Reads like a printed programme, not a page.',
+    palette: {
+      bg: '#171A21',
+      paper: '#1F242D',
+      ink: '#EFE9DC',
+      soft: '#BDB5A4',
+      accent: '#C98A4B',
+      line: '#3A4150',
+      on: '#171A21',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.02em', caps: false },
+    variant: 'ledger',
+    mood: 'Luxe',
+    motion: { reveal: 'fade', hero: 'lift', nav: 'dot', coverExit: 'curtain' },
+    photo: '/photos/kyoto.webp',
   },
 ];
 
