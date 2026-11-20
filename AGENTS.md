@@ -44,13 +44,27 @@ Banned, unless the user explicitly asks:
 
 Do instead: real content from `src/data/`, editorial typography, hairline rules, generous whitespace, one accent colour per palette, Indonesian copy written like a person.
 
+### Copy is written by a person, not generated
+
+- Indonesian, conversational, concrete. Short sentences. No translationese ("hal yang paling penting adalah...").
+- Wishes must sound like six different people: vary register (family, coworker banter, close friend), vary length, and never repeat the same opening formula twice. Read them out loud — if two start the same way, rewrite one.
+- Never put a placeholder name inside a sentence template (`bila {guest} berkenan hadir` breaks for "Tamu Undangan"). Use the neutral invitation phrasing instead; the name is already shown on the cover and hero.
+- No emoji anywhere in copy. Avoid the em dash as a stylistic tic — it appears in page titles and numbered section labels, nowhere else.
+- UI strings should read like a host talking: "Mohon kabari kami sebelum 19 Desember 2026", not "Konfirmasi kehadiran wajib diselesaikan".
+
+### Content source and privacy
+
+- `wedding.ts` currently carries the **real** Gladbert & Monica wedding: names, parents, Instagram handles, venue, dates, and photos pulled from `Wedding-inv` into `/public/photos`. `public/brand/` carries the real logo. That is deliberate — it is the flagship portfolio piece.
+- To de-identify the demo, edit `wedding.ts` and swap `/public/photos` only. No component reads those values directly.
+
 ## Architecture invariants
 
 Two data files, one rule: **content and design never mix.**
 
 - `src/data/wedding.ts` — the wedding itself (couple, dates, venue, story, gallery, video, wishes). It is identical in **every** template. Adding or editing a fact happens here, once. Never invent a wedding fact in a component or in `themes.ts`.
 - `src/data/themes.ts` — design only: slug, name, category, tier, price, blurb, `palette`, type, `variant`, card `photo`, optional `music`, plus `includedFeatures` (shared by all templates).
-- `src/components/previews/tokens.ts` — the four layout variants (`faithful`, `classic`, `editorial`, `split`) as class-token sets. **`Invitation.tsx` is the only renderer**; `sections.tsx` holds the section bodies. A new template = a `themes.ts` entry, nothing else. Only add a variant when the *layout* genuinely differs.
+- `src/components/previews/tokens.ts` — the seven layout variants (`faithful`, `classic`, `editorial`, `split`, `poster`, `spotlight`, `compact`) as class-token sets. **`Invitation.tsx` is the only renderer**; `sections.tsx` holds the section bodies. A new template = a `themes.ts` entry, nothing else. Only add a variant when the *layout* genuinely differs — a colour change is a palette, not a variant.
+- The guest-name tester lives in the page chrome (`src/components/GuestTester.astro`), **not** inside the phone shell: an input fixed inside a 100svh scroller gets buried by the mobile keyboard. It writes `?to=` and dispatches `vowlder:guest`, which `hooks.ts` listens to. Keep it that way.
 - Every template must stay at feature parity: slideshow, countdown, couple + Instagram, story, event (maps/Waze/dress code/transit/parking), gallery with lightbox, wishes, footer, bottom nav, guest-name bar. A new template that drops a section is a regression, not a variation.
 - Palette contrast is not negotiable: ink, soft text, and accent must clear WCAG AA (4.5:1) on both `bg` and `paper`, and `on` must clear 4.5:1 on `accent`. `scripts/audit-pages.mjs` enforces it — check new palettes there before shipping.
 - **OG tags are static, per theme.** `src/pages/preview/[slug].astro` renders `og:*` at build time and `src/pages/og/[slug].png.ts` renders the card. WhatsApp must get a thumbnail without running JS — never move this to client code.

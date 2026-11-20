@@ -1,0 +1,110 @@
+---
+interface Props {
+  /** `bar` sits under the sticky header on phones, `card` in the desktop sidebar. */
+  variant?: 'bar' | 'card';
+  id: string;
+}
+
+const { variant = 'card', id } = Astro.props;
+const inputId = `guest-name-${id}`;
+---
+
+<div
+  data-guest-tester
+  class={
+    variant === 'bar'
+      ? 'flex h-11 items-center gap-2 border-t border-line/70 px-4'
+      : 'rounded-xl border border-line bg-paper/70 p-3.5'
+  }
+>
+  {variant === 'card' && (
+    <p class="eyebrow">Coba nama tamu</p>
+  )}
+  <label
+    for={inputId}
+    class={
+      variant === 'bar'
+        ? 'shrink-0 text-[10px] tracking-[0.14em] text-ink-soft uppercase'
+        : 'mt-2 block text-[10px] tracking-[0.12em] text-ink-soft uppercase'
+    }
+  >
+    {variant === 'bar' ? 'Nama' : 'Nama tamu'}
+  </label>
+  <input
+    id={inputId}
+    type="text"
+    maxlength="40"
+    autocomplete="name"
+    placeholder="Tamu Undangan"
+    class={
+      variant === 'bar'
+        ? 'min-w-0 flex-1 rounded-lg border border-line bg-cream px-2.5 py-2.5 text-[12px]'
+        : 'mt-1 w-full rounded-lg border border-line bg-cream px-2.5 py-2 text-[13px]'
+    }
+  />
+  <button
+    type="button"
+    data-copy
+    class={
+      variant === 'bar'
+        ? 'shrink-0 rounded-lg border border-ink/15 px-2.5 py-1.5 text-[10px] tracking-[0.1em] whitespace-nowrap uppercase hover:border-ink/40'
+        : 'mt-2 w-full rounded-lg bg-ink px-3 py-2 text-[11px] font-medium text-cream hover:bg-ink-soft'
+    }
+  >
+    Salin link
+  </button>
+  <p
+    data-status
+    aria-live="polite"
+    class={variant === 'bar' ? 'sr-only' : 'mt-1.5 text-[10px] text-ink-soft'}
+  >
+  </p>
+</div>
+
+<script>
+  const roots = Array.from(document.querySelectorAll<HTMLElement>('[data-guest-tester]'));
+
+  if (roots.length) {
+    const initial = new URLSearchParams(location.search).get('to') ?? '';
+
+    for (const root of roots) {
+      const input = root.querySelector<HTMLInputElement>('input');
+      if (!input) continue;
+      input.value = initial;
+
+      input.addEventListener('input', () => {
+        const name = input.value.trim();
+
+        const url = new URL(location.href);
+        if (name) url.searchParams.set('to', name);
+        else url.searchParams.delete('to');
+        history.replaceState({}, '', url);
+
+        window.dispatchEvent(
+          new CustomEvent('vowlder:guest', { detail: name || 'Tamu Undangan' })
+        );
+
+        for (const other of roots) {
+          const twin = other.querySelector<HTMLInputElement>('input');
+          if (twin && twin !== input) twin.value = input.value;
+        }
+      });
+
+      root.querySelector('[data-copy]')?.addEventListener('click', () => {
+        const status = root.querySelector<HTMLElement>('[data-status]');
+        const done = (message: string) => {
+          if (!status) return;
+          status.textContent = message;
+          window.setTimeout(() => {
+            status.textContent = '';
+          }, 3200);
+        };
+
+        navigator.clipboard?.writeText(location.href).then(
+          () => done('Link tersalin. Tinggal kirim ke pasangan Anda.'),
+          () => done('Tidak bisa menyalin. Salin manual dari address bar.')
+        );
+      });
+    }
+  }
+</script>

@@ -8,9 +8,12 @@ import { wedding } from '../data/wedding';
 const [featured] = themes;
 const fromPrice = rupiah(Math.min(...themes.map((theme) => theme.price)));
 const steps = [
-  { title: 'Pilih tema', body: 'Buka live preview, cek di ponsel sendiri. Semua tema bisa diganti isi.' },
-  { title: 'Kirim detail acara', body: 'Nama, tanggal, lokasi, foto, dan susunan acara lewat WhatsApp.' },
-  { title: 'Terima link', body: 'Link undangan siap dibagikan dalam 2–3 hari kerja.' },
+  { title: 'Pilih tema', body: 'Buka preview, cek di ponsel sendiri. Mau ganti warna atau huruf, bisa.' },
+  { title: 'Kirim detail acara', body: 'Nama, tanggal, lokasi, foto, dan susunan acara. Lewat WhatsApp saja.' },
+  {
+    title: 'Terima link',
+    body: 'Undangan siap dibagikan dalam 2–3 hari kerja. Satu link per tamu, atau satu link untuk semua.',
+  },
 ];
 ---
 
@@ -30,7 +33,7 @@ const steps = [
             Undangan pernikahan digital yang dikirim lewat WhatsApp.
           </h1>
           <p class="mt-5 max-w-md text-[0.95rem] leading-relaxed text-ink-soft sm:text-base">
-            Satu isi undangan, {themes.length} desain. Nama tamu terisi sendiri dari tautan — tidak ada
+            Satu isi undangan, {themes.length} desain. Nama tamu terisi sendiri dari tautan. Tidak ada
             aplikasi yang perlu diunduh, tidak ada form panjang.
           </p>
 
@@ -71,8 +74,9 @@ const steps = [
             <h2 class="mt-2 font-display text-3xl font-medium sm:text-4xl">Pilih tema</h2>
           </div>
           <p class="max-w-xs text-sm leading-relaxed text-ink-soft">
-            Semua tema berisi undangan yang sama — {wedding.couple.groom.nickname} &amp;
-            {wedding.couple.bride.nickname}, {wedding.event.dateLabel}. Yang berubah hanya desainnya.
+            Semua tema memakai undangan yang sama: {wedding.couple.groom.nickname} &amp;
+            {wedding.couple.bride.nickname}, {wedding.event.dateLabel}. Bedanya cuma warna, huruf, dan
+            tata letaknya.
           </p>
         </div>
 
@@ -110,7 +114,7 @@ const steps = [
     <!-- Included -->
     <section class="border-t border-line bg-paper/60">
       <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8">
-        <p class="eyebrow">Isi undangan — sama di semua tema</p>
+        <p class="eyebrow">Yang selalu ada</p>
         <ul class="mt-4 grid gap-x-8 gap-y-3 text-sm sm:grid-cols-2 lg:grid-cols-4">
           {
             includedFeatures.map((item) => (

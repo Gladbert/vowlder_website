@@ -18,6 +18,8 @@ export const wedding = {
     },
   },
   initials: 'G & M',
+  greeting:
+    'Dengan memohon penyertaan Tuhan, kami bermaksud menyelenggarakan pernikahan putra-putri kami.',
   dateLabel: 'Sabtu, 19 Desember 2026',
   shortDate: '19 . 12 . 2026',
   hashtag: '#GladbertMonica',
@@ -37,6 +39,7 @@ export const wedding = {
     venue: 'HARRIS Hotel & Conventions Gubeng',
     address: 'Jl. Bangka No. 8-18, Gubeng',
     city: 'Surabaya, Jawa Timur 60281',
+    cityShort: 'Surabaya',
     mapsUrl: 'https://maps.app.goo.gl/uSyZmd2mfscrhwoMA',
     wazeUrl: 'https://waze.com/ul?q=HARRIS+Hotel+%26+Conventions+Gubeng+Surabaya',
     transit: 'Dari Stasiun Surabaya Gubeng (Pintu Timur). Drop-off tamu di grand lobby hotel.',
@@ -48,28 +51,28 @@ export const wedding = {
       year: '2016',
       title: 'Our First Page',
       subtitle: 'Where Our Paths Met',
-      narrative: 'Sebuah hari di Surabaya yang jadi halaman pertama cerita kami.',
+      narrative: 'Ketemu pertama kali di Surabaya. Waktu itu cuma teman satu lingkaran, belum kepikiran ke mana-mana.',
       photo: '/photos/couple.webp',
     },
     {
       year: '2019',
       title: 'Our Journey',
       subtitle: 'Our Kind of Love',
-      narrative: 'Enam tahun momen kecil yang ternyata berarti semua.',
+      narrative: 'Dari makan bareng, telpon tiap malam, sampai akhirnya tidak ada hari yang lewat tanpa cerita.',
       photo: '/photos/kyoto.webp',
     },
     {
       year: '2025',
       title: 'Sangjit',
       subtitle: 'Our Stories, Intertwined',
-      narrative: 'Dua keluarga, satu doa restu.',
+      narrative: 'Dua keluarga akhirnya duduk satu meja. Restu didapat, tanggal mulai dipilih.',
       photo: '/photos/candid.webp',
     },
     {
       year: '2026',
       title: 'Holy Matrimony',
       subtitle: 'A Vow for Always',
-      narrative: 'Janji untuk saling menjaga di setiap musim kehidupan.',
+      narrative: 'Janji di depan keluarga. Bukan garis akhir, cuma halaman baru.',
       photo: '/photos/fuji.webp',
     },
   ],
@@ -129,9 +132,30 @@ export const wedding = {
     url: 'https://www.youtube.com/shorts/3QU6E5Mc33c',
   },
   wishes: [
-    { name: 'Rina', message: 'Selamat menempuh hidup baru, Gladbert & Monica. Bahagia selalu.' },
-    { name: 'Dwi', message: 'Turut berbahagia. Semoga semua lancar sampai hari H.' },
-    { name: 'Keluarga Siauw', message: 'Doa terbaik untuk kalian berdua. Sampai jumpa di Surabaya.' },
+    {
+      name: 'Rina',
+      message: 'Selamat menempuh hidup baru. Semoga langgeng terus, rukun sampai kapan pun.',
+    },
+    {
+      name: 'Toni',
+      message: 'Glad! Selamat ya. Jangan lupa sisa catering-nya dikirim ke kantor.',
+    },
+    {
+      name: 'Dwi',
+      message: 'Turut berbahagia. Semoga semua dipermudah sampai hari H.',
+    },
+    {
+      name: 'Keluarga Siauw',
+      message: 'Doa terbaik dari kami semua. Sampai ketemu di Surabaya, ya.',
+    },
+    {
+      name: 'Nadia',
+      message: 'Akhirnya! Semoga langgeng sampai kakek-nenek. Sampai jumpa bulan depan.',
+    },
+    {
+      name: 'Maria & Yusuf',
+      message: 'Tuhan memberkati kalian berdua. Selamat ya, Monica!',
+    },
   ],
 };
 

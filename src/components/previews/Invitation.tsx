@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import type { Theme } from '../../data/themes';
 import { wedding } from '../../data/wedding';
-import GuestNameBar from './GuestNameBar';
 import { useGuestName, useInvitationAudio } from './hooks';
 import { variants } from './tokens';
 import {
@@ -34,7 +33,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
   const t = variants[theme.variant];
   const p = theme.palette;
 
-  const [guest, setGuest] = useGuestName();
+  const [guest] = useGuestName();
   const [opened, setOpened] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const audio = useInvitationAudio(theme.music);
@@ -43,63 +42,106 @@ export default function Invitation({ theme }: { theme: Theme }) {
 
   const { groom, bride } = wedding.couple;
 
+  // Escape closes the lightbox, and the page behind it stops scrolling.
   useEffect(() => {
     if (lightbox === null) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setLightbox(null);
     };
+    const scroller = navState.ref.current;
+    const previous = scroller?.style.overflowY;
+    if (scroller) scroller.style.overflowY = 'hidden';
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [lightbox]);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      if (scroller && previous !== undefined) scroller.style.overflowY = previous;
+    };
+  }, [lightbox, navState.ref]);
 
   function open() {
     setOpened(true);
     audio.unlock();
   }
 
+  const nameLine = (
+    <>
+      {groom.nickname} <span className="text-[0.72em] italic" style={{ color: p.accent }}>&amp;</span>{' '}
+      {bride.nickname}
+    </>
+  );
+
   return (
-    <div
-      className="relative h-[100svh] lg:h-full"
-      style={{ background: p.bg, color: p.ink }}
-    >
+    <MotionConfig reducedMotion="user">
+    <div className="relative h-full" style={{ background: p.bg, color: p.ink }}>
       {audio.src && <audio ref={audio.ref} src={audio.src} loop preload="none" />}
 
       <div
         ref={navState.ref}
         onScroll={navState.onScroll}
-        className="h-full overflow-x-hidden overflow-y-auto overscroll-contain pb-14"
+        className="h-full overflow-x-hidden overflow-y-auto overscroll-auto pb-14 lg:overscroll-contain"
       >
         {/* Hero */}
         <section className="relative">
-          <div className={`relative w-full overflow-hidden ${t.heroRatio}`} style={{ background: p.line }}>
-            <AnimatePresence initial={false}>
-              <motion.img
-                key={slide}
-                src={wedding.heroSlides[slide].src}
-                alt={wedding.heroSlides[slide].location}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.9 }}
-                className="absolute inset-0 h-full w-full object-cover"
+          {t.heroOverlay ? (
+            <div className={`relative w-full overflow-hidden ${t.heroRatio}`}>
+              <AnimatePresence initial={false}>
+                <motion.img
+                  key={slide}
+                  src={wedding.heroSlides[slide].src}
+                  alt={wedding.heroSlides[slide].location}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.9 }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </AnimatePresence>
+              <div
+                className="absolute inset-0"
+                style={{ background: `linear-gradient(to top, ${p.bg} 4%, ${p.bg}b3 38%, ${p.bg}00 78%)` }}
               />
-            </AnimatePresence>
-            <p className="absolute bottom-3 left-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white backdrop-blur">
-              {wedding.heroSlides[slide].location}
-            </p>
-          </div>
+              <div className={`absolute inset-x-0 bottom-0 px-5 pb-6 ${t.align}`}>
+                <p className={t.label} style={{ color: p.accent }}>
+                  Wedding Invitation
+                </p>
+                <h1 className={`mt-2 ${t.title}`}>{nameLine}</h1>
+                <p className={`mt-2 ${t.small}`} style={{ color: p.soft }}>
+                  {wedding.dateLabel}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className={`relative w-full overflow-hidden ${t.heroRatio}`} style={{ background: p.line }}>
+              <AnimatePresence initial={false}>
+                <motion.img
+                  key={slide}
+                  src={wedding.heroSlides[slide].src}
+                  alt={wedding.heroSlides[slide].location}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.9 }}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </AnimatePresence>
+              <p className="absolute bottom-3 left-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white backdrop-blur">
+                {wedding.heroSlides[slide].location}
+              </p>
+            </div>
+          )}
 
-          <div className={`px-5 pt-7 pb-8 ${t.align}`}>
-            <p className={t.label} style={{ color: p.accent }}>
-              Wedding Invitation
-            </p>
-            <h1 className={`mt-2 ${t.title}`}>
-              {groom.nickname} <span className="text-[0.72em] italic" style={{ color: p.accent }}>&amp;</span>{' '}
-              {bride.nickname}
-            </h1>
-            <p className={`mt-3 ${t.small}`} style={{ color: p.soft }}>
-              {wedding.dateLabel}
-            </p>
+          <div className={`${t.sectionPad} ${t.align} ${t.heroOverlay ? 'pt-2' : ''}`}>
+            {!t.heroOverlay && (
+              <>
+                <p className={t.label} style={{ color: p.accent }}>
+                  Wedding Invitation
+                </p>
+                <h1 className={`mt-2 ${t.title}`}>{nameLine}</h1>
+                <p className={`mt-3 ${t.small}`} style={{ color: p.soft }}>
+                  {wedding.dateLabel}
+                </p>
+              </>
+            )}
 
             <Countdown iso={wedding.event.iso} p={p} t={t} />
 
@@ -125,14 +167,14 @@ export default function Invitation({ theme }: { theme: Theme }) {
 
         <Gallery p={p} t={t} onOpen={setLightbox} />
         <Wishes p={p} t={t} guest={guest} />
-        <Footer p={p} t={t} guest={guest} />
+        <Footer p={p} t={t} />
       </div>
 
-      {/* Music */}
       {audio.src && (
         <button
           type="button"
           onClick={audio.toggle}
+          aria-pressed={!audio.muted}
           aria-label={audio.muted ? 'Nyalakan musik' : 'Matikan musik'}
           className="absolute top-3 right-3 z-20 rounded-full bg-black/35 px-3 py-2 text-[10px] tracking-[0.14em] uppercase text-white backdrop-blur"
         >
@@ -140,16 +182,8 @@ export default function Invitation({ theme }: { theme: Theme }) {
         </button>
       )}
 
-      <GuestNameBar
-        value={guest}
-        onChange={setGuest}
-        className="bottom-[3.75rem]"
-        ink={p.ink}
-        paper={p.bg}
-      />
-
-      {/* Bottom nav */}
       <nav
+        aria-label="Bagian undangan"
         className="absolute inset-x-0 bottom-0 z-30"
         style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}
       >
@@ -160,7 +194,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 type="button"
                 onClick={() => navState.goTo(item.id)}
                 aria-current={navState.active === item.id ? 'true' : undefined}
-                className={`w-full py-3 text-[9px] tracking-[0.1em] uppercase ${
+                className={`min-h-[44px] w-full py-3.5 text-[10px] tracking-[0.08em] uppercase ${
                   navState.active === item.id ? t.navActive : ''
                 }`}
                 style={{ color: navState.active === item.id ? p.accent : p.soft }}
@@ -180,8 +214,8 @@ export default function Invitation({ theme }: { theme: Theme }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.45 }}
             className={`absolute inset-0 z-40 flex flex-col ${
-              t.cover === 'plain' ? 'justify-center text-center' : `${t.coverJustify} ${t.align}`
-            }`}
+              t.cover === 'plain' ? 'justify-center' : t.coverJustify
+            } ${t.align}`}
             style={{ background: p.bg, color: p.ink }}
           >
             {t.cover === 'photo' && (
@@ -193,9 +227,13 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 />
                 <div
                   className="absolute inset-0"
-                  style={{
-                    background: `linear-gradient(to top, ${p.bg} 6%, ${p.bg}e6 42%, ${p.bg}22 100%)`,
-                  }}
+                  style={
+                    t.coverBand
+                      ? { background: `linear-gradient(to top, ${p.bg} 0%, ${p.bg} 46%, ${p.bg}00 47%)` }
+                      : {
+                          background: `linear-gradient(to top, ${p.bg} 6%, ${p.bg}e6 42%, ${p.bg}22 100%)`,
+                        }
+                  }
                 />
               </>
             )}
@@ -208,16 +246,12 @@ export default function Invitation({ theme }: { theme: Theme }) {
               />
             )}
 
-            <div className="relative px-5 pb-8">
+            <div className="relative max-h-full overflow-y-auto px-5 pb-8">
               <p className={t.label} style={{ color: p.accent }}>
                 The Wedding Of
               </p>
 
-              <h2 className={`mt-2 ${t.title}`}>
-                {groom.nickname}{' '}
-                <span className="text-[0.7em] italic" style={{ color: p.accent }}>&amp;</span>{' '}
-                {bride.nickname}
-              </h2>
+              <h2 className={`mt-2 ${t.title}`}>{nameLine}</h2>
 
               <p className={`mt-2.5 ${t.small}`} style={{ color: p.soft }}>
                 {wedding.dateLabel}
@@ -233,16 +267,20 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 className={`mx-auto mt-5 max-w-[19rem] border px-4 py-3 ${t.radius}`}
                 style={{ borderColor: p.line, background: p.paper }}
               >
-                <p className={t.small} style={{ color: p.accent }}>
+                <p className={`${t.small} ${t.align === 'text-left' ? '' : 'text-center'}`} style={{ color: p.accent }}>
                   Kepada
                 </p>
-                <p className="mt-1 text-[15px] font-medium">{guest}</p>
+                <p
+                  className={`mt-1 text-[15px] font-medium ${t.align === 'text-left' ? '' : 'text-center'}`}
+                >
+                  {guest}
+                </p>
               </div>
 
               <button
                 type="button"
                 onClick={open}
-                className={`mx-auto mt-4 flex w-full max-w-[19rem] items-center justify-center ${t.button}`}
+                className={`mx-auto mt-4 flex min-h-[48px] w-full max-w-[19rem] items-center justify-center ${t.button}`}
                 style={{ background: p.accent, color: p.on }}
               >
                 Buka Undangan
@@ -259,6 +297,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
           role="dialog"
           aria-modal="true"
           aria-label={wedding.gallery[lightbox].title}
+          onClick={() => setLightbox(null)}
         >
           <button
             type="button"
@@ -271,6 +310,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
           <img
             src={wedding.gallery[lightbox].photo}
             alt={wedding.gallery[lightbox].title}
+            onClick={(event) => event.stopPropagation()}
             className="mx-auto my-auto max-h-[62%] w-auto max-w-full object-contain"
           />
 
@@ -285,6 +325,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </MotionConfig>
   );
 }

@@ -4,7 +4,15 @@
 (() => {
   const vw = document.documentElement.clientWidth;
   const vh = window.innerHeight;
-  const report = { viewport: [vw, vh], hOverflow: [], textOverlap: [], clipped: [], lowContrast: [], fonts: {} };
+  const report = {
+    viewport: [vw, vh],
+    hOverflow: [],
+    textOverlap: [],
+    clipped: [],
+    lowContrast: [],
+    coverCta: null,
+    fonts: {},
+  };
 
   report.fonts.cormorant = document.fonts.check('16px "Cormorant Garamond Variable"');
   report.fonts.inter = document.fonts.check('16px "Inter Variable"');
@@ -191,6 +199,19 @@
     const min = size >= 24 ? 3 : 4.5;
     if (ratio < min) report.lowContrast.push({ el: label(el), ratio: Number(ratio.toFixed(2)), size });
     if (report.lowContrast.length > 6) break;
+  }
+
+  // 5. The cover gate's primary action must be fully visible without scrolling.
+  const cta = [...document.querySelectorAll('button')].find((el) =>
+    (el.textContent || '').includes('Buka Undangan')
+  );
+  if (cta) {
+    const r = cta.getBoundingClientRect();
+    report.coverCta = {
+      visible: r.top >= -1 && r.bottom <= vh + 1 && r.left >= -1 && r.right <= vw + 1,
+      top: Math.round(r.top),
+      bottom: Math.round(r.bottom),
+    };
   }
 
   return JSON.stringify(report, null, 1);

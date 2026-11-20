@@ -4,7 +4,7 @@ export type Category = 'Adat' | 'Minimalis' | 'Floral' | 'Syari' | 'Oriental' | 
 export type Tier = 'Basic' | 'Premium' | 'Signature';
 
 /** Layout shell. Colours always come from the palette. */
-export type Variant = 'faithful' | 'classic' | 'editorial' | 'split';
+export type Variant = 'faithful' | 'classic' | 'editorial' | 'split' | 'poster' | 'spotlight' | 'compact';
 
 export type Palette = {
   bg: string;
@@ -48,14 +48,14 @@ const serif = "'Cormorant Garamond Variable', Georgia, serif";
 
 /** Identical in every template — the design differs, the invitation does not. */
 export const includedFeatures = [
-  'Slideshow empat foto',
-  'Hitung mundur hari H',
-  'Profil mempelai & Instagram',
+  'Empat foto bergilir di pembuka',
+  'Hitung mundur ke hari H',
+  'Profil mempelai dan Instagram',
   'Cerita dalam empat babak',
-  'Detail acara, peta & Waze',
-  'Galeri delapan foto',
+  'Peta, Waze, dan simpan tanggal',
+  'Galeri delapan foto, bisa diperbesar',
+  'Konfirmasi kehadiran',
   'Buku ucapan tamu',
-  'Nama tamu dari tautan',
 ];
 
 export const themes: Theme[] = [
@@ -268,6 +268,68 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.02em', caps: true },
     variant: 'faithful',
     photo: '/photos/fuji.webp',
+  },
+  {
+    slug: 'pressed-linen',
+    name: 'Pressed Linen',
+    category: 'Minimalis',
+    tier: 'Premium',
+    price: 425_000,
+    blurb:
+      'Poster: foto penuh, pita warna padat, huruf besar kiri-rata, galeri satu kolom. Paling banyak ruang untuk foto.',
+    palette: {
+      bg: '#F7F5F2',
+      paper: '#FFFFFF',
+      ink: '#1A1917',
+      soft: '#5F5A54',
+      accent: '#8C2F28',
+      line: '#DED9D2',
+      on: '#FFF8F6',
+    },
+    type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
+    variant: 'poster',
+    photo: '/photos/groom.webp',
+  },
+  {
+    slug: 'amber-dusk',
+    name: 'Amber Dusk',
+    category: 'Klasik',
+    tier: 'Signature',
+    price: 650_000,
+    blurb:
+      'Nama tamu menyatu di atas foto, bingkai tipis, kapital berjarak lebar. Untuk resepsi malam dengan lampu rendah.',
+    palette: {
+      bg: '#23180F',
+      paper: '#2E2116',
+      ink: '#F6E9D8',
+      soft: '#CDB79D',
+      accent: '#E0A94F',
+      line: '#4A3625',
+      on: '#23180F',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.05em', caps: false },
+    variant: 'spotlight',
+    photo: '/photos/bride.webp',
+  },
+  {
+    slug: 'linen-minimal',
+    name: 'Linen Minimal',
+    category: 'Minimalis',
+    tier: 'Basic',
+    price: 175_000,
+    blurb:
+      'Versi paling ringkas: monogram menggantikan foto mempelai, galeri tiga kolom, tanpa ornamen.',
+    palette: {
+      bg: '#F4F4F1',
+      paper: '#FBFBF9',
+      ink: '#22241F',
+      soft: '#5C6156',
+      accent: '#4A5A45',
+      line: '#DCDED7',
+      on: '#F7F8F4',
+    },
+    type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
+    variant: 'compact',
   },
 ];
 

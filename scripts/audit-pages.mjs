@@ -27,6 +27,8 @@ const failures = [];
 
 for (const [label, width, height] of [
   ['phone', 390, 844],
+  ['small-phone', 320, 568],
+  ['landscape', 844, 390],
   ['desktop', 1280, 900],
 ]) {
   browser('set', 'viewport', String(width), String(height));
@@ -56,6 +58,7 @@ for (const [label, width, height] of [
         textOverlap: report.textOverlap,
         clipped: report.clipped,
         lowContrast: report.lowContrast,
+        coverCta: report.coverCta && !report.coverCta.visible ? report.coverCta : [],
         fonts: Object.entries(report.fonts).filter(([, ok]) => !ok),
       };
       const count = Object.values(problems).reduce((n, list) => n + list.length, 0);
@@ -68,7 +71,7 @@ for (const [label, width, height] of [
 }
 
 if (!failures.length) {
-  console.log(`OK — ${routes.length} routes × 2 viewports, no layout defects.`);
+  console.log(`OK — ${routes.length} routes × 4 viewports, no layout defects.`);
   process.exit(0);
 }
 

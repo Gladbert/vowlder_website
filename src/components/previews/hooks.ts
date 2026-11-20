@@ -7,6 +7,15 @@ export function useGuestName(fallback = 'Tamu Undangan') {
   useEffect(() => {
     const fromUrl = new URLSearchParams(window.location.search).get('to');
     if (fromUrl) setName(fromUrl);
+
+    // The tester input lives outside the island (page chrome), so it drives the
+    // name through an event instead of a second copy of this state.
+    const onGuest = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail;
+      if (typeof detail === 'string') setName(detail);
+    };
+    window.addEventListener('vowlder:guest', onGuest);
+    return () => window.removeEventListener('vowlder:guest', onGuest);
   }, []);
 
   const update = useCallback((value: string) => {
