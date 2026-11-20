@@ -8,7 +8,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "audit": "node scripts/audit-pages.mjs"
+    "audit": "node scripts/audit-pages.mjs",
+    "deploy": "bun run build && wrangler deploy",
+    "deploy:dry": "bun run build && wrangler deploy --dry-run --outdir=.wrangler/dry"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.9",

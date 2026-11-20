@@ -15,6 +15,7 @@ Portfolio + catalogue for Vowlder wedding invitations. Astro 7 static output, Re
 - `bun run check` — `astro check` (TypeScript 6; TS 7 is not supported by `astro check` yet).
 - `node scripts/audit-pages.mjs [baseUrl]` — layout audit (see below).
 - `node scripts/prepare-photos.mjs` — re-encode source photos to `/public/photos` (only when adding real photos).
+- `bun run deploy` — builds, then `wrangler deploy` (Cloudflare Workers static assets via `wrangler.jsonc`). Set `SITE_URL` first: `SITE_URL=https://vowlder.com bun run deploy`. Without it the build falls back to `https://vowlder.com`, and every canonical/og:image URL inherits that host.
 
 ## Validate locally before you commit or push
 
