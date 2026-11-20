@@ -1,0 +1,212 @@
+---
+import Base from '../layouts/Base.astro';
+import ThemeThumb from '../components/ThemeThumb.astro';
+import { customWaLink, rupiah, themes } from '../data/themes';
+
+const signature = themes.filter((theme) => theme.tier === 'Signature').slice(0, 3);
+const signatureFrom = rupiah(Math.min(...themes.map((theme) => theme.price)));
+
+const included = [
+  'A palette and typeface picked for you, not taken off a shelf',
+  'Both ceremonies laid out, or one if that is all you have',
+  'Your own section order — some couples want the story before the schedule',
+  'One motion pass: how the cover opens, how sections arrive',
+  'Guest links, RSVP, and the guest book',
+  'Twelve months live, two rounds of edits',
+];
+
+const steps = [
+  {
+    title: 'Send what you have',
+    body: 'A mood board, a screenshot, a colour, a fabric. Anything is more useful than an adjective.',
+  },
+  {
+    title: 'We quote in a day',
+    body: 'You get a fixed price and a date. No deposit until you say yes to both.',
+  },
+  {
+    title: 'First draft in a week',
+    body: 'One private link, on your phone. You mark it up, we adjust. Two rounds are included.',
+  },
+  {
+    title: 'Then the guests',
+    body: 'We generate the links and hand them over with the RSVP list ready to go.',
+  },
+];
+
+const send = [
+  'Wedding date, and the date you actually need the invitation',
+  'Venue, city, and how many guests you expect',
+  'Names as they should appear, plus both sets of parents',
+  'Six to twelve photos, originals if you have them',
+  'Anything you have seen and liked',
+];
+---
+
+<Base
+  title="Custom invitations · Vowlder"
+  description="If none of the catalogue themes fit, Vowlder can build one invitation around your palette, typography, and ceremony. Fixed price, first draft in a week."
+>
+  <main>
+    <section class="mx-auto max-w-6xl px-5 pt-10 pb-12 sm:px-8 sm:pt-16 sm:pb-16">
+      <p class="eyebrow">Custom design</p>
+      <h1 class="display-1 mt-4 max-w-[22ch]">None of the {themes.length} themes is quite it?</h1>
+      <p class="lede mt-5 max-w-lg">
+        Then we make one. Same structure, same speed, your palette and your typefaces. You are not
+        asking for a favour, and you are not paying agency money either.
+      </p>
+
+      <div class="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+        <a
+          href={customWaLink()}
+          target="_blank"
+          rel="noopener"
+          class="flex min-h-[48px] items-center justify-center rounded-pill bg-ink px-6 text-sm font-medium text-cream hover:bg-ink-soft"
+        >
+          Start a custom brief
+        </a>
+        <a
+          href="/#themes"
+          class="flex min-h-[48px] items-center justify-center rounded-pill border border-ink/20 px-6 text-sm font-medium hover:border-ink/50"
+        >
+          Look at the catalogue first
+        </a>
+      </div>
+
+      <p class="mt-4 text-sm text-ink-soft">
+        Custom work starts at {signatureFrom}, depending on how far it moves from the catalogue.
+      </p>
+    </section>
+
+    <!-- What changes -->
+    <section class="border-t border-line">
+      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+          <div>
+            <p class="eyebrow">What you get</p>
+            <h2 class="display-2 mt-2">Everything a theme has, decided by you.</h2>
+            <p class="lede mt-3 max-w-sm">
+              A custom invitation is not a new product. It is the same invitation with the design
+              decisions moved from us to you.
+            </p>
+          </div>
+
+          <ul class="divide-y divide-line border-y border-line">
+            {
+              included.map((item) => (
+                <li class="flex items-start gap-3 py-3.5 text-sm leading-relaxed">
+                  <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brass" />
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Steps -->
+    <section class="border-t border-line bg-paper/50">
+      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <p class="eyebrow">How it goes</p>
+        <h2 class="display-2 mt-2">About a week, same as everything else</h2>
+
+        <ol class="mt-7 divide-y divide-line border-y border-line">
+          {
+            steps.map((step, index) => (
+              <li class="grid gap-1.5 py-5 sm:grid-cols-[3rem_1fr] sm:gap-6">
+                <span class="text-xs tabular-nums text-brass">0{index + 1}</span>
+                <div>
+                  <h3 class="text-base font-medium">{step.title}</h3>
+                  <p class="lede mt-1 max-w-xl">{step.body}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <!-- What to send -->
+    <section class="border-t border-line">
+      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+          <div>
+            <p class="eyebrow">Before you write</p>
+            <h2 class="display-2 mt-2">Have these five things ready.</h2>
+            <p class="lede mt-3 max-w-sm">
+              If you are missing some of them, write anyway. We would rather start early than wait
+              for a perfect brief.
+            </p>
+          </div>
+
+          <ol class="divide-y divide-line border-y border-line">
+            {
+              send.map((item, index) => (
+                <li class="grid gap-1 py-3.5 text-sm leading-relaxed sm:grid-cols-[2rem_1fr] sm:gap-4">
+                  <span class="tabular-nums text-brass">{index + 1}.</span>
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reference -->
+    <section class="border-t border-line bg-paper/50">
+      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <p class="eyebrow">A place to start</p>
+        <h2 class="display-2 mt-2">Three we would build on</h2>
+        <p class="lede mt-3 max-w-md">
+          Most custom briefs begin from one of these and move one or two things: the palette, the
+          typeface, or the cover.
+        </p>
+
+        <div class="mt-7 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-6">
+          {
+            signature.map((theme) => (
+              <a href={`/preview/${theme.slug}/`} class="group">
+                <ThemeThumb theme={theme} class="aspect-[9/16]" />
+                <p class="mt-2 font-brand text-lg leading-tight group-hover:underline">{theme.name}</p>
+                <p class="eyebrow mt-1">{theme.category} · {theme.mood}</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Close -->
+    <section class="border-t border-line">
+      <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
+        <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+          <div>
+            <h2 class="display-1 max-w-[22ch]">Send us the mess. We will sort it out.</h2>
+            <p class="lede mt-4 max-w-md">
+              A photo, a colour, a venue name. That is enough for a first reply, and the first reply
+              is free.
+            </p>
+          </div>
+          <div class="flex flex-col gap-2.5 sm:flex-row sm:gap-3 lg:justify-end">
+            <a
+              href={customWaLink()}
+              target="_blank"
+              rel="noopener"
+              class="flex min-h-[48px] items-center justify-center rounded-pill bg-ink px-6 text-sm font-medium text-cream hover:bg-ink-soft"
+            >
+              WhatsApp us
+            </a>
+            <a
+              href="mailto:hello@vowlder.com"
+              class="flex min-h-[48px] items-center justify-center rounded-pill border border-ink/20 px-6 text-sm font-medium hover:border-ink/50"
+            >
+              hello@vowlder.com
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</Base>

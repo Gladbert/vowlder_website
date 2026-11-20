@@ -25,10 +25,14 @@ Run all four, in order, and stop on the first failure:
 
 1. `bunx astro check` — zero errors.
 2. `bun run build` — builds every route, including `/og/*.png`.
-3. `bun run dev` in another shell, then `node scripts/audit-pages.mjs http://localhost:4399` — fails on text overlap, horizontal overflow, clipped text, contrast under WCAG AA, or a font that did not load, at 390x844 and 1280x900, scrolling every preview.
+3. `bun run dev` in another shell, then `node scripts/audit-pages.mjs http://localhost:4399` — ~90 s, phone viewport. Add `--full` for phone + small phone + landscape + desktop (~6 min). It fails on text overlap, horizontal overflow, clipped text, contrast under WCAG AA, a font that did not load, a cover CTA below the fold, a template with fewer than five reveals, or nested reveals. It prints progress, so a stuck browser looks different from a stuck script. Never `pkill -f "astro dev"` from a shell whose own command line contains that string: it kills the shell.
 4. Open the page yourself (`agent-browser open`, `agent-browser set viewport 390 844`, `agent-browser screenshot`) and look at it. The audit proves nothing overlaps; it cannot prove the design is good.
 
 Then run the **code-review skill** on the diff (`~/.pi/agent/skills/code-review/SKILL.md`) and fix what it flags before committing.
+
+## The site is a company, not a catalogue
+
+`index.astro` is the company page: hero, what we do (three editorial rows, not cards), catalogue, packages derived from `themes.ts` tiers, a custom-design band, four-step process, FAQ built on native `<details>`, contact block. `custom.astro` is the escape hatch for people who want their own palette: what you get, how it goes, what to send, references, prefilled WhatsApp brief. Reachable from the header, the footer, the catalogue band, and every preview sidebar. A change that turns the front page back into "grid of cards and a footer" is a regression.
 
 ## No AI slop
 
@@ -58,6 +62,27 @@ Do instead: real content from `src/data/`, editorial typography, hairline rules,
 - `wedding.ts` currently carries the **real** Gladbert & Monica wedding: names, parents, Instagram handles, venue, dates, and photos pulled from `Wedding-inv` into `/public/photos`. `public/brand/` carries the real logo. That is deliberate — it is the flagship portfolio piece.
 - To de-identify the demo, edit `wedding.ts` and swap `/public/photos` only. No component reads those values directly.
 
+## Design system
+
+Reference skills, in order of how much they change my decisions here:
+
+- `github.com/nextlevelbuilder/ui-ux-pro-max-skill` — pick a style, palette, and font pairing for the *industry* before writing components. Wedding software is not a SaaS dashboard.
+- `github.com/dickwu/apple-design-skill` — motion and interaction craft: short durations, one easing curve, transform/opacity only, no easing that draws attention to itself.
+- `github.com/anthropics/skills` (`frontend-design`) — commit to one aesthetic direction up front; no centred hero, no three emoji cards, no purple gradient.
+- `github.com/Leonxlnx/taste-skill` — metric-driven spacing and type scales instead of adjectives.
+- `github.com/vercel-labs/agent-skills` (`web-design-guidelines`) — pre-ship check: focus states, labels, autocomplete, image dimensions, `prefers-reduced-motion`, curly quotes, tabular numbers.
+
+What those rules landed on for Vowlder:
+
+- **Fonts**: Archivo (body), Instrument Serif (company voice, site headings only), Cormorant Garamond (invitation voice, inside previews). Three families, three jobs. Do not add a fourth; do not use Inter.
+- **Palette**: `--color-cream #FBF9F5`, `--color-paper #F4F0E8`, `--color-ink #1A1917`, `--color-ink-soft #5C574F`, `--color-brass #6F5B3E`, `--color-line #E3DCD1`. One accent, four neutrals, hairline borders. No second accent, no gradients, no glow.
+- **Type scale**: `display-1`, `display-2`, `lede`, `eyebrow` in `global.css`. Use those utilities; do not hand-roll a `text-4xl` heading.
+- **Shape**: `rounded-pill` for actions, `rounded-card` for surfaces, square for invitation internals that the template asks for. No radius soup.
+- **Density**: mobile first, 5px-free spacing, 44px minimum tap targets, `min-h-[48px]` on primary actions.
+- **Rhythm**: every section starts with an `eyebrow`, then `display-2`, then one `lede` paragraph. Not more.
+
+Persist decisions here rather than in code comments, so the next session does not re-invent them.
+
 ## Architecture invariants
 
 Two data files, one rule: **content and design never mix.**
@@ -66,6 +91,7 @@ Two data files, one rule: **content and design never mix.**
 - `src/data/themes.ts` — design only: slug, name, category, tier, price, blurb, `palette`, type, `variant`, card `photo`, optional `music`, plus `includedFeatures` (shared by all templates).
 - `src/components/previews/tokens.ts` — the eight layout variants (`faithful`, `classic`, `editorial`, `split`, `poster`, `spotlight`, `compact`, `medallion`) as class-token sets. **`Invitation.tsx` is the only renderer**; `sections.tsx` holds the section bodies. A new template = a `themes.ts` entry, nothing else. Only add a variant when the *layout* genuinely differs — a colour change is a palette, not a variant.
 - The guest-name tester lives in the page chrome (`src/components/GuestTester.astro`), **not** inside the phone shell: an input fixed inside a 100svh scroller gets buried by the mobile keyboard. It writes `?to=` and dispatches `vowlder:guest`, which `hooks.ts` listens to. Keep it that way.
+- **The catalogue carries no religion-specific themes.** Islamic/Syariah designs were removed on request; do not add them back unless the user asks. Cultural (Javanese, Minang, Chinese-Indonesian) is fine.
 - Chinese-Indonesian templates (`oriental-red-gold`, `sino-angpao`, `imlek-modern`, `teapai-emas`) may override two things only: `giftLabel: 'Angpao'` and a `glyph` (囍 / 福) rendered on the cover and footer. Nothing else changes per culture — same wedding, same sections.
 - Every template must stay at feature parity, in this order: hero slideshow and countdown → opening (salam, greeting, couple quote) → couple + parents + Instagram → schedule with **both** ceremonies and one location block (maps/Waze/calendar/transit/parking/notes) → turut mengundang → story → gallery with lightbox and film → hadiah → RSVP, wishes → footer. That order is the Indonesian market convention (checked against Akanikah, Wevitation, Menica, Sebarundangan). A template that drops a section is a regression, not a variation.
 - Countdown always targets the **next** ceremony that has not passed (`useNextEventIso`). Never render four zeros, and never hardcode the event index.

@@ -2,10 +2,10 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
-// ponytail: hardcoded fallback site URL so og:image is absolute in the static HTML
-// (WhatsApp crawler needs absolute URLs). Override with SITE_URL when a real domain lands.
+// Absolute URLs are baked into the HTML at build time (WhatsApp's crawler needs them).
+// Fallback is the live workers.dev host; override with SITE_URL once the domain lands.
 export default defineConfig({
-  site: process.env.SITE_URL ?? 'https://vowlder.com',
+  site: process.env.SITE_URL ?? 'https://vowlder-website.gladbert-sogo.workers.dev',
   integrations: [react()],
   vite: { plugins: [tailwindcss()] },
 });

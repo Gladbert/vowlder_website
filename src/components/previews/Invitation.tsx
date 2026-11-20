@@ -22,12 +22,12 @@ import {
 } from './sections';
 
 const nav = [
-  { id: 'profil', label: 'Profil' },
-  { id: 'acara', label: 'Acara' },
-  { id: 'cerita', label: 'Cerita' },
-  { id: 'galeri', label: 'Galeri' },
-  { id: 'hadiah', label: 'Hadiah' },
-  { id: 'ucapan', label: 'Ucapan' },
+  { id: 'profil', label: 'Couple' },
+  { id: 'acara', label: 'Schedule' },
+  { id: 'cerita', label: 'Story' },
+  { id: 'galeri', label: 'Gallery' },
+  { id: 'hadiah', label: 'Gifts' },
+  { id: 'ucapan', label: 'Wishes' },
 ];
 
 /**
@@ -197,7 +197,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
               <Countdown p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
 
               <p className={`mt-4 ${t.body}`} style={{ color: p.soft }}>
-                Kepada Bapak/Ibu/Saudara/i
+                Dear
                 <br />
                 <span className="text-[13px] font-medium" style={{ color: p.ink }}>
                   {guest}
@@ -218,18 +218,18 @@ export default function Invitation({ theme }: { theme: Theme }) {
 
           <Story p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
           <Gallery p={p} t={t} root={navState.ref} reveal={motionSet.reveal} onOpen={setLightbox} />
-          <Gift p={p} t={t} root={navState.ref} reveal={motionSet.reveal} label={theme.giftLabel ?? 'Hadiah'} />
+          <Gift p={p} t={t} root={navState.ref} reveal={motionSet.reveal} label={theme.giftLabel ?? 'Gifts'} />
           <Wishes p={p} t={t} root={navState.ref} reveal={motionSet.reveal} guest={guest} />
           <Footer p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
         </div>
 
         <a
           href="/"
-          aria-label="Kembali ke katalog tema"
-          className="absolute top-3 left-3 z-20 flex items-center gap-1.5 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm"
+          aria-label="Back to the theme catalogue"
+          className="absolute top-3 left-3 z-20 hidden items-center gap-1.5 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm sm:flex"
           style={{ background: p.ink, color: p.bg }}
         >
-          <span aria-hidden="true">←</span> Katalog
+          <span aria-hidden="true">←</span> Themes
         </a>
 
         {audio.src && (
@@ -237,16 +237,16 @@ export default function Invitation({ theme }: { theme: Theme }) {
             type="button"
             onClick={audio.toggle}
             aria-pressed={!audio.muted}
-            aria-label={audio.muted ? 'Nyalakan musik' : 'Matikan musik'}
-            className="absolute top-3 right-3 z-20 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm"
+            aria-label={audio.muted ? 'Play music' : 'Pause music'}
+            className="absolute top-14 right-3 z-20 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm sm:top-3"
             style={{ background: p.ink, color: p.bg }}
           >
-            {audio.muted ? 'Musik off' : 'Musik on'}
+            {audio.muted ? 'Music off' : 'Music on'}
           </button>
         )}
 
         <nav
-          aria-label="Bagian undangan"
+          aria-label="Invitation sections"
           className="absolute inset-x-0 bottom-0 z-30"
           style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}
         >
@@ -408,7 +408,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                     className={`${t.small} ${t.align === 'text-left' ? '' : 'text-center'}`}
                     style={{ color: p.accent }}
                   >
-                    Kepada
+                    To
                   </p>
                   <p
                     className={`mt-1 text-[15px] font-medium ${
@@ -430,7 +430,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                     shown: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
                   }}
                 >
-                  Buka Undangan
+                  Open Invitation
                 </motion.button>
               </motion.div>
             </motion.div>
@@ -456,7 +456,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 onClick={() => setLightbox(null)}
                 className="self-end rounded-full bg-white/15 px-3 py-1.5 text-[10px] tracking-[0.16em] uppercase text-white"
               >
-                Tutup
+                Close
               </button>
 
               <motion.img

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { WA_NUMBER } from '../data/themes';
 
 interface Props {
   title: string;
@@ -11,21 +12,30 @@ interface Props {
 const { title, description, image = '/og/default.png', bare = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
+
+const links = [
+  { href: '/#themes', label: 'Themes' },
+  { href: '/#packages', label: 'Packages' },
+  { href: '/#how-it-works', label: 'How it works' },
+  { href: '/#faq', label: 'FAQ' },
+  { href: '/custom', label: 'Custom design' },
+  { href: '/#contact', label: 'Contact' },
+];
 ---
 
 <!doctype html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/brand/vowlder-mark.png" type="image/png" />
+    <link rel="icon" href="/brand/vowlder-name.png" type="image/png" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Vowlder" />
-    <meta property="og:locale" content="id_ID" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -36,56 +46,114 @@ const ogImage = new URL(image, Astro.site).href;
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="theme-color" content="#f7f3ec" />
+    <meta name="theme-color" content="#fbf9f5" />
     <slot name="head" />
   </head>
   <body class="min-h-[100svh]">
     {
       !bare && (
-        <header class="sticky top-0 z-40 border-b border-line/70 bg-cream/85 backdrop-blur">
-          <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
-            <a href="/" class="flex items-center gap-2.5" aria-label="Vowlder — beranda">
-              <img src="/brand/vowlder-mark.png" alt="" width="28" height="28" class="h-7 w-7" />
-              <img src="/brand/vowlder-name.png" alt="Vowlder" width="102" height="16" class="h-4 w-auto" />
-            </a>
-            <nav class="flex items-center gap-5 text-sm">
-              <a href="#tema" class="hidden text-ink-soft hover:text-ink sm:inline">
-                Tema
+        <header class="sticky top-0 z-40 border-b border-line bg-cream/92 backdrop-blur">
+          <div class="mx-auto max-w-6xl px-5 sm:px-8">
+            <div class="flex h-14 items-center justify-between gap-4">
+              <a href="/" aria-label="Vowlder home" class="shrink-0">
+                <img
+                  src="/brand/vowlder-name.png"
+                  alt="Vowlder"
+                  width="128"
+                  height="20"
+                  class="h-5 w-auto"
+                />
               </a>
-              <a href="#cara-pesan" class="hidden text-ink-soft hover:text-ink sm:inline">
-                Cara pesan
-              </a>
+
+              <nav aria-label="Main" class="hidden items-center gap-6 text-sm md:flex">
+                {[...links.slice(0, 3), links[5]].map((link) => (
+                  <a href={link.href} class="text-ink-soft hover:text-ink">
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+
               <a
-                href="#tema"
-                class="rounded-full bg-ink px-4 py-2 text-xs font-medium tracking-wide text-cream hover:bg-ink-soft"
+                href={`https://wa.me/${WA_NUMBER}`}
+                target="_blank"
+                rel="noopener"
+                class="flex min-h-[40px] shrink-0 items-center rounded-pill bg-ink px-4 text-xs font-medium text-cream hover:bg-ink-soft"
               >
-                Lihat katalog
+                Order
               </a>
-            </nav>
+            </div>
+
+            {/* Phones: one scrollable row instead of a hamburger. Always visible, no JS. */}
+            <div class="-mx-5 overflow-x-auto px-5 md:hidden">
+              <nav aria-label="Sections" class="flex gap-5 pb-2 text-[12.5px] whitespace-nowrap">
+                {links.map((link) => (
+                  <a href={link.href} class="text-ink-soft hover:text-ink">
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+            </div>
           </div>
         </header>
       )
     }
+
     <slot />
+
     {
       !bare && (
         <footer class="border-t border-line">
-          <div class="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-10 sm:flex-row sm:items-end sm:justify-between sm:px-8">
-            <div>
-              <img
-                src="/brand/vowlder-name.png"
-                alt="Vowlder"
-                width="102"
-                height="16"
-                class="h-4 w-auto"
-              />
-              <p class="mt-3 max-w-xs text-sm leading-relaxed text-ink-soft">
-                Undangan pernikahan digital. Dibuat di Indonesia, dikirim lewat WhatsApp.
-              </p>
+          <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-14">
+            <div class="grid gap-9 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr]">
+              <div>
+                <img
+                  src="/brand/vowlder-name.png"
+                  alt="Vowlder"
+                  width="128"
+                  height="20"
+                  class="h-5 w-auto"
+                />
+                <p class="mt-3 max-w-xs text-sm leading-relaxed text-ink-soft">
+                  Digital wedding invitations, built one at a time in Surabaya. One link per guest,
+                  sent over WhatsApp.
+                </p>
+              </div>
+
+              <nav aria-label="Footer">
+                <p class="eyebrow">Explore</p>
+                <ul class="mt-3 space-y-2 text-sm">
+                  {links.map((link) => (
+                    <li>
+                      <a href={link.href} class="text-ink-soft hover:text-ink">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              <div>
+                <p class="eyebrow">Contact</p>
+                <ul class="mt-3 space-y-2 text-sm text-ink-soft">
+                  <li>
+                    <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener" class="hover:text-ink">
+                      WhatsApp
+                    </a>
+                  </li>
+                  <li>
+                    <a href="mailto:hello@vowlder.com" class="hover:text-ink">hello@vowlder.com</a>
+                  </li>
+                  <li>Surabaya, Indonesia</li>
+                  <li>Replies within one working day</li>
+                </ul>
+              </div>
             </div>
-            <div class="text-sm text-ink-soft">
-              <a href="mailto:halo@vowlder.com" class="hover:text-ink">halo@vowlder.com</a>
-              <p class="mt-1.5">© {new Date().getFullYear()} Vowlder</p>
+
+            <div
+              class="mt-10 flex flex-col gap-2 border-t border-line pt-5 text-xs text-ink-soft sm:flex-row sm:items-center sm:justify-between"
+            >
+              <p>© {new Date().getFullYear()} Vowlder</p>
+              <p>Made in Surabaya. Photographs by the couples.</p>
             </div>
           </div>
         </footer>

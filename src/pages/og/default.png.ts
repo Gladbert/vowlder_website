@@ -4,9 +4,9 @@ import { themes } from '../../data/themes';
 
 export const GET: APIRoute = async () => {
   const png = await renderOgCard({
-    eyebrow: `Katalog ${new Date().getFullYear()}`,
+    eyebrow: `Catalogue ${new Date().getFullYear()}`,
     title: 'Vowlder',
-    meta: `${themes.length} tema undangan pernikahan digital`,
+    meta: `${themes.length} digital wedding invitation themes`,
     bg: '#f7f3ec',
     ink: '#2b2320',
     accent: '#856436',

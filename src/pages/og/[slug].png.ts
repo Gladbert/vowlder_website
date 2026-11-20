@@ -11,7 +11,7 @@ export const GET: APIRoute = async ({ props }) => {
   const png = await renderOgCard({
     eyebrow: `${theme.category} · ${theme.tier}`,
     title: theme.name,
-    meta: `${rupiah(theme.price)} — undangan pernikahan digital`,
+    meta: `${rupiah(theme.price)} · digital wedding invitation`,
     bg: theme.palette.bg,
     ink: theme.palette.ink,
     accent: theme.palette.accent,

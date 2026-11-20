@@ -79,7 +79,7 @@ export function Ornament({ p, root, centered = true }: { p: Palette; root?: RefO
 export function Countdown({ p, t, root }: Look) {
   const iso = useNextEventIso(wedding.events.map((event) => event.iso));
   const countdown = useCountdown(iso ?? '');
-  const units = ['hari', 'jam', 'menit', 'detik'] as const;
+  const units = ['days', 'hours', 'mins', 'secs'] as const;
 
   if (iso === null) return null;
 
@@ -134,15 +134,15 @@ export function Opening({ p, t, root, reveal }: Look) {
 
 export function Couple({ p, t, root, reveal }: Look) {
   const people = [
-    { person: wedding.couple.groom, role: 'Mempelai Pria' },
-    { person: wedding.couple.bride, role: 'Mempelai Wanita' },
+    { person: wedding.couple.groom, role: 'The Groom' },
+    { person: wedding.couple.bride, role: 'The Bride' },
   ];
 
   return (
     <section id="profil" className={t.sectionPad}>
       <Reveal kind={reveal} root={root}>
         <SectionLabel index={1} p={p} t={t}>
-          Mempelai
+          The Couple
         </SectionLabel>
       </Reveal>
 
@@ -159,7 +159,7 @@ export function Couple({ p, t, root, reveal }: Look) {
                 </p>
                 <h3 className={`mt-0.5 ${t.sectionTitle}`}>{person.fullName}</h3>
                 <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
-                  {person.birthOrder} dari {person.parents}
+                  {person.birthOrder} of {person.parents}
                 </p>
                 <a
                   href={person.instagram}
@@ -211,7 +211,7 @@ export function Couple({ p, t, root, reveal }: Look) {
                 className={`mt-1.5 ${t.couple === 'columns' ? 'text-[11px] leading-relaxed' : t.body}`}
                 style={{ color: p.soft }}
               >
-                {person.birthOrder} dari {person.parents}
+                {person.birthOrder} of {person.parents}
               </p>
               <a
                 href={person.instagram}
@@ -237,7 +237,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
     <section id="acara" className={t.sectionPad}>
       <Reveal kind={reveal} root={root}>
         <SectionLabel index={2} p={p} t={t}>
-          Acara
+          Schedule
         </SectionLabel>
       </Reveal>
 
@@ -290,7 +290,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
       <Reveal kind={reveal} root={root} delay={0.1} className="mt-3">
         <div className={`${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
           <p className={t.label} style={{ color: p.accent }}>
-            Lokasi
+            Venue
           </p>
           <p className={`mt-2 ${t.body}`}>
             {primary.venue}
@@ -308,7 +308,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
               className={`flex-1 ${t.button} text-center`}
               style={{ background: p.accent, color: p.on }}
             >
-              Peta
+              Map
             </a>
             <a
               href={primary.wazeUrl}
@@ -329,7 +329,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
               className={`flex-1 ${t.buttonGhost} text-center`}
               style={{ borderColor: p.line, color: p.accent }}
             >
-              Simpan tanggal
+              Save the date
             </a>
             <button
               type="button"
@@ -337,7 +337,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
               className={`flex-1 ${t.buttonGhost} text-center`}
               style={{ borderColor: p.line, color: p.accent }}
             >
-              File kalender
+              Calendar file
             </button>
           </div>
 
@@ -356,7 +356,7 @@ export function Schedule({ p, t, root, reveal }: Look) {
 
       <Reveal kind={reveal} root={root} delay={0.12} className="mt-4">
         <p className={t.small} style={{ color: p.soft }}>
-          Turut mengundang
+          Also invited
         </p>
         <p className={`mt-1 ${t.body}`}>{wedding.invited.join(' · ')}</p>
       </Reveal>
@@ -369,7 +369,7 @@ export function Story({ p, t, root, reveal }: Look) {
     <section id="cerita" className={t.sectionPad} style={{ background: p.paper }}>
       <Reveal kind={reveal} root={root}>
         <SectionLabel index={3} p={p} t={t}>
-          Cerita
+          Our Story
         </SectionLabel>
       </Reveal>
 
@@ -421,7 +421,7 @@ export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index:
     <section id="galeri" className={t.sectionPad} style={{ background: p.paper }}>
       <Reveal kind={reveal} root={root}>
         <SectionLabel index={4} p={p} t={t}>
-          Galeri
+          Gallery
         </SectionLabel>
       </Reveal>
 
@@ -438,7 +438,7 @@ export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index:
             <button
               type="button"
               onClick={() => onOpen(index)}
-              aria-label={`Perbesar foto: ${photo.title}`}
+              aria-label={`View photo: ${photo.title}`}
               className="block w-full text-left"
             >
               <img
@@ -470,12 +470,12 @@ export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index:
         >
           <span>
             <span className={`block ${t.small}`} style={{ color: p.soft }}>
-              Video prewedding
+              Prewedding film
             </span>
             <span className={`mt-0.5 block ${t.body}`}>{wedding.video.title}</span>
           </span>
           <span className={t.small} style={{ color: p.accent }}>
-            Tonton
+            Watch
           </span>
         </a>
       </Reveal>
@@ -521,15 +521,15 @@ function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
     return (
       <div className={`mt-4 ${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
         <p className={t.small} style={{ color: p.accent }}>
-          Konfirmasi kehadiran
+          RSVP
         </p>
         <p className={`mt-1.5 ${t.body}`}>
           {attendance === 'hadir'
-            ? `Terima kasih, ${guest}. Kami catat ${pax} orang. Sampai ketemu di ${wedding.event.cityShort}.`
-            : `Baik, kami catat kalau ${guest} belum bisa hadir. Terima kasih sudah kabar.`}
+            ? `Thank you, ${guest}. We've put down ${pax} ${pax === 1 ? 'guest' : 'guests'}. See you in ${wedding.event.cityShort}.`
+            : `Noted, we'll miss you ${guest}. Thanks for letting us know.`}
         </p>
         <p className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
-          Ini pratinjau tema, jadi konfirmasinya belum benar-benar terkirim.
+          This is a theme preview, so nothing is actually sent.
         </p>
         <button
           type="button"
@@ -537,7 +537,7 @@ function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
           className={`mt-3 ${t.buttonGhost}`}
           style={{ borderColor: p.line, color: p.accent }}
         >
-          Ubah konfirmasi
+          Edit RSVP
         </button>
       </div>
     );
@@ -553,10 +553,10 @@ function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
       style={{ borderColor: p.line, background: p.paper }}
     >
       <p className={t.small} style={{ color: p.accent }}>
-        Konfirmasi kehadiran
+        RSVP
       </p>
       <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
-        Mohon kabari kami sebelum {wedding.dateLabel}.
+        Please let us know before {wedding.dateLabel}.
       </p>
 
       <div className="mt-3 flex gap-2">
@@ -573,7 +573,7 @@ function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
               color: attendance === option ? p.on : p.accent,
             }}
           >
-            {option === 'hadir' ? 'Hadir' : 'Tidak hadir'}
+            {option === 'hadir' ? 'Attending' : "Can't make it"}
           </button>
         ))}
       </div>
@@ -581,7 +581,7 @@ function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
       {attendance === 'hadir' && (
         <div className="mt-3">
           <label className={`block ${t.small}`} style={{ color: p.soft }} htmlFor="rsvp-pax">
-            Jumlah orang
+            How many of you
           </label>
           <select
             id="rsvp-pax"
@@ -592,7 +592,7 @@ function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
           >
             {[1, 2, 3, 4].map((count) => (
               <option key={count} value={count}>
-                {count} orang
+                {count} {count === 1 ? 'guest' : 'guests'}
               </option>
             ))}
           </select>
@@ -605,7 +605,7 @@ function Rsvp({ p, t, guest }: Pick<Look, 'p' | 't'> & { guest: string }) {
         className={`mt-3 w-full ${t.button} disabled:opacity-50`}
         style={{ background: p.accent, color: p.on }}
       >
-        Kirim konfirmasi
+        Send RSVP
       </button>
     </form>
   );
@@ -634,7 +634,7 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
     <section id="ucapan" className={t.sectionPad}>
       <Reveal kind={reveal} root={root}>
         <SectionLabel index={6} p={p} t={t}>
-          Ucapan
+          Wishes
         </SectionLabel>
       </Reveal>
 
@@ -649,7 +649,7 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
           style={{ borderColor: p.line, background: p.paper }}
         >
           <label className={`block ${t.small}`} style={{ color: p.soft }} htmlFor="wish-name">
-            Nama
+            Name
           </label>
           <input
             id="wish-name"
@@ -662,7 +662,7 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
           />
 
           <label className={`mt-3 block ${t.small}`} style={{ color: p.soft }} htmlFor="wish-body">
-            Ucapan
+            Message
           </label>
           <textarea
             id="wish-body"
@@ -670,7 +670,7 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
             onChange={(event) => setMessage(event.target.value)}
             rows={3}
             maxLength={280}
-            placeholder="Tulis ucapan buat mempelai…"
+            placeholder="Write something for the couple…"
             className={`mt-1 w-full resize-none border px-2.5 py-2 text-[13px] ${t.radius}`}
             style={{ borderColor: p.line, background: p.bg, color: p.ink }}
           />
@@ -680,7 +680,7 @@ export function Wishes({ p, t, root, reveal, guest }: Look & { guest: string }) 
             className={`mt-3 w-full ${t.button}`}
             style={{ background: p.accent, color: p.on }}
           >
-            Kirim ucapan
+            Send wishes
           </button>
         </form>
       </Reveal>
@@ -711,19 +711,19 @@ export function Footer({ p, t, root, reveal }: Look) {
     >
       <Reveal kind={reveal} root={root}>
         <p className={t.label} style={{ color: p.accent }}>
-          Terima kasih
+          Thank you
         </p>
         <h3 className={`mt-2 ${t.title}`}>
           {wedding.couple.groom.nickname} &amp; {wedding.couple.bride.nickname}
         </h3>
         <p className={`mx-auto mt-2 max-w-[17rem] ${t.body}`} style={{ color: p.soft }}>
-          Merupakan kebahagiaan bagi kami bila Bapak/Ibu/Saudara/i berkenan hadir.
+          It would mean a lot to have you there.
         </p>
         <p className={`mt-4 ${t.small}`} style={{ color: p.soft }}>
           {wedding.hashtag}
         </p>
         <p className={`mt-1 ${t.small}`} style={{ color: p.soft }}>
-          Dibuat dengan Vowlder
+          Made with Vowlder
         </p>
       </Reveal>
     </footer>

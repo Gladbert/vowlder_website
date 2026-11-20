@@ -18,7 +18,7 @@ const inputId = `guest-name-${id}`;
   }
 >
   {variant === 'card' && (
-    <p class="eyebrow">Coba nama tamu</p>
+    <p class="eyebrow">Try a guest name</p>
   )}
   <label
     for={inputId}
@@ -28,14 +28,14 @@ const inputId = `guest-name-${id}`;
         : 'mt-2 block text-[10px] tracking-[0.12em] text-ink-soft uppercase'
     }
   >
-    {variant === 'bar' ? 'Nama' : 'Nama tamu'}
+    {variant === 'bar' ? 'Name' : 'Guest name'}
   </label>
   <input
     id={inputId}
     type="text"
     maxlength="40"
     autocomplete="name"
-    placeholder="Tamu Undangan"
+    placeholder="Dear Guest"
     class={
       variant === 'bar'
         ? 'min-w-0 flex-1 rounded-lg border border-line bg-cream px-2.5 py-2.5 text-[12px]'
@@ -51,7 +51,7 @@ const inputId = `guest-name-${id}`;
         : 'mt-2 w-full rounded-lg bg-ink px-3 py-2 text-[11px] font-medium text-cream hover:bg-ink-soft'
     }
   >
-    Salin link
+    Copy link
   </button>
   <p
     data-status
@@ -81,7 +81,7 @@ const inputId = `guest-name-${id}`;
         history.replaceState({}, '', url);
 
         window.dispatchEvent(
-          new CustomEvent('vowlder:guest', { detail: name || 'Tamu Undangan' })
+          new CustomEvent('vowlder:guest', { detail: name || 'Dear Guest' })
         );
 
         for (const other of roots) {
@@ -101,8 +101,8 @@ const inputId = `guest-name-${id}`;
         };
 
         navigator.clipboard?.writeText(location.href).then(
-          () => done('Link tersalin. Tinggal kirim ke pasangan Anda.'),
-          () => done('Tidak bisa menyalin. Salin manual dari address bar.')
+          () => done('Link copied. Send it to your partner.'),
+          () => done("Couldn't copy automatically. Copy it from the address bar.")
         );
       });
     }

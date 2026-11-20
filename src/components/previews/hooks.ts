@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /** Reads ?to= and keeps it in sync when the visitor edits the test name. */
-export function useGuestName(fallback = 'Tamu Undangan') {
+export function useGuestName(fallback = 'Dear Guest') {
   const [name, setName] = useState(fallback);
 
   useEffect(() => {
@@ -90,9 +90,9 @@ export function useCountdown(iso: string) {
   if (now === null) return null;
   const diff = Math.max(0, target - now);
   return {
-    hari: Math.floor(diff / 86_400_000),
-    jam: Math.floor(diff / 3_600_000) % 24,
-    menit: Math.floor(diff / 60_000) % 60,
-    detik: Math.floor(diff / 1000) % 60,
+    days: Math.floor(diff / 86_400_000),
+    hours: Math.floor(diff / 3_600_000) % 24,
+    mins: Math.floor(diff / 60_000) % 60,
+    secs: Math.floor(diff / 1000) % 60,
   };
 }

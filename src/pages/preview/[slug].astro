@@ -17,79 +17,110 @@ const others = themes.filter((item) => item.slug !== theme.slug).slice(0, 3);
 
 <Base
   bare
-  title={`${theme.name} — undangan pernikahan digital | Vowlder`}
+  title={`${theme.name} · digital wedding invitation | Vowlder`}
   description={theme.blurb}
   image={`/og/${theme.slug}.png`}
 >
-  <div class="min-h-[100svh] bg-cream">
-    <header class="sticky top-0 z-40 border-b border-line bg-cream/95 backdrop-blur">
-      <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-3 px-4 sm:px-8">
-        <a href="/" class="flex shrink-0 items-center gap-2 text-sm text-ink-soft hover:text-ink">
-          <span aria-hidden="true">←</span> Katalog
-        </a>
-        <p class="min-w-0 truncate text-sm font-medium">{theme.name}</p>
+  <div class="relative min-h-[100svh] bg-cream">
+    <!--
+      Phone: the bar floats over a full-screen invitation, so the invitation owns the
+      whole viewport the way a real guest link does. Tablet and up: it takes layout space.
+    -->
+    <header
+      class="absolute inset-x-0 top-0 z-50 border-b border-line/70 bg-cream/90 backdrop-blur sm:static sm:bg-cream/95"
+    >
+      <div class="mx-auto flex h-12 max-w-6xl items-center justify-between gap-2 px-3 sm:h-14 sm:gap-3 sm:px-8">
         <a
-          href={waLink(theme, previewUrl)}
-          target="_blank"
-          rel="noopener"
-          class="shrink-0 rounded-full bg-ink px-3.5 py-1.5 text-xs font-medium text-cream hover:bg-ink-soft"
+          href="/"
+          aria-label="Back to the theme catalogue"
+          class="flex min-h-[40px] shrink-0 items-center gap-1.5 text-sm text-ink-soft hover:text-ink"
         >
-          Pesan
+          <span aria-hidden="true">←</span><span class="hidden sm:inline">Themes</span>
         </a>
+
+        <p class="min-w-0 truncate text-[13px] font-medium sm:text-sm">{theme.name}</p>
+
+        <div class="flex shrink-0 items-center gap-1.5">
+          <button
+            type="button"
+            data-tester-toggle
+            aria-expanded="false"
+            aria-controls="tester-row"
+            class="min-h-[36px] rounded-full border border-ink/15 px-3 text-[11px] tracking-wide hover:border-ink/40 lg:hidden"
+          >
+            Name
+          </button>
+          <a
+            href={waLink(theme, previewUrl)}
+            target="_blank"
+            rel="noopener"
+            class="flex min-h-[36px] items-center rounded-full bg-ink px-3.5 text-xs font-medium text-cream hover:bg-ink-soft"
+          >
+            Order
+          </a>
+        </div>
       </div>
-      <!-- Phone: the tester has to stay reachable without scrolling 5 000 px of invitation. -->
-      <div class="lg:hidden">
+
+      <div id="tester-row" class="hidden lg:hidden">
         <GuestTester variant="bar" id="bar" />
       </div>
     </header>
 
-    <main class="mx-auto max-w-6xl sm:px-8 sm:pt-8 lg:grid lg:grid-cols-[420px_minmax(0,1fr)] lg:items-start lg:gap-14">
+    <main class="mx-auto max-w-6xl sm:px-8 sm:pt-6 lg:grid lg:grid-cols-[420px_minmax(0,1fr)] lg:items-start lg:gap-14">
       <div
-        id="undangan"
-        class="relative mx-auto h-[calc(100svh-6.25rem)] w-full overflow-hidden bg-paper sm:max-w-[420px] sm:rounded-[2rem] sm:border sm:border-line sm:shadow-[0_30px_80px_-50px_rgba(43,35,32,0.6)] lg:h-[calc(100svh-9rem)] lg:max-w-none"
+        id="invitation"
+        class="relative mx-auto h-[100svh] w-full overflow-hidden bg-paper sm:h-[calc(100svh-6.25rem)] sm:max-w-[420px] sm:rounded-[2rem] sm:border sm:border-line sm:shadow-[0_30px_80px_-50px_rgba(43,35,32,0.6)] lg:h-[calc(100svh-8.5rem)] lg:max-w-none"
       >
         <Invitation theme={theme} client:load />
       </div>
 
-      <aside id="info" class="scroll-mt-28 px-5 pt-10 pb-16 sm:px-0 lg:pt-2">
+      <aside id="info" class="scroll-mt-16 px-5 pt-10 pb-16 sm:px-0 lg:pt-2">
         <p class="eyebrow">{theme.category} · {theme.mood} · {theme.tier}</p>
-        <h1 class="mt-2 font-display text-3xl leading-tight font-medium sm:text-4xl">{theme.name}</h1>
+        <h1 class="display-2 mt-2">{theme.name}</h1>
         <p class="mt-3 max-w-md text-sm leading-relaxed text-ink-soft">{theme.blurb}</p>
 
-        <p class="mt-5 font-display text-2xl">{rupiah(theme.price)}</p>
-        <p class="mt-1 text-xs text-ink-soft">Sekali bayar. Aktif 12 bulan. Revisi 2 kali.</p>
+        <p class="font-brand mt-5 text-3xl">{rupiah(theme.price)}</p>
+        <p class="mt-1 text-xs text-ink-soft">One payment. Live for twelve months. Two rounds of edits.</p>
 
         <div class="mt-6 hidden lg:block">
           <GuestTester variant="card" id="card" />
         </div>
 
         <p class="mt-6 max-w-sm rounded-xl border border-line bg-paper/70 p-3.5 text-xs leading-relaxed text-ink-soft lg:mt-4">
-          Ketuk <span class="font-medium text-ink">Buka Undangan</span> untuk masuk. Nama yang Anda isi
-          di atas langsung masuk ke undangan, dan tautannya bisa dikirim ke pasangan.
+          Tap <span class="font-medium text-ink">Open Invitation</span> to go in. The name you enter
+          above goes straight into the invitation, and the link can be sent to your partner.
         </p>
 
-        <div class="mt-6 flex flex-wrap gap-3">
+        <div class="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
           <a
             href={waLink(theme, previewUrl)}
             target="_blank"
             rel="noopener"
-            class="rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream hover:bg-ink-soft"
+            class="flex min-h-[48px] items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream hover:bg-ink-soft"
           >
-            Pesan tema ini
+            Order this theme
           </a>
           <a
-            href="#undangan"
-            class="rounded-full border border-ink/20 px-5 py-3 text-sm font-medium hover:border-ink/50"
+            href="#invitation"
+            class="flex min-h-[48px] items-center justify-center rounded-full border border-ink/20 px-5 py-3 text-sm font-medium hover:border-ink/50"
           >
-            Ke undangan
+            Back to the invitation
           </a>
         </div>
 
+        <p class="mt-6 max-w-sm text-xs leading-relaxed text-ink-soft">
+          Want this palette or layout changed?{' '}
+          <a href="/custom" class="text-ink underline underline-offset-4 hover:text-brass">
+            We build custom designs
+          </a>{' '}
+          from the same structure.
+        </p>
+
         <div class="mt-8">
-          <p class="eyebrow">Yang selalu ada</p>
+          <p class="eyebrow">What every theme includes</p>
           <p class="mt-2 max-w-md text-sm leading-relaxed text-ink-soft">
-            Tema ini memakai undangan yang sama dengan tema lain: {wedding.couple.groom.nickname} &amp;
-            {wedding.couple.bride.nickname}, {wedding.event.dateLabel}, di {wedding.event.venue}.
+            This theme runs the same invitation as the rest: {wedding.couple.groom.nickname} &amp;
+            {wedding.couple.bride.nickname}, {wedding.event.dateLabel}, at {wedding.event.venue}.
           </p>
           <ul class="mt-3 grid gap-1.5 text-sm sm:grid-cols-2">
             {
@@ -104,8 +135,8 @@ const others = themes.filter((item) => item.slug !== theme.slug).slice(0, 3);
         </div>
 
         <div class="mt-10">
-          <p class="eyebrow">Tema lain</p>
-          <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+          <p class="eyebrow">Other themes</p>
+          <div class="mt-4 grid grid-cols-3 gap-3 sm:gap-4">
             {
               others.map((item) => (
                 <a href={`/preview/${item.slug}/`} class="group">
@@ -115,11 +146,27 @@ const others = themes.filter((item) => item.slug !== theme.slug).slice(0, 3);
               ))
             }
           </div>
-          <a href="/" class="mt-4 inline-block text-sm text-ink-soft underline underline-offset-4 hover:text-ink">
-            Lihat {themes.length} tema
+          <a
+            href="/"
+            class="mt-4 inline-flex min-h-[44px] items-center text-sm text-ink-soft underline underline-offset-4 hover:text-ink"
+          >
+            See all {themes.length} themes
           </a>
         </div>
       </aside>
     </main>
   </div>
 </Base>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-tester-toggle]');
+  const row = document.getElementById('tester-row');
+
+  if (toggle && row) {
+    toggle.addEventListener('click', () => {
+      const open = row.classList.toggle('hidden');
+      toggle.setAttribute('aria-expanded', String(!open));
+      if (!open) row.querySelector<HTMLInputElement>('input')?.focus();
+    });
+  }
+</script>

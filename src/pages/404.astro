@@ -1,19 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
+import { themes } from '../data/themes';
 ---
 
 <Base
-  title="Halaman tidak ditemukan — Vowlder"
-  description="Halaman yang Anda cari tidak ada. Kembali ke katalog tema undangan Vowlder."
+  title="Page not found · Vowlder"
+  description="That page does not exist. Head back to the theme catalogue."
 >
   <main class="mx-auto flex min-h-[70svh] max-w-6xl flex-col justify-center px-5 py-16 sm:px-8">
     <p class="eyebrow">404</p>
-    <h1 class="mt-3 max-w-lg font-display text-3xl leading-tight font-medium sm:text-4xl">
-      Halaman ini tidak ada. Tema yang Anda cari mungkin sudah berganti nama.
+    <h1 class="display-2 mt-3 max-w-lg">
+      This page does not exist. The theme you were after may have been renamed.
     </h1>
-    <div class="mt-7 flex flex-wrap gap-3">
-      <a href="/" class="rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream hover:bg-ink-soft">
-        Kembali ke katalog
+    <p class="mt-4 max-w-md text-sm leading-relaxed text-ink-soft">
+      There are {themes.length} themes in the catalogue, all showing the same invitation.
+    </p>
+    <div class="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
+      <a
+        href="/"
+        class="flex min-h-[48px] items-center justify-center rounded-full bg-ink px-5 py-3 text-sm font-medium text-cream hover:bg-ink-soft"
+      >
+        Back to the catalogue
       </a>
     </div>
   </main>

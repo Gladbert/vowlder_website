@@ -1,5 +1,6 @@
-// Design only. Content comes from wedding.ts — every template shows the same wedding.
-export type Category = 'Adat' | 'Minimalis' | 'Floral' | 'Syari' | 'Oriental' | 'Klasik';
+import type { CoverExit, HeroMotion, NavMotion, RevealKind } from '../components/previews/motion';
+// Design only. Content comes from wedding.ts; every template shows the same wedding.
+export type Category = 'Traditional' | 'Minimalist' | 'Floral' | 'Oriental' | 'Classic';
 
 export type Tier = 'Basic' | 'Premium' | 'Signature';
 
@@ -16,9 +17,8 @@ export type Variant =
   | 'seal';
 
 /** Catalogue tag, the way template galleries label a mood. */
-export type Mood = 'Elegan' | 'Romantis' | 'Natural' | 'Mewah' | 'Hangat' | 'Bold' | 'Tenang';
+export type Mood = 'Elegant' | 'Romantic' | 'Natural' | 'Luxe' | 'Warm' | 'Bold' | 'Calm';
 
-import type { CoverExit, HeroMotion, NavMotion, RevealKind } from '../components/previews/motion';
 
 /** Per-template motion signature. Two templates may share a layout, never this. */
 export type ThemeMotion = {
@@ -63,39 +63,38 @@ export type Theme = {
 };
 
 export const categories: Category[] = [
-  'Adat',
-  'Minimalis',
+  'Traditional',
+  'Minimalist',
   'Floral',
-  'Syari',
   'Oriental',
-  'Klasik',
+  'Classic',
 ];
 
 export const WA_NUMBER = '6281234567890';
 
 const serif = "'Cormorant Garamond Variable', Georgia, serif";
 
-/** Identical in every template — the design differs, the invitation does not. */
+/** Identical in every template: the design differs, the invitation does not. */
 export const includedFeatures = [
-  'Empat foto bergilir di pembuka',
-  'Hitung mundur ke hari H',
-  'Dua rangkaian acara dan lokasi',
-  'Peta, Waze, dan simpan tanggal',
-  'Profil mempelai dan Instagram',
-  'Cerita dalam empat babak',
-  'Galeri delapan foto, bisa diperbesar',
-  'Konfirmasi kehadiran, hadiah, dan buku ucapan',
+  'Four photographs on a loop at the top',
+  'A countdown to the day',
+  'Both ceremonies and the venue',
+  'Map, Waze, and save the date',
+  'Couple profiles and Instagram',
+  'The story in four parts',
+  'Eight photographs, tap to enlarge',
+  'RSVP, gifts, and a guest book',
 ];
 
 export const themes: Theme[] = [
   {
     slug: 'gladbert-monica',
     name: 'Gladbert & Monica',
-    category: 'Minimalis',
+    category: 'Minimalist',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Tema yang dipakai di acara aslinya: krem, emas, dan burgundy, dengan alur yang sudah diuji di lapangan.',
+      'The template we used at the real wedding: cream, gold, and burgundy, with an order of sections that has already survived a room full of guests.',
     palette: {
       bg: '#F3EFEA',
       paper: '#FAF8F5',
@@ -107,18 +106,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
     variant: 'faithful',
-    mood: 'Hangat',
+    mood: 'Warm',
     motion: { reveal: 'rise', hero: 'drift', nav: 'underline', coverExit: 'fade' },
     photo: '/photos/cover.webp',
   },
   {
     slug: 'kyoto-sepia',
     name: 'Kyoto Sepia',
-    category: 'Minimalis',
+    category: 'Minimalist',
     tier: 'Premium',
     price: 425_000,
     blurb:
-      'Editorial kiri-rata: nomor bagian, huruf besar, foto sebagai pita. Untuk pasangan yang tidak suka ornamen.',
+      'Left-aligned editorial. Numbered sections, big type, photographs in a strip. For couples who would rather not have ornaments.',
     palette: {
       bg: '#F5F0E8',
       paper: '#FBF7F1',
@@ -130,18 +129,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
     variant: 'editorial',
-    mood: 'Tenang',
+    mood: 'Calm',
     motion: { reveal: 'slide', hero: 'pan', nav: 'dot', coverExit: 'rise' },
     photo: '/photos/kyoto.webp',
   },
   {
     slug: 'javanese-royal',
     name: 'Javanese Royal',
-    category: 'Adat',
+    category: 'Traditional',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Cokelat tua dan emas, bingkai ganda, huruf kapital berspasi lebar. Untuk prosesi adat dan panggih.',
+      'Brown and gold, a double frame, capitals with wide spacing. Built for a Javanese ceremony, from siraman to panggih.',
     palette: {
       bg: '#1E1712',
       paper: '#2A211A',
@@ -153,7 +152,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 600, tracking: '0.04em', caps: false },
     variant: 'classic',
-    mood: 'Mewah',
+    mood: 'Luxe',
     motion: { reveal: 'fade', hero: 'drift', nav: 'underline', coverExit: 'curtain' },
     photo: '/photos/couple.webp',
   },
@@ -164,7 +163,7 @@ export const themes: Theme[] = [
     tier: 'Premium',
     price: 425_000,
     blurb:
-      'Sage dan putih, kartu membulat, foto mempelai berdampingan. Untuk akad di taman atau villa.',
+      'Sage and white, rounded cards, the two of you side by side. For a garden ceremony or a villa weekend.',
     palette: {
       bg: '#F2F5EE',
       paper: '#FBFCF9',
@@ -181,36 +180,13 @@ export const themes: Theme[] = [
     photo: '/photos/bamboo.webp',
   },
   {
-    slug: 'islamic-syari',
-    name: 'Islamic Syari',
-    category: 'Syari',
-    tier: 'Premium',
-    price: 425_000,
-    blurb:
-      'Hijau tua dan emas pucat, tanpa musik sebagai bawaan, dengan catatan adab tamu di bagian acara.',
-    palette: {
-      bg: '#0F2A24',
-      paper: '#153A31',
-      ink: '#F1EAD9',
-      soft: '#C6D0C0',
-      accent: '#D5BC86',
-      line: '#2B5648',
-      on: '#0F2A24',
-    },
-    type: { heading: serif, weight: 500, tracking: '0.02em', caps: false },
-    variant: 'split',
-    mood: 'Tenang',
-    motion: { reveal: 'fade', hero: 'still', nav: 'dot', coverExit: 'fade' },
-    photo: '/photos/shrine.webp',
-  },
-  {
     slug: 'oriental-red-gold',
     name: 'Oriental Red Gold',
     category: 'Oriental',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Merah tua dan emas, bingkai ganda, kapital berjarak lebar. Untuk teapai, sangjit, dan resepsi malam.',
+      'Deep red and gold, double frame, wide capitals. For teapai, sangjit, and an evening reception.',
     palette: {
       bg: '#2A0E0E',
       paper: '#3A1414',
@@ -222,18 +198,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 600, tracking: '0.06em', caps: false },
     variant: 'classic',
-    mood: 'Mewah',
+    mood: 'Luxe',
     motion: { reveal: 'fade', hero: 'pan', nav: 'underline', coverExit: 'curtain' },
     photo: '/photos/candid.webp',
   },
   {
     slug: 'art-deco',
     name: 'Art Deco',
-    category: 'Klasik',
+    category: 'Classic',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Hitam dan kuning tua, garis tipis, nomor bagian besar. Untuk resepsi hotel dengan tata lampu rendah.',
+      'Black and old gold, thin rules, oversized section numbers. Suits a ballroom with the lights turned down.',
     palette: {
       bg: '#111110',
       paper: '#1A1A18',
@@ -256,7 +232,7 @@ export const themes: Theme[] = [
     tier: 'Premium',
     price: 425_000,
     blurb:
-      'Merah muda pucat dan terracotta, kartu membulat, banyak ruang kosong. Untuk akad pagi dan resepsi intim.',
+      'Pale blush and terracotta, rounded cards, plenty of empty space. For a morning ceremony and a small reception.',
     palette: {
       bg: '#FBF1EE',
       paper: '#FFF9F6',
@@ -268,18 +244,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'split',
-    mood: 'Romantis',
+    mood: 'Romantic',
     motion: { reveal: 'right', hero: 'lift', nav: 'underline', coverExit: 'zoom' },
     photo: '/photos/lake.webp',
   },
   {
     slug: 'midnight-noir',
     name: 'Midnight Noir',
-    category: 'Klasik',
+    category: 'Classic',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Biru arang dan perak, tipografi editorial, tanpa hiasan. Untuk pasangan yang mau undangan nyaris tanpa warna.',
+      'Charcoal and silver, editorial type, almost no ornament. For couples who want an invitation with no colour at all.',
     palette: {
       bg: '#101418',
       paper: '#181D22',
@@ -291,18 +267,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 400, tracking: '-0.01em', caps: false },
     variant: 'editorial',
-    mood: 'Elegan',
+    mood: 'Elegant',
     motion: { reveal: 'fade', hero: 'still', nav: 'dot', coverExit: 'fade' },
     photo: '/photos/shibuya.webp',
   },
   {
     slug: 'sunda-sekar',
     name: 'Sunda Sekar',
-    category: 'Adat',
+    category: 'Traditional',
     tier: 'Basic',
     price: 175_000,
     blurb:
-      'Krem dan kuning tua, rapi dan sederhana. Versi paling ringan dari susunan yang sama.',
+      'Cream and old gold, tidy and plain. The lightest build of the same invitation.',
     palette: {
       bg: '#F6F1E6',
       paper: '#FFFDF8',
@@ -321,11 +297,11 @@ export const themes: Theme[] = [
   {
     slug: 'pressed-linen',
     name: 'Pressed Linen',
-    category: 'Minimalis',
+    category: 'Minimalist',
     tier: 'Premium',
     price: 425_000,
     blurb:
-      'Poster: foto penuh, pita warna padat, huruf besar kiri-rata, galeri satu kolom. Paling banyak ruang untuk foto.',
+      'Poster layout: a full photograph, a solid colour band, big left-aligned type, one-column gallery. The most room for pictures.',
     palette: {
       bg: '#F7F5F2',
       paper: '#FFFFFF',
@@ -344,11 +320,11 @@ export const themes: Theme[] = [
   {
     slug: 'amber-dusk',
     name: 'Amber Dusk',
-    category: 'Klasik',
+    category: 'Classic',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Nama tamu menyatu di atas foto, bingkai tipis, kapital berjarak lebar. Untuk resepsi malam dengan lampu rendah.',
+      'Your names sit on the photograph inside a thin frame, with wide capitals. For an evening reception under low light.',
     palette: {
       bg: '#23180F',
       paper: '#2E2116',
@@ -360,18 +336,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.05em', caps: false },
     variant: 'spotlight',
-    mood: 'Elegan',
+    mood: 'Elegant',
     motion: { reveal: 'fade', hero: 'drift', nav: 'dot', coverExit: 'zoom' },
     photo: '/photos/bride.webp',
   },
   {
     slug: 'linen-minimal',
     name: 'Linen Minimal',
-    category: 'Minimalis',
+    category: 'Minimalist',
     tier: 'Basic',
     price: 175_000,
     blurb:
-      'Versi paling ringkas: monogram menggantikan foto mempelai, galeri tiga kolom, tanpa ornamen.',
+      'The shortest version: a monogram instead of portraits, a three-column gallery, no ornament.',
     palette: {
       bg: '#F4F4F1',
       paper: '#FBFBF9',
@@ -383,7 +359,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'compact',
-    mood: 'Tenang',
+    mood: 'Calm',
     motion: { reveal: 'right', hero: 'still', nav: 'underline', coverExit: 'fade' },
   },
   {
@@ -393,7 +369,7 @@ export const themes: Theme[] = [
     tier: 'Premium',
     price: 425_000,
     blurb:
-      'Foto mempelai bundar, huruf miring, dan kartu lembut. Paling pas untuk akad pagi atau resepsi di rumah.',
+      'Round portraits, italic headings, soft cards. Fits a morning ceremony or a reception at home.',
     palette: {
       bg: '#FBF3F4',
       paper: '#FFF9FA',
@@ -405,18 +381,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'medallion',
-    mood: 'Romantis',
+    mood: 'Romantic',
     motion: { reveal: 'unfold', hero: 'lift', nav: 'dot', coverExit: 'zoom' },
     photo: '/photos/bride.webp',
   },
   {
     slug: 'pusaka',
     name: 'Pusaka',
-    category: 'Adat',
+    category: 'Traditional',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Hijau tua dan emas tua, foto bundar, huruf miring. Untuk acara adat yang tetap ingin terasa tenang.',
+      'Deep green and old gold, round portraits, italic headings. For a traditional ceremony that still feels quiet.',
     palette: {
       bg: '#12211C',
       paper: '#172B24',
@@ -428,18 +404,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.03em', caps: false },
     variant: 'medallion',
-    mood: 'Mewah',
+    mood: 'Luxe',
     motion: { reveal: 'fade', hero: 'drift', nav: 'underline', coverExit: 'curtain' },
     photo: '/photos/shrine.webp',
   },
   {
     slug: 'minang-gadang',
     name: 'Minang Gadang',
-    category: 'Adat',
+    category: 'Traditional',
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Marun dan kuning tua, bingkai ganda, kapital lebar. Untuk baralek dengan susunan acara panjang.',
+      'Maroon and old brass, double frame, wide capitals. For a baralek with a long run of events.',
     palette: {
       bg: '#2B120F',
       paper: '#3A1A15',
@@ -451,18 +427,18 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 600, tracking: '0.05em', caps: false },
     variant: 'classic',
-    mood: 'Mewah',
+    mood: 'Luxe',
     motion: { reveal: 'fade', hero: 'drift', nav: 'pill', coverExit: 'curtain' },
     photo: '/photos/couple.webp',
   },
   {
     slug: 'pantai-sore',
     name: 'Pantai Sore',
-    category: 'Minimalis',
+    category: 'Minimalist',
     tier: 'Premium',
     price: 425_000,
     blurb:
-      'Hijau laut dan pasir, foto penuh, galeri satu kolom. Untuk akad di pantai atau villa dekat laut.',
+      'Sea green and sand, full-bleed photographs, a one-column gallery. For a ceremony by the water.',
     palette: {
       bg: '#F6F1E7',
       paper: '#FFFCF5',
@@ -485,7 +461,7 @@ export const themes: Theme[] = [
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Merah tua, emas, dan segel 囍. Bagian hadiah berubah jadi angpao, kapital berjarak lebar untuk teapai dan sangjit.',
+      'Deep red, gold, and a seal. The gift block becomes angpao, with wide capitals for teapai and sangjit.',
     palette: {
       bg: '#2A0A10',
       paper: '#3A1219',
@@ -497,7 +473,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 600, tracking: '0.04em', caps: false },
     variant: 'seal',
-    mood: 'Mewah',
+    mood: 'Luxe',
     motion: { reveal: 'fade', hero: 'drift', nav: 'pill', coverExit: 'curtain' },
     giftLabel: 'Angpao',
     glyph: '囍',
@@ -506,11 +482,11 @@ export const themes: Theme[] = [
   {
     slug: 'imlek-modern',
     name: 'Imlek Modern',
-    category: 'Minimalis',
+    category: 'Minimalist',
     tier: 'Premium',
     price: 425_000,
     blurb:
-      'Krem bersih dengan aksen vermilion dan satu karakter 福. Untuk pasangan yang mau nuansa Tionghoa tanpa merah penuh.',
+      'Clean cream with a vermilion accent and a single character. Chinese-Indonesian without a wall of red.',
     palette: {
       bg: '#FAF6EF',
       paper: '#FFFDF8',
@@ -522,7 +498,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
     variant: 'editorial',
-    mood: 'Tenang',
+    mood: 'Calm',
     motion: { reveal: 'slide', hero: 'lift', nav: 'pill', coverExit: 'rise' },
     giftLabel: 'Angpao',
     glyph: '福',
@@ -535,7 +511,7 @@ export const themes: Theme[] = [
     tier: 'Signature',
     price: 650_000,
     blurb:
-      'Cokelat tua dan emas, foto mempelai bundar, huruf miring. Untuk rangkaian teapai dan sangjit di rumah.',
+      'Dark brown and gold, round portraits, italic headings. For teapai and sangjit at home.',
     palette: {
       bg: '#1C1410',
       paper: '#261B15',
@@ -547,7 +523,7 @@ export const themes: Theme[] = [
     },
     type: { heading: serif, weight: 500, tracking: '0.03em', caps: false },
     variant: 'medallion',
-    mood: 'Elegan',
+    mood: 'Elegant',
     motion: { reveal: 'unfold', hero: 'pan', nav: 'pill', coverExit: 'zoom' },
     giftLabel: 'Angpao',
     glyph: '囍',
@@ -557,10 +533,21 @@ export const themes: Theme[] = [
 
 export function waLink(theme: Theme, previewUrl?: string) {
   const lines = [
-    `Halo Vowlder, saya mau pesan tema *${theme.name}* (${theme.tier} – Rp ${theme.price.toLocaleString('id-ID')}).`,
+    `Hi Vowlder, I'd like to order the *${theme.name}* theme (${theme.tier}, Rp ${theme.price.toLocaleString('en-US')}).`,
   ];
-  if (previewUrl) lines.push(`Preview yang saya lihat: ${previewUrl}`);
+  if (previewUrl) lines.push(`Preview I was looking at: ${previewUrl}`);
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
-export const rupiah = (n: number) => `Rp ${n.toLocaleString('id-ID')}`;
+/** Prefilled brief for the custom-design thread: enough for us to quote, not a form. */
+export function customWaLink() {
+  const lines = [
+    'Hi Vowlder, I would like a custom invitation, not one from the catalogue.',
+    'Wedding date: ',
+    'Venue / city: ',
+    'What I have in mind (colours, type, reference): ',
+  ];
+  return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
+export const rupiah = (n: number) => `Rp ${n.toLocaleString('en-US')}`;
