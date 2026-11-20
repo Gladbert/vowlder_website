@@ -1,83 +1,116 @@
-// Local pre-push gate: renders every page at phone and desktop width and fails on
-// real layout problems (overlap, overflow, clipping, contrast) plus missing fonts.
-// Usage: node scripts/audit-pages.mjs [baseUrl]
+// Local pre-push gate. Drives headless Chrome through the agent-browser CLI and
+// fails on real layout defects: text overlap, horizontal overflow, clipped text,
+// contrast under WCAG AA, a font that did not load, a cover CTA below the fold, or
+// a template with missing / nested scroll reveals.
+//
+//   node scripts/audit-pages.mjs [baseUrl]          # phone only, fast (~2 min)
+//   node scripts/audit-pages.mjs [baseUrl] --full   # phone, small, landscape, desktop
+//
+// Every browser call has a timeout, and progress is printed, so a hung browser
+// cannot look like a hung script.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
-const base = process.argv[2] ?? 'http://localhost:4399';
+const args = process.argv.slice(2);
+const base = args.find((arg) => arg.startsWith('http')) ?? 'http://localhost:4399';
+const full = args.includes('--full');
+const CALL_TIMEOUT = 25_000;
+
 const auditScript = readFileSync('scripts/audit-layout.js', 'utf8');
 
-// Theme slugs come from the rendered catalogue, so this never drifts from themes.ts.
-const html = await fetch(base).then((response) => response.text());
-const slugs = [...new Set([...html.matchAll(/\/preview\/([\w-]+)\//g)].map((m) => m[1]))];
+const viewports = full
+  ? [
+      ['phone', 390, 844],
+      ['small-phone', 320, 568],
+      ['landscape', 844, 390],
+      ['desktop', 1280, 900],
+    ]
+  : [['phone', 390, 844]];
 
-const browser = (...args) => execFileSync('agent-browser', args, { encoding: 'utf8' });
-const evalJs = (code) => {
-  const raw = execFileSync('agent-browser', ['eval', code], { encoding: 'utf8' }).trim();
+const steps = full ? [0, 1, 2, 3, 4, 5] : [0, 2, 4];
+
+const call = (bin, argv, input) =>
+  execFileSync(bin, argv, { encoding: 'utf8', input, timeout: CALL_TIMEOUT, stdio: ['pipe', 'pipe', 'pipe'] });
+
+const browser = (...argv) => call('agent-browser', argv);
+const sleep = (seconds) => execFileSync('sleep', [String(seconds)]);
+
+const parsePayload = (raw) => {
+  const trimmed = raw.trim();
   try {
-    const once = JSON.parse(raw);
+    const once = JSON.parse(trimmed);
     return typeof once === 'string' ? JSON.parse(once) : once;
   } catch {
-    return raw;
+    return trimmed;
   }
 };
 
-const routes = ['/', ...slugs.map((slug) => `/preview/${slug}/`)];
-const failures = [];
+const evalJs = (code) => parsePayload(call('agent-browser', ['eval', code]));
 
-for (const [label, width, height] of [
-  ['phone', 390, 844],
-  ['small-phone', 320, 568],
-  ['landscape', 844, 390],
-  ['desktop', 1280, 900],
-]) {
+const html = await fetch(base).then((response) => response.text());
+const slugs = [...new Set([...html.matchAll(/\/preview\/([\w-]+)\//g)].map((m) => m[1]))];
+const routes = ['/', '/custom', ...slugs.map((slug) => `/preview/${slug}/`)];
+
+const started = Date.now();
+const failures = [];
+let checked = 0;
+
+for (const [label, width, height] of viewports) {
   browser('set', 'viewport', String(width), String(height));
 
   for (const route of routes) {
+    const isInvitation = route.startsWith('/preview/');
     browser('open', base + route);
-    execFileSync('sleep', ['1.5']);
-    evalJs("document.fonts.ready.then(()=>1); 'ok'");
+    sleep(1.4);
 
-    const states = route === '/' ? [0] : [0, 1, 2, 3, 4, 5];
-    if (route !== '/') {
+    if (isInvitation) {
       evalJs(
-        "(()=>{const b=[...document.querySelectorAll('button')].find(x=>x.textContent.includes('Buka Undangan'));if(b)b.click();return 'ok'})()"
+        "(()=>{const b=[...document.querySelectorAll('button')].find(x=>x.textContent.includes('Open Invitation'));if(b)b.click();return 'ok'})()"
       );
-      execFileSync('sleep', ['1']);
+      sleep(0.8);
     }
 
-    for (const step of states) {
+    for (const step of steps) {
       if (step > 0) {
-        evalJs(`(()=>{const c=document.querySelector('.overflow-y-auto');if(c)c.scrollTop=${step}*760;return 'ok'})()`);
-        execFileSync('sleep', ['1']);
+        evalJs(
+          `(()=>{const c=document.querySelector('.overflow-y-auto');if(c)c.scrollTop=${step}*760;return 'ok'})()`
+        );
+        sleep(0.9);
       }
-      const raw = execFileSync('agent-browser', ['eval', '--stdin'], { input: auditScript, encoding: 'utf8' });
-      const report = JSON.parse(JSON.parse(raw.trim()));
+
+      const report = parsePayload(call('agent-browser', ['eval', '--stdin'], auditScript));
+      checked++;
+
       const problems = {
         hOverflow: report.hOverflow,
         textOverlap: report.textOverlap,
         clipped: report.clipped,
         lowContrast: report.lowContrast,
         coverCta: report.coverCta && !report.coverCta.visible ? report.coverCta : [],
-        reveal: route !== '/' && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
+        reveal: isInvitation && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
         nested: report.nestedReveals > 0 ? { nested: report.nestedReveals } : [],
         fonts: Object.entries(report.fonts).filter(([, ok]) => !ok),
       };
+
       const count = Object.values(problems).reduce((n, list) => n + list.length, 0);
       if (count) failures.push({ label, route, step, problems });
     }
-    // Only the top-of-page state matters on the landing page.
-    if (route === '/') continue;
-    evalJs('(()=>{const c=document.querySelector(".overflow-y-auto");if(c)c.scrollTop=0;return "ok"})()');
+
+    process.stdout.write(
+      `\r${checked} states checked · ${failures.length} failing · ${Math.round((Date.now() - started) / 1000)}s   `
+    );
   }
 }
 
+const seconds = Math.round((Date.now() - started) / 1000);
+
 if (!failures.length) {
-  console.log(`OK — ${routes.length} routes × 4 viewports, no layout defects.`);
+  console.log(`\nOK — ${routes.length} routes × ${viewports.length} viewport(s), ${checked} states, ${seconds}s, no layout defects.`);
   process.exit(0);
 }
 
-for (const failure of failures) {
+console.log(`\n\n✗ ${failures.length} failing state(s) of ${checked} in ${seconds}s`);
+for (const failure of failures.slice(0, 12)) {
   console.log(`\n✗ ${failure.label} ${failure.route} (scroll step ${failure.step})`);
   console.log(JSON.stringify(failure.problems, null, 1));
 }
