@@ -20,7 +20,6 @@
     "astro": "^7.4.13",
     "lucide-react": "^1.77.0",
     "motion": "^14.14.0",
-    "qrcode": "^1.5.4",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
@@ -28,7 +27,6 @@
     "@astrojs/check": "^0.9.12",
     "@tailwindcss/vite": "^4.3.5",
     "@types/node": "^26.6.6",
-    "@types/qrcode": "^1.5.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "sharp": "^0.35.5",

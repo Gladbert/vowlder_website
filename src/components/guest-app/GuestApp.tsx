@@ -25,7 +25,6 @@ import type { GalleryPhoto, RSVPRecord, Wish } from '../../vendor/wedding-inv/ty
 import type { ToastState } from '../../vendor/wedding-inv/ui/DynamicIslandToast';
 import { weddingMusic } from '../../vendor/wedding-inv/utils/audioSynth';
 import { wedding } from '../../data/wedding';
-import GuestPass from './GuestPass';
 import '../../vendor/wedding-inv/styles/base.css';
 
 const SECTIONS = ['hero-section', 'couple-section', 'story-section', 'events-section', 'gallery-section', 'guestbook-section'];
@@ -56,7 +55,6 @@ export default function GuestApp() {
   });
   const [rsvp, setRsvp] = useState<RSVPRecord | null>(null);
   const [likedWishes, setLikedWishes] = useState<string[]>([]);
-  const [passOpen, setPassOpen] = useState(false);
   const [photos, setPhotos] = useState<GalleryPhoto[]>(GALLERY_PHOTOS);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
@@ -286,23 +284,7 @@ export default function GuestApp() {
             <FooterSection coupleInfo={COUPLE_INFO} />
           </main>
 
-          {rsvp && (
-            <button
-              type="button"
-              onClick={() => setPassOpen(true)}
-              className="fixed bottom-24 left-1/2 z-40 -translate-x-1/2 rounded-full bg-[#1C1714] px-4 py-2.5 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#FCF9F5] shadow-lg"
-            >
-              Show my pass
-            </button>
-          )}
-
           <BottomNav activeSection={activeSection} onNavigate={handleNavigate} badgeCount={badgeCount} />
-          <GuestPass
-            open={passOpen}
-            onClose={() => setPassOpen(false)}
-            name={rsvp?.guestName ?? guestName}
-            pax={paxCount}
-          />
         </div>
       </div>
     </MotionConfig>
