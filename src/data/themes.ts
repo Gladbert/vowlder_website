@@ -72,7 +72,7 @@ export const categories: Category[] = [
   'Classic',
 ];
 
-export const WA_NUMBER = '6281234567890';
+export const WA_NUMBER = '6285330168811';
 
 const serif = "'Cormorant Garamond Variable', Georgia, serif";
 

@@ -792,7 +792,7 @@ export function Wishes({
   );
 }
 
-export function Footer({ p, t, root, reveal }: Look) {
+export function Footer({ p, t, root, reveal, glyph }: Look & { glyph?: string }) {
   return (
     <footer className={`${t.sectionPad} pb-20 ${t.align}`} style={{ background: p.paper, borderTop: `1px solid ${p.line}` }}>
       <Reveal kind={reveal} root={root}>
@@ -808,6 +808,18 @@ export function Footer({ p, t, root, reveal }: Look) {
         <p className={`mt-4 ${t.small}`} style={{ color: p.soft }}>
           {wedding.hashtag}
         </p>
+        {glyph && (
+          <p
+            className="mt-3 text-[1.1rem] leading-none"
+            style={{
+              color: p.accent,
+              fontFamily: "'Songti SC', 'Noto Serif CJK SC', 'Noto Sans CJK SC', 'PingFang SC', serif",
+            }}
+            aria-hidden="true"
+          >
+            {glyph}
+          </p>
+        )}
         <p className={`mt-1 ${t.small}`} style={{ color: p.soft }}>
           Made with Vowlder
         </p>

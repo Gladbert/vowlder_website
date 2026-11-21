@@ -36,6 +36,16 @@ const call = (bin, argv, input) =>
   execFileSync(bin, argv, { encoding: 'utf8', input, timeout: CALL_TIMEOUT, stdio: ['pipe', 'pipe', 'pipe'] });
 
 const browser = (...argv) => call('agent-browser', argv);
+
+// A wedged browser session should cost one route, not the whole run.
+const safe = (fn, fallback) => {
+  try {
+    return fn();
+  } catch (error) {
+    if (String(error?.code ?? '').includes('ETIMEDOUT')) return fallback;
+    throw error;
+  }
+};
 const sleep = (seconds) => execFileSync('sleep', [String(seconds)]);
 
 const parsePayload = (raw) => {
@@ -52,9 +62,9 @@ const evalJs = (code) => parsePayload(call('agent-browser', ['eval', code]));
 
 // The catalogue page lists every theme; the home page only teases six.
 const html = await fetch(`${base}/themes`).then((response) => response.text());
-const slugs = [...new Set([...html.matchAll(/\/preview\/([\w-]+)\//g)].map((m) => m[1]))];
+const slugs = [...new Set([...html.matchAll(/\/themes\/([\w-]+)\//g)].map((m) => m[1]))];
 const pages = ['/', '/themes', '/packages', '/process', '/about', '/faq', '/custom', '/contact'];
-const routes = [...pages, ...slugs.map((slug) => `/preview/${slug}/`)];
+const routes = [...pages, ...slugs.map((slug) => `/themes/${slug}/`)];
 
 const started = Date.now();
 const failures = [];
@@ -64,8 +74,15 @@ for (const [label, width, height] of viewports) {
   browser('set', 'viewport', String(width), String(height));
 
   for (const route of routes) {
-    const isInvitation = route.startsWith('/preview/');
-    browser('open', base + route);
+    const isInvitation = route.split('/').length === 4;
+    const opened = safe(() => {
+      browser('open', base + route);
+      return true;
+    }, false);
+    if (!opened) {
+      failures.push({ label, route, step: 'open', problems: { browser: ['timed out'] } });
+      continue;
+    }
     sleep(1.4);
 
     if (isInvitation) {
@@ -83,7 +100,13 @@ for (const [label, width, height] of viewports) {
         sleep(0.9);
       }
 
-      const report = parsePayload(call('agent-browser', ['eval', '--stdin'], auditScript));
+      let report;
+      try {
+        report = parsePayload(call('agent-browser', ['eval', '--stdin'], auditScript));
+      } catch {
+        failures.push({ label, route, step, problems: { browser: ['timed out'] } });
+        continue;
+      }
       checked++;
 
       const problems = {

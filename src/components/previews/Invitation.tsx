@@ -280,7 +280,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
             rsvp={rsvp}
             onOpenRsvp={() => setRsvpOpen(true)}
           />
-          <Footer p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
+          <Footer p={p} t={t} root={navState.ref} reveal={motionSet.reveal} glyph={theme.glyph} />
         </div>
 
         <a
@@ -405,7 +405,15 @@ export default function Invitation({ theme }: { theme: Theme }) {
                       shown: { opacity: 1, scale: 1, transition: { duration: 0.7, ease: EASE } },
                     }}
                     className="mx-auto mb-3 flex h-12 w-12 items-center justify-center border text-[1.4rem] leading-none"
-                    style={{ borderColor: p.accent, color: p.accent, outline: `1px solid ${p.line}`, outlineOffset: 4 }}
+                    style={{
+                      borderColor: p.accent,
+                      color: p.accent,
+                      outline: `1px solid ${p.line}`,
+                      outlineOffset: 4,
+                      // 囍 / 福 are CJK: name the fallbacks so Android shows glyphs, not tofu.
+                      fontFamily:
+                        "'Songti SC', 'Noto Serif CJK SC', 'Noto Sans CJK SC', 'PingFang SC', serif",
+                    }}
                     aria-hidden="true"
                   >
                     {theme.glyph}

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { theme } = Astro.props;
-const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
+const previewUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
 ---
 
 {/*
@@ -22,7 +22,7 @@ const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
   class="group relative flex gap-4 sm:block"
 >
   <a
-    href={`/preview/${theme.slug}/`}
+    href={`/themes/${theme.slug}/`}
     aria-label={`Open the ${theme.name} preview`}
     class="block w-[5.5rem] shrink-0 transition-transform duration-300 sm:w-auto sm:hover:-translate-y-1"
   >
@@ -42,7 +42,7 @@ const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
 
     <div class="mt-auto flex flex-wrap gap-2 pt-2 sm:mt-4 sm:pt-0">
       <a
-        href={`/preview/${theme.slug}/`}
+        href={`/themes/${theme.slug}/`}
         class="flex min-h-[40px] items-center rounded-pill bg-ink px-4 text-xs font-medium text-cream hover:bg-ink-soft"
       >
         Preview

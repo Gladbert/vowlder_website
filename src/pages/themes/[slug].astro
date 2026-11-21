@@ -1,0 +1,117 @@
+---
+import Base from '../../layouts/Base.astro';
+import GuestTester from '../../components/GuestTester.astro';
+import TryPanel from '../../components/site/TryPanel.astro';
+import Invitation from '../../components/previews/Invitation';
+import { themes, waLink } from '../../data/themes';
+
+export function getStaticPaths() {
+  return themes.map((theme) => ({ params: { slug: theme.slug }, props: { theme } }));
+}
+
+const { theme } = Astro.props;
+const invitationUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
+---
+
+{/*
+  This is not a "preview" of an invitation: it is the invitation, at full size, exactly
+  as a guest opens it. Chrome is three floating pills, and the model is described in a
+  sheet so nothing sits beside the invitation pretending to be part of it.
+*/}
+<Base
+  bare
+  title={`${theme.name} · wedding invitation | Vowlder`}
+  description={`${theme.name}: ${theme.blurb}`}
+  image={`/og/${theme.slug}.png`}
+>
+  <div class="min-h-[100svh] bg-paper">
+    <main class="relative mx-auto h-[100svh] w-full max-w-[560px] overflow-hidden bg-paper sm:border-x sm:border-line">
+      <Invitation theme={theme} client:load />
+    </main>
+
+    <div class="pointer-events-none fixed inset-x-0 top-0 z-60">
+      <div class="pointer-events-auto mx-auto flex max-w-[560px] items-center justify-between gap-2 px-3 py-2.5">
+        <a
+          href="/themes"
+          class="press press-active flex min-h-[40px] items-center gap-1.5 rounded-pill bg-cream/85 px-3.5 text-[11px] tracking-[0.08em] uppercase text-ink shadow-sm backdrop-blur"
+        >
+          <span aria-hidden="true">←</span> Themes
+        </a>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            data-try-toggle
+            aria-expanded="false"
+            aria-controls="try-sheet"
+            class="press press-active flex min-h-[40px] items-center rounded-pill bg-cream/85 px-3.5 text-[11px] tracking-[0.08em] uppercase text-ink shadow-sm backdrop-blur"
+          >
+            What works
+          </button>
+          <a
+            href={waLink(theme, invitationUrl)}
+            target="_blank"
+            rel="noopener"
+            class="press press-active flex min-h-[40px] items-center rounded-pill bg-ink px-4 text-[11px] tracking-[0.08em] uppercase text-cream shadow-sm"
+          >
+            Order
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="try-sheet"
+      data-try-sheet
+      hidden
+      class="fixed inset-0 z-70 flex items-end justify-center bg-black/45 sm:items-center"
+    >
+      <div class="max-h-[86svh] w-full max-w-[560px] overflow-y-auto bg-cream px-4 pb-5 pt-3 sm:rounded-t-card">
+        <div class="flex items-center justify-between gap-4">
+          <p class="font-brand text-xl">{theme.name}</p>
+          <button
+            type="button"
+            data-try-close
+            class="flex min-h-[40px] min-w-[40px] items-center justify-center rounded-pill border border-line text-lg leading-none"
+          >
+            ×
+          </button>
+        </div>
+
+        <p class="mt-1 text-xs leading-relaxed text-ink-soft">
+          {theme.category} · {theme.mood} · {theme.tier}
+        </p>
+
+        <div class="mt-3">
+          <GuestTester variant="card" id="sheet" />
+        </div>
+
+        <div class="mt-3">
+          <TryPanel variant="inline" />
+        </div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('[data-try-toggle]');
+  const sheet = document.querySelector<HTMLElement>('[data-try-sheet]');
+  const close = document.querySelector<HTMLButtonElement>('[data-try-close]');
+
+  function setOpen(open: boolean) {
+    if (!sheet || !toggle) return;
+    sheet.hidden = !open;
+    toggle.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+
+  toggle?.addEventListener('click', () => setOpen(sheet ? sheet.hasAttribute('hidden') : false));
+  close?.addEventListener('click', () => setOpen(false));
+  sheet?.addEventListener('click', (event) => {
+    if (event.target === sheet) setOpen(false);
+  });
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setOpen(false);
+  });
+</script>
