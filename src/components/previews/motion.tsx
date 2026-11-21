@@ -7,7 +7,19 @@ export const EASE = [0.22, 1, 0.36, 1] as const;
 export type RevealKind = 'rise' | 'fade' | 'soft' | 'slide' | 'right' | 'drop' | 'unfold';
 export type HeroMotion = 'drift' | 'pan' | 'lift' | 'still';
 export type NavMotion = 'underline' | 'dot' | 'pill';
-export type CoverExit = 'fade' | 'rise' | 'curtain' | 'zoom';
+export type CoverExit =
+  | 'fade'
+  | 'rise'
+  | 'curtain'
+  | 'zoom'
+  | 'shrink'
+  | 'left'
+  | 'right'
+  | 'flip'
+  | 'unveil'
+  | 'iris'
+  | 'blind'
+  | 'drift';
 
 const presets: Record<RevealKind, { from: TargetAndTransition; to: TargetAndTransition }> = {
   rise: { from: { opacity: 0, y: 16 }, to: { opacity: 1, y: 0 } },
@@ -95,10 +107,25 @@ export function Rule({
   );
 }
 
-/** Cover exit styles, one per template family. */
-export const coverExits: Record<CoverExit, TargetAndTransition> = {
-  fade: { opacity: 0 },
-  rise: { opacity: 0, y: '-8%' },
-  curtain: { opacity: 0, y: '-100%' },
-  zoom: { opacity: 0, scale: 1.06 },
+/**
+ * Twelve opening mechanics. Every template picks one plus its own duration, so no
+ * two themes open the same way. Transform and opacity only, except the two clip
+ * masks (iris, blind), which are one full-screen layer for half a second.
+ */
+export const coverExits: Record<
+  CoverExit,
+  { to: TargetAndTransition; origin?: string }
+> = {
+  fade: { to: { opacity: 0 } },
+  rise: { to: { opacity: 0, y: '-8%' } },
+  curtain: { to: { opacity: 0, y: '-100%' }, origin: 'top center' },
+  zoom: { to: { opacity: 0, scale: 1.06 } },
+  shrink: { to: { opacity: 0, scale: 0.94 } },
+  left: { to: { opacity: 0, x: '-100%' }, origin: 'left center' },
+  right: { to: { opacity: 0, x: '100%' }, origin: 'right center' },
+  flip: { to: { opacity: 0, rotateX: -92, transformPerspective: 1400 }, origin: 'top center' },
+  unveil: { to: { opacity: 0, scaleY: 0 }, origin: 'top center' },
+  iris: { to: { opacity: 0, clipPath: 'circle(0% at 50% 42%)' } },
+  blind: { to: { opacity: 0, clipPath: 'inset(0% 0% 100% 0%)' } },
+  drift: { to: { opacity: 0, y: '-4%', scale: 1.02 } },
 };

@@ -28,6 +28,8 @@ export type ThemeMotion = {
   hero: HeroMotion;
   nav: NavMotion;
   coverExit: CoverExit;
+  /** Seconds the opening takes. Unique per template together with coverExit. */
+  coverDuration?: number;
 };
 
 export type Palette = {
@@ -111,7 +113,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
     variant: 'faithful',
     mood: 'Warm',
-    motion: { reveal: 'rise', hero: 'drift', nav: 'underline', coverExit: 'fade' },
+    motion: { reveal: 'rise', hero: 'drift', nav: 'underline', coverExit: 'flip', coverDuration: 0.7 },
     renderer: 'guest-app',
     photo: '/photos/cover.webp',
   },
@@ -135,7 +137,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
     variant: 'editorial',
     mood: 'Calm',
-    motion: { reveal: 'slide', hero: 'pan', nav: 'dot', coverExit: 'rise' },
+    motion: { reveal: 'slide', hero: 'pan', nav: 'dot', coverExit: 'rise', coverDuration: 0.55 },
     photo: '/photos/kyoto.webp',
   },
   {
@@ -158,7 +160,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'split',
     mood: 'Natural',
-    motion: { reveal: 'soft', hero: 'lift', nav: 'dot', coverExit: 'zoom' },
+    motion: { reveal: 'soft', hero: 'lift', nav: 'dot', coverExit: 'shrink', coverDuration: 0.5 },
     photo: '/photos/bamboo.webp',
   },
   {
@@ -181,7 +183,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 600, tracking: '0.06em', caps: false },
     variant: 'classic',
     mood: 'Luxe',
-    motion: { reveal: 'fade', hero: 'pan', nav: 'underline', coverExit: 'curtain' },
+    motion: { reveal: 'fade', hero: 'pan', nav: 'underline', coverExit: 'curtain', coverDuration: 0.65 },
     photo: '/photos/candid.webp',
   },
   {
@@ -204,7 +206,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.08em', caps: true },
     variant: 'editorial',
     mood: 'Bold',
-    motion: { reveal: 'drop', hero: 'pan', nav: 'pill', coverExit: 'rise' },
+    motion: { reveal: 'drop', hero: 'pan', nav: 'pill', coverExit: 'blind', coverDuration: 0.6 },
     photo: '/photos/hero1.webp',
   },
   {
@@ -227,7 +229,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'split',
     mood: 'Romantic',
-    motion: { reveal: 'right', hero: 'lift', nav: 'underline', coverExit: 'zoom' },
+    motion: { reveal: 'right', hero: 'lift', nav: 'underline', coverExit: 'iris', coverDuration: 0.6 },
     photo: '/photos/lake.webp',
   },
   {
@@ -250,7 +252,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 400, tracking: '-0.01em', caps: false },
     variant: 'editorial',
     mood: 'Elegant',
-    motion: { reveal: 'fade', hero: 'still', nav: 'dot', coverExit: 'fade' },
+    motion: { reveal: 'fade', hero: 'still', nav: 'dot', coverExit: 'fade', coverDuration: 0.75 },
     photo: '/photos/shibuya.webp',
   },
   {
@@ -273,7 +275,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
     variant: 'poster',
     mood: 'Bold',
-    motion: { reveal: 'drop', hero: 'pan', nav: 'pill', coverExit: 'rise' },
+    motion: { reveal: 'unfold', hero: 'pan', nav: 'pill', coverExit: 'left', coverDuration: 0.5 },
     photo: '/photos/groom.webp',
   },
   {
@@ -296,7 +298,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.05em', caps: false },
     variant: 'spotlight',
     mood: 'Elegant',
-    motion: { reveal: 'fade', hero: 'drift', nav: 'dot', coverExit: 'zoom' },
+    motion: { reveal: 'fade', hero: 'drift', nav: 'dot', coverExit: 'zoom', coverDuration: 0.7 },
     photo: '/photos/bride.webp',
   },
   {
@@ -319,7 +321,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'compact',
     mood: 'Calm',
-    motion: { reveal: 'right', hero: 'still', nav: 'underline', coverExit: 'fade' },
+    motion: { reveal: 'right', hero: 'still', nav: 'underline', coverExit: 'fade', coverDuration: 0.4 },
   },
   {
     slug: 'temu-rasa',
@@ -341,7 +343,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'medallion',
     mood: 'Romantic',
-    motion: { reveal: 'unfold', hero: 'lift', nav: 'dot', coverExit: 'zoom' },
+    motion: { reveal: 'unfold', hero: 'lift', nav: 'dot', coverExit: 'unveil', coverDuration: 0.55 },
     photo: '/photos/bride.webp',
   },
   {
@@ -364,7 +366,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.03em', caps: false },
     variant: 'medallion',
     mood: 'Luxe',
-    motion: { reveal: 'fade', hero: 'drift', nav: 'underline', coverExit: 'curtain' },
+    motion: { reveal: 'fade', hero: 'drift', nav: 'underline', coverExit: 'curtain', coverDuration: 0.8 },
     photo: '/photos/shrine.webp',
   },
   {
@@ -387,7 +389,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 600, tracking: '0.05em', caps: false },
     variant: 'classic',
     mood: 'Luxe',
-    motion: { reveal: 'fade', hero: 'drift', nav: 'pill', coverExit: 'curtain' },
+    motion: { reveal: 'fade', hero: 'drift', nav: 'pill', coverExit: 'flip', coverDuration: 0.55 },
     photo: '/photos/couple.webp',
   },
   {
@@ -410,7 +412,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
     variant: 'poster',
     mood: 'Natural',
-    motion: { reveal: 'rise', hero: 'pan', nav: 'dot', coverExit: 'rise' },
+    motion: { reveal: 'rise', hero: 'pan', nav: 'dot', coverExit: 'right', coverDuration: 0.5 },
     photo: '/photos/lake.webp',
   },
   {
@@ -433,7 +435,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 600, tracking: '0.04em', caps: false },
     variant: 'seal',
     mood: 'Luxe',
-    motion: { reveal: 'fade', hero: 'drift', nav: 'pill', coverExit: 'curtain' },
+    motion: { reveal: 'soft', hero: 'drift', nav: 'pill', coverExit: 'iris', coverDuration: 0.75 },
     giftLabel: 'Angpao',
     glyph: '囍',
     photo: '/photos/candid.webp',
@@ -458,7 +460,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
     variant: 'editorial',
     mood: 'Calm',
-    motion: { reveal: 'slide', hero: 'lift', nav: 'pill', coverExit: 'rise' },
+    motion: { reveal: 'slide', hero: 'lift', nav: 'pill', coverExit: 'rise', coverDuration: 0.7 },
     giftLabel: 'Angpao',
     glyph: '福',
     photo: '/photos/hero1.webp',
@@ -483,7 +485,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.03em', caps: false },
     variant: 'medallion',
     mood: 'Elegant',
-    motion: { reveal: 'unfold', hero: 'pan', nav: 'pill', coverExit: 'zoom' },
+    motion: { reveal: 'unfold', hero: 'pan', nav: 'pill', coverExit: 'unveil', coverDuration: 0.65 },
     giftLabel: 'Angpao',
     glyph: '囍',
     photo: '/photos/groom.webp',
@@ -508,7 +510,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '-0.01em', caps: false },
     variant: 'rail',
     mood: 'Warm',
-    motion: { reveal: 'right', hero: 'pan', nav: 'underline', coverExit: 'rise' },
+    motion: { reveal: 'right', hero: 'pan', nav: 'underline', coverExit: 'left', coverDuration: 0.6 },
     photo: '/photos/shibuya.webp',
   },
   {
@@ -531,7 +533,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.02em', caps: false },
     variant: 'ledger',
     mood: 'Luxe',
-    motion: { reveal: 'fade', hero: 'lift', nav: 'dot', coverExit: 'curtain' },
+    motion: { reveal: 'fade', hero: 'lift', nav: 'dot', coverExit: 'blind', coverDuration: 0.75 },
     photo: '/photos/kyoto.webp',
   },
   {
@@ -554,7 +556,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0em', caps: false },
     variant: 'split',
     mood: 'Natural',
-    motion: { reveal: 'soft', hero: 'pan', nav: 'dot', coverExit: 'zoom' },
+    motion: { reveal: 'soft', hero: 'pan', nav: 'dot', coverExit: 'drift', coverDuration: 0.65 },
     photo: '/photos/lake.webp',
   },
   {
@@ -577,7 +579,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '-0.02em', caps: false },
     variant: 'compact',
     mood: 'Elegant',
-    motion: { reveal: 'rise', hero: 'still', nav: 'underline', coverExit: 'fade' },
+    motion: { reveal: 'rise', hero: 'still', nav: 'underline', coverExit: 'shrink', coverDuration: 0.45 },
     photo: '/photos/shibuya.webp',
   },
   {
@@ -600,7 +602,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'faithful',
     mood: 'Warm',
-    motion: { reveal: 'rise', hero: 'lift', nav: 'underline', coverExit: 'fade' },
+    motion: { reveal: 'rise', hero: 'lift', nav: 'underline', coverExit: 'drift', coverDuration: 0.55 },
     photo: '/photos/candid.webp',
   },
   {
@@ -623,7 +625,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 600, tracking: '-0.02em', caps: false },
     variant: 'editorial',
     mood: 'Bold',
-    motion: { reveal: 'slide', hero: 'pan', nav: 'pill', coverExit: 'rise' },
+    motion: { reveal: 'slide', hero: 'pan', nav: 'pill', coverExit: 'zoom', coverDuration: 0.5 },
     photo: '/photos/kyoto.webp',
   },
 ];

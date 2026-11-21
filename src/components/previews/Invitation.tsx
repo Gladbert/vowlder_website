@@ -57,6 +57,15 @@ export default function Invitation({ theme }: { theme: Theme }) {
     coverExit: t.coverExit,
   };
   const hero = heroMotions[motionSet.hero];
+  const opening = coverExits[motionSet.coverExit];
+  const openingDuration = motionSet.coverDuration ?? 0.55;
+  // The two clip-mask openings need their starting mask, or there is nothing to animate.
+  const openingClip =
+    motionSet.coverExit === 'iris'
+      ? { clipPath: 'circle(150% at 50% 42%)' }
+      : motionSet.coverExit === 'blind'
+        ? { clipPath: 'inset(0% 0% 0% 0%)' }
+        : {};
 
   const [guest] = useGuestName();
   const [opened, setOpened] = useState(false);
@@ -376,12 +385,16 @@ export default function Invitation({ theme }: { theme: Theme }) {
         <AnimatePresence>
           {!opened && (
             <motion.div
-              initial={{ opacity: 1 }}
-              exit={{ ...coverExits[motionSet.coverExit], transition: { duration: 0.55, ease: EASE } }}
+              initial={{ opacity: 1, ...openingClip }}
+              exit={{ ...opening.to, transition: { duration: openingDuration, ease: EASE } }}
               className={`absolute inset-0 z-40 flex flex-col ${
                 t.cover === 'plain' ? 'justify-center' : t.coverJustify
               } ${t.align}`}
-              style={{ background: p.bg, color: p.ink, transformOrigin: 'top center' }}
+              style={{
+                background: p.bg,
+                color: p.ink,
+                transformOrigin: opening.origin ?? 'center',
+              }}
             >
               {t.cover === 'photo' && (
                 <>

@@ -116,7 +116,8 @@ Two data files, one rule: **content and design never mix.**
 `src/components/previews/motion.tsx` is the only place motion is defined.
 
 - **Transform and opacity only.** Never animate height, width, top/left, filter, or box-shadow. `scaleX` on a hairline is fine; `width` on one is not.
-- `Reveal` wraps section content; `Rule` draws a hairline; `coverExits` maps a variant to its gate exit (`fade`, `rise`, `curtain`, `zoom`). Each variant picks `reveal` + `coverExit` in `tokens.ts` — that is how templates feel different without new components.
+- `Reveal` wraps section content; `Rule` draws a hairline. **Twelve opening mechanics** live in `coverExits`: `fade`, `rise`, `curtain`, `zoom`, `shrink`, `left`, `right`, `flip`, `unveil`, `iris`, `blind`, `drift`. Each template sets `coverExit` **and** `coverDuration`; the pair must be unique across the catalogue (23 themes, 23 distinct pairs). The full signature — `reveal / hero / nav / coverExit / coverDuration` — is unique per template too; a recheck script asserts both.
+- `token.reveal` / `token.coverExit` remain as fallbacks for a new theme that has no `motion` block yet. Never ship a theme without one.
 - Every reveal carries `data-reveal`. The layout audit counts those nodes and fails a template with fewer than five, so motion cannot silently disappear from a template.
 - `viewport: { root }` is mandatory: the invitation scrolls inside its own container, so a reveal without an explicit root never fires.
 - `once: true` everywhere. No loops, no attention-seeking motion, no bounce, no spin, no parallax tied to scroll.
