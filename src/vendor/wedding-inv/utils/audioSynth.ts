@@ -8,7 +8,7 @@ export const WEDDING_TRACK = {
   title: 'Dream Lantern',
   version: 'Kimi no Na wa (Instrumental)',
   artist: 'RADWIMPS',
-  localAudioUrl: '/audio/dream_lantern_kimi_no_na_wa.mp3',
+  localAudioUrl: '/audio/ceremony.mp3',
 };
 
 class WeddingMusicPlayer {

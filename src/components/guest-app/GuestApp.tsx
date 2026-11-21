@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MotionConfig, motion } from 'motion/react';
+import { Share2 } from 'lucide-react';
 import { OpeningCover } from '../../vendor/wedding-inv/ui/OpeningCover';
 import { HeroSection } from '../../vendor/wedding-inv/ui/HeroSection';
 import { CoupleSection } from '../../vendor/wedding-inv/ui/CoupleSection';
@@ -23,6 +24,8 @@ import type { GalleryPhoto, RSVPRecord, Wish } from '../../vendor/wedding-inv/ty
 
 import type { ToastState } from '../../vendor/wedding-inv/ui/DynamicIslandToast';
 import { weddingMusic } from '../../vendor/wedding-inv/utils/audioSynth';
+import { wedding } from '../../data/wedding';
+import GuestPass from './GuestPass';
 import '../../vendor/wedding-inv/styles/base.css';
 
 const SECTIONS = ['hero-section', 'couple-section', 'story-section', 'events-section', 'gallery-section', 'guestbook-section'];
@@ -37,8 +40,23 @@ export default function GuestApp() {
   const [opened, setOpened] = useState(false);
   const [guestName, setGuestName] = useState('Honoured Guest');
   const [paxCount, setPaxCount] = useState(2);
-  const [wishes, setWishes] = useState<Wish[]>(INITIAL_WISHES);
+  // The original seeds came from the server and arrive empty here; use the same six
+  // wishes the rest of the catalogue shows, so the mock has content to read and heart.
+  const [wishes, setWishes] = useState<Wish[]>(() => {
+    if (INITIAL_WISHES.length > 0) return INITIAL_WISHES;
+    return wedding.wishes.map((wish, index) => ({
+      id: `seed-${index}`,
+      name: wish.name,
+      message: wish.message,
+      relationship: 'Friend',
+      attendance: 'attending' as const,
+      createdAt: new Date(Date.now() - index * 36e5).toISOString(),
+      avatarColor: AVATAR_COLORS[index % AVATAR_COLORS.length],
+    }));
+  });
   const [rsvp, setRsvp] = useState<RSVPRecord | null>(null);
+  const [likedWishes, setLikedWishes] = useState<string[]>([]);
+  const [passOpen, setPassOpen] = useState(false);
   const [photos, setPhotos] = useState<GalleryPhoto[]>(GALLERY_PHOTOS);
   const [toast, setToast] = useState<ToastState | null>(null);
   const [isPlayingMusic, setIsPlayingMusic] = useState(false);
@@ -149,6 +167,24 @@ export default function GuestApp() {
     showToast('Your reply is saved on this device only', 'success');
   };
 
+  const handleToggleWishLike = (id: string) => {
+    setLikedWishes((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]));
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'Gladbert & Monica', text: 'You are invited.', url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      showToast('Link copied to your clipboard', 'copy');
+    } catch {
+      showToast('Could not share, copy the address bar instead', 'copy');
+    }
+  };
+
   const handleNavigate = (sectionId: string) => {
     const target = scroller.current?.querySelector<HTMLElement>(`#${sectionId}`);
     target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -189,12 +225,24 @@ export default function GuestApp() {
         )}
 
         <div className={opened ? '' : 'hidden'}>
+          {/* Share sits on the left: FloatingControls owns the right. */}
+          <button
+            type="button"
+            onClick={handleShare}
+            aria-label="Share this invitation"
+            className="fixed left-3 top-[calc(env(safe-area-inset-top,0px)+12px)] z-40 flex h-11 min-h-[44px] items-center gap-1.5 rounded-full border border-white/[0.14] bg-[#1A1412]/85 px-3.5 text-xs font-medium text-[#FAF8F5] backdrop-blur-xl transition-colors hover:bg-[#1A1412] sm:top-4 sm:left-4"
+          >
+            <Share2 className="h-3.5 w-3.5 text-[#E6D4C1]" aria-hidden="true" />
+            <span>Share</span>
+          </button>
+
           <FloatingControls
             isPlayingMusic={isPlayingMusic}
             onToggleMusic={handleToggleMusic}
             viewMode={viewMode}
             onToggleViewMode={() => setViewMode((mode) => (mode === 'mobile' ? 'fluid' : 'mobile'))}
             showScreenToggle={isDesktop}
+            onOpenShare={handleShare}
           />
 
           <main
@@ -227,12 +275,34 @@ export default function GuestApp() {
               defaultGuestName={guestName}
               paxCount={paxCount}
               existingRSVP={rsvp}
+              onCancelRsvp={() => {
+                setRsvp(null);
+                showToast('Your reply was cleared on this device', 'success');
+              }}
+              likedWishIds={likedWishes}
+              onToggleWishLike={handleToggleWishLike}
               onNotify={showToast}
             />
             <FooterSection coupleInfo={COUPLE_INFO} />
           </main>
 
+          {rsvp && (
+            <button
+              type="button"
+              onClick={() => setPassOpen(true)}
+              className="fixed bottom-24 left-1/2 z-40 -translate-x-1/2 rounded-full bg-[#1C1714] px-4 py-2.5 text-[11px] font-semibold tracking-[0.14em] uppercase text-[#FCF9F5] shadow-lg"
+            >
+              Show my pass
+            </button>
+          )}
+
           <BottomNav activeSection={activeSection} onNavigate={handleNavigate} badgeCount={badgeCount} />
+          <GuestPass
+            open={passOpen}
+            onClose={() => setPassOpen(false)}
+            name={rsvp?.guestName ?? guestName}
+            pax={paxCount}
+          />
         </div>
       </div>
     </MotionConfig>

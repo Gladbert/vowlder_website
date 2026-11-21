@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Send,
@@ -46,6 +47,9 @@ interface GuestbookSectionProps {
   wishesTotal?: number;
   /** Fetch the next page when the local list is exhausted (lazy guestbook). */
   onLoadMoreWishes?: () => void | Promise<void>;
+  /** Local hearts, supplied by the standalone build. */
+  likedWishIds?: string[];
+  onToggleWishLike?: (id: string) => void;
   onNotify?: (message: string, type?: 'success' | 'copy' | 'love') => void;
 }
 
@@ -72,6 +76,8 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
   rsvpIsReactivating = false,
   wishesTotal,
   onLoadMoreWishes,
+  likedWishIds = [],
+  onToggleWishLike,
   onNotify,
 }) => {
   // For default wedding invitation, leave name blank so placeholder "e.g., Alexander & Partner" is purely a textbox hint
@@ -713,18 +719,31 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
                   transition={{ duration: 0.25, delay: idx * 0.03 }}
                   className="p-4 rounded-2xl bg-white/85 backdrop-blur-md border border-[#E6DDD0] shadow-[0_2px_8px_rgba(28,23,20,0.03)]"
                 >
-                  <div className="mb-2">
-                    <h4 className="font-semibold text-xs text-[#1C1714]">
-                      {item.name}
-                    </h4>
-                    <span className="text-[10px] text-muted-on-light">
-                      {wishDate(item.createdAt)}
-                    </span>
+                  <div className="mb-2 flex items-start justify-between gap-3">
+                    <div>
+                      <h4 className="font-semibold text-xs text-[#1C1714]">{item.name}</h4>
+                      <span className="text-[10px] text-muted-on-light">{wishDate(item.createdAt)}</span>
+                    </div>
+                    {onToggleWishLike && (
+                      <button
+                        type="button"
+                        onClick={() => onToggleWishLike(item.id)}
+                        aria-pressed={likedWishIds.includes(item.id)}
+                        aria-label={
+                          likedWishIds.includes(item.id)
+                            ? `Remove your heart from ${item.name}`
+                            : `Heart the wish from ${item.name}`
+                        }
+                        className="flex min-h-[40px] min-w-[40px] items-center justify-center rounded-full border border-[#E6DDD0] text-[#966A38] transition-colors hover:bg-[#FAF6F0]"
+                      >
+                        <Heart
+                          className={`h-3.5 w-3.5 ${likedWishIds.includes(item.id) ? 'fill-current' : ''}`}
+                        />
+                      </button>
+                    )}
                   </div>
 
-                  <p className="text-xs text-[#4A3B2F] leading-relaxed">
-                    {item.message}
-                  </p>
+                  <p className="text-xs text-[#4A3B2F] leading-relaxed">{item.message}</p>
                 </motion.div>
               ))}
 
