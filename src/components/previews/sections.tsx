@@ -406,18 +406,29 @@ export function Story({ p, t, root, reveal }: Look) {
       </Reveal>
 
       {t.story === 'timeline' ? (
-        <ol className="mt-5 space-y-6">
+        <ol className="mt-5 space-y-7">
           {wedding.story.map((item, index) => (
             <li key={item.year} className="border-l pl-4" style={{ borderColor: p.line }}>
               <Reveal kind={reveal} root={root} delay={index * 0.07}>
-                <span className={`${t.small} tabular-nums`} style={{ color: p.accent }}>
-                  {item.year}
-                </span>
-                <h3 className={`mt-1 ${t.sectionTitle}`}>{item.title}</h3>
-                <p className={t.small} style={{ color: p.soft }}>
-                  {item.subtitle}
-                </p>
-                <p className={`mt-1.5 ${t.body}`}>{item.narrative}</p>
+                <div className="flex items-start gap-3">
+                  <img
+                    src={item.photo}
+                    alt=""
+                    loading="lazy"
+                    className={`h-16 w-16 shrink-0 object-cover ${t.radius === 'rounded-full' ? 'rounded-full' : t.radius}`}
+                    style={{ background: p.line }}
+                  />
+                  <div className="min-w-0">
+                    <span className={`${t.small} tabular-nums`} style={{ color: p.accent }}>
+                      {item.year}
+                    </span>
+                    <h3 className={`mt-1 ${t.sectionTitle}`}>{item.title}</h3>
+                    <p className={t.small} style={{ color: p.soft }}>
+                      {item.subtitle}
+                    </p>
+                  </div>
+                </div>
+                <p className={`mt-2 ${t.body}`}>{item.narrative}</p>
               </Reveal>
             </li>
           ))}
@@ -444,7 +455,14 @@ export function Story({ p, t, root, reveal }: Look) {
   );
 }
 
-export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index: number) => void }) {
+export function Gallery({
+  p,
+  t,
+  root,
+  reveal,
+  onOpen,
+  onFilm,
+}: Look & { onOpen: (index: number) => void; onFilm: (open: boolean) => void }) {
   const [likes, setLikes] = useState<Record<number, number>>({});
   const [liked, setLiked] = useState<Record<number, boolean>>({});
 
@@ -585,12 +603,12 @@ export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index:
       </p>
 
       <Reveal kind={reveal} root={root} delay={0.1} className="mt-5">
-        <a
-          href={wedding.video.url}
-          target="_blank"
-          rel="noopener"
-          className={`relative block overflow-hidden ${t.radius}`}
+        <button
+          type="button"
+          onClick={() => onFilm(true)}
+          className={`relative block w-full overflow-hidden text-left ${t.radius}`}
           style={{ background: p.bg }}
+          aria-label="Play the prewedding film"
         >
           <img
             src="/photos/cover.webp"
@@ -602,6 +620,15 @@ export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index:
             <PlayIcon />
             <span className="text-[10px] tracking-[0.16em] uppercase">Prewedding film</span>
           </span>
+        </button>
+        <a
+          href={wedding.video.url}
+          target="_blank"
+          rel="noopener"
+          className={`mt-1 inline-flex min-h-[40px] items-center ${t.small}`}
+          style={{ color: p.soft }}
+        >
+          Open on YouTube
         </a>
       </Reveal>
     </section>
@@ -647,10 +674,18 @@ export function Wishes({
   onOpenRsvp,
 }: Look & { guest: string; rsvp: RsvpValue | null; onOpenRsvp: () => void }) {
   const [wishes, setWishes] = useState(() =>
-    wedding.wishes.map((wish, index) => ({ ...wish, id: `seed-${index}`, likes: 0, liked: false }))
+    wedding.wishes.map((wish, index) => ({
+      ...wish,
+      id: `seed-${index}`,
+      likes: 0,
+      liked: false,
+      relationship: 'Friend',
+      initials: wish.name.slice(0, 1).toUpperCase(),
+    }))
   );
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
+  const [relationship, setRelationship] = useState(wedding.relationships[1]);
   const nextId = useRef(0);
 
   function submit(event: { preventDefault: () => void }) {
@@ -658,7 +693,15 @@ export function Wishes({
     if (!message.trim()) return;
     nextId.current += 1;
     setWishes([
-      { id: `wish-${nextId.current}`, name: name.trim() || guest, message: message.trim(), likes: 0, liked: false },
+      {
+        id: `wish-${nextId.current}`,
+        name: name.trim() || guest,
+        message: message.trim(),
+        relationship,
+        likes: 0,
+        liked: false,
+        initials: (name.trim() || guest).slice(0, 1).toUpperCase(),
+      },
       ...wishes,
     ]);
     setMessage('');
@@ -739,9 +782,26 @@ export function Wishes({
             onChange={(event) => setName(event.target.value)}
             placeholder={guest}
             maxLength={40}
-            className={`mt-1 w-full border px-2.5 py-2 text-[13px] ${t.radius}`}
+            className={`mt-1 min-h-[40px] w-full border px-2.5 py-2 text-[13px] ${t.radius}`}
             style={{ borderColor: p.line, background: p.bg, color: p.ink }}
           />
+
+          <label className={`mt-3 block ${t.small}`} style={{ color: p.soft }} htmlFor="wish-relationship">
+            You are here as
+          </label>
+          <select
+            id="wish-relationship"
+            value={relationship}
+            onChange={(event) => setRelationship(event.target.value)}
+            className={`mt-1 min-h-[40px] w-full border px-2.5 py-2 text-[13px] ${t.radius}`}
+            style={{ borderColor: p.line, background: p.bg, color: p.ink }}
+          >
+            {wedding.relationships.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
 
           <label className={`mt-3 block ${t.small}`} style={{ color: p.soft }} htmlFor="wish-body">
             Message
@@ -768,9 +828,21 @@ export function Wishes({
           <li key={wish.id} className={`border p-3 ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
             <Reveal kind="fade" root={root} delay={Math.min(index, 2) * 0.05}>
               <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-[11px] font-semibold">{wish.name}</p>
-                  <p className={`mt-1 ${t.body}`}>{wish.message}</p>
+                <div className="flex min-w-0 items-start gap-2.5">
+                  <span
+                    aria-hidden="true"
+                    className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold"
+                    style={{ background: p.accent, color: p.on }}
+                  >
+                    {wish.initials}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-semibold">{wish.name}</p>
+                    <p className={`${t.small}`} style={{ color: p.soft }}>
+                      {wish.relationship}
+                    </p>
+                    <p className={`mt-1 ${t.body}`}>{wish.message}</p>
+                  </div>
                 </div>
                 <button
                   type="button"

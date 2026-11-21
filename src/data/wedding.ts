@@ -111,6 +111,10 @@ export const wedding = {
 
   invited: ['The Go family', 'The Setiawan family', 'The Siauw family'],
 
+  /** Shown on the cover, the way printed invitations apologise for name errors. */
+  typoNote: 'Apologies in advance for any misspelling of names or titles.',
+  relationships: ['Family', 'Friend', 'Colleague', 'Neighbour', 'Plus one'],
+
   gift: {
     note: "No gift is expected, and your presence is already plenty. If you'd still like to send something, ask either of us for the account details.",
     channels: ['BCA', 'Mandiri', 'GoPay', 'OVO', 'QRIS', 'Physical gift'],

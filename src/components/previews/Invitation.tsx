@@ -62,6 +62,8 @@ export default function Invitation({ theme }: { theme: Theme }) {
   const [opened, setOpened] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [rsvpOpen, setRsvpOpen] = useState(false);
+  const [filmOpen, setFilmOpen] = useState(false);
+  const [pax, setPax] = useState(2);
   const [rsvp, setRsvp] = useState<RsvpValue | null>(null);
   const audio = useInvitationAudio(theme.music ?? DEFAULT_TRACK);
   const navState = useSectionNav(nav.map((item) => item.id));
@@ -70,13 +72,19 @@ export default function Invitation({ theme }: { theme: Theme }) {
 
   const { groom, bride } = wedding.couple;
 
+  useEffect(() => {
+    const fromUrl = Number(new URLSearchParams(window.location.search).get('pax'));
+    if (Number.isFinite(fromUrl) && fromUrl > 0 && fromUrl <= 6) setPax(Math.round(fromUrl));
+  }, []);
+
   // Escape closes whichever overlay is on top, and the page behind stops scrolling.
   useEffect(() => {
-    if (lightbox === null && !rsvpOpen) return;
+    if (lightbox === null && !rsvpOpen && !filmOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return;
       setLightbox(null);
       setRsvpOpen(false);
+      setFilmOpen(false);
     };
     const scroller = navState.ref.current;
     const previous = scroller?.style.overflowY;
@@ -86,7 +94,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
       window.removeEventListener('keydown', onKey);
       if (scroller && previous !== undefined) scroller.style.overflowY = previous;
     };
-  }, [lightbox, rsvpOpen, navState.ref]);
+  }, [lightbox, rsvpOpen, filmOpen, navState.ref]);
 
   // Two-second slideshow, advanced by a timer the markup owns.
   useEffect(() => {
@@ -255,6 +263,9 @@ export default function Invitation({ theme }: { theme: Theme }) {
                   {guest}
                 </span>
               </p>
+              <p className={`mt-1.5 ${t.small}`} style={{ color: p.soft }}>
+                Reserved for {pax} {pax === 1 ? 'guest' : 'guests'}
+              </p>
             </div>
           </section>
 
@@ -269,7 +280,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
           )}
 
           <Story p={p} t={t} root={navState.ref} reveal={motionSet.reveal} />
-          <Gallery p={p} t={t} root={navState.ref} reveal={motionSet.reveal} onOpen={setLightbox} />
+          <Gallery p={p} t={t} root={navState.ref} reveal={motionSet.reveal} onOpen={setLightbox} onFilm={setFilmOpen} />
           <Gift p={p} t={t} root={navState.ref} reveal={motionSet.reveal} label={theme.giftLabel ?? 'Gifts'} />
           <Wishes
             p={p}
@@ -345,6 +356,15 @@ export default function Invitation({ theme }: { theme: Theme }) {
                   >
                     <Icon />
                     <span>{item.label}</span>
+                    {item.id === 'ucapan' && rsvp && (
+                      <span
+                        aria-label={`${rsvp.pax} guests confirmed`}
+                        className="absolute right-1.5 top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold tabular-nums"
+                        style={{ background: p.accent, color: p.on }}
+                      >
+                        {rsvp.attendance === 'tidak' ? 0 : rsvp.pax}
+                      </span>
+                    )}
                   </button>
                 </li>
               );
@@ -460,7 +480,21 @@ export default function Invitation({ theme }: { theme: Theme }) {
                   <p className={`mt-1 text-[15px] font-medium ${t.align === 'text-left' ? '' : 'text-center'}`}>
                     {guest}
                   </p>
+                  <p className={`mt-1 ${t.small} ${t.align === 'text-left' ? '' : 'text-center'}`} style={{ color: p.soft }}>
+                    {pax} {pax === 1 ? 'seat' : 'seats'}
+                  </p>
                 </motion.div>
+
+                <motion.p
+                  className={`mx-auto mt-2 max-w-[19rem] text-[10px] leading-relaxed ${t.align === 'text-left' ? '' : 'text-center'}`}
+                  style={{ color: p.soft }}
+                  variants={{
+                    hidden: { opacity: 0 },
+                    shown: { opacity: 1, transition: { duration: 0.55, ease: EASE } },
+                  }}
+                >
+                  {wedding.typoNote}
+                </motion.p>
 
                 <motion.button
                   type="button"
@@ -524,6 +558,43 @@ export default function Invitation({ theme }: { theme: Theme }) {
                   {wedding.gallery[lightbox].caption}
                 </p>
               </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {filmOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="absolute inset-0 z-50 flex flex-col justify-center bg-black/92 px-4 py-6"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Prewedding film"
+              onClick={() => setFilmOpen(false)}
+            >
+              <div className="mx-auto aspect-[9/16] w-full max-w-[320px] overflow-hidden rounded-xl bg-black">
+                <iframe
+                  title={wedding.video.title}
+                  src="https://www.youtube.com/embed/3QU6E5Mc33c"
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="h-full w-full border-0"
+                />
+              </div>
+              <div className="mx-auto mt-3 flex w-full max-w-[320px] items-center justify-between gap-3 text-white">
+                <p className="text-[12px]">{wedding.video.title}</p>
+                <button
+                  type="button"
+                  onClick={() => setFilmOpen(false)}
+                  className="flex min-h-[40px] min-w-[40px] items-center justify-center rounded-full bg-white/15 px-3 text-[10px] tracking-[0.16em] uppercase"
+                >
+                  Close
+                </button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
