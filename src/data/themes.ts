@@ -58,6 +58,8 @@ export type Theme = {
   glyph?: string;
   /** Motion signature; falls back to the variant defaults in tokens.ts. */
   motion?: ThemeMotion;
+  /** 'guest-app' renders the vendored Wedding-inv guest app verbatim, not our renderer. */
+  renderer?: 'guest-app';
   /** Card thumbnail photo. Omit for a purely typographic card. */
   photo?: string;
   /** Path to a loopable track. Leave undefined and the music control stays hidden. */
@@ -110,6 +112,7 @@ export const themes: Theme[] = [
     variant: 'faithful',
     mood: 'Warm',
     motion: { reveal: 'rise', hero: 'drift', nav: 'underline', coverExit: 'fade' },
+    renderer: 'guest-app',
     photo: '/photos/cover.webp',
   },
   {

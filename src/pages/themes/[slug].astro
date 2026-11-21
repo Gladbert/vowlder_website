@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import GuestTester from '../../components/GuestTester.astro';
 import TryPanel from '../../components/site/TryPanel.astro';
 import Invitation from '../../components/previews/Invitation';
+import GuestApp from '../../components/guest-app/GuestApp';
 import { themes, waLink } from '../../data/themes';
 
 export function getStaticPaths() {
@@ -10,6 +11,7 @@ export function getStaticPaths() {
 }
 
 const { theme } = Astro.props;
+const isGuestApp = theme.renderer === 'guest-app';
 const invitationUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
 ---
 
@@ -26,11 +28,16 @@ const invitationUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
 >
   <div class="min-h-[100svh] bg-paper">
     <main class="relative mx-auto h-[100svh] w-full max-w-[560px] overflow-hidden bg-paper sm:border-x sm:border-line">
-      <Invitation theme={theme} client:load />
+      {isGuestApp ? <GuestApp client:load /> : <Invitation theme={theme} client:load />}
     </main>
 
     <div class="pointer-events-none fixed inset-x-0 top-0 z-60">
-      <div class="pointer-events-auto mx-auto flex max-w-[560px] items-center justify-between gap-2 px-3 py-2.5">
+      <div
+        class:list={[
+          'pointer-events-auto mx-auto flex max-w-[560px] items-center gap-2 px-3 py-2.5',
+          isGuestApp ? 'justify-start' : 'justify-between',
+        ]}
+      >
         <a
           href="/themes"
           class="press press-active flex min-h-[40px] items-center gap-1.5 rounded-pill bg-cream/85 px-3.5 text-[11px] tracking-[0.08em] uppercase text-ink shadow-sm backdrop-blur"
@@ -38,7 +45,7 @@ const invitationUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
           <span aria-hidden="true">←</span> Themes
         </a>
 
-        <div class="flex items-center gap-2">
+        <div class:list={['flex items-center gap-2', isGuestApp && 'hidden']}>
           <button
             type="button"
             data-try-toggle

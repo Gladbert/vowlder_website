@@ -1,0 +1,163 @@
+
+/* Semantic secondary-text tokens.
+   The old ad-hoc browns (#857262, #8C7B6D, #7A6757, ...) failed WCAG AA on both
+   surfaces (4.0-4.4:1 on cream, 3.4-4.0:1 on near-black). These two clear the
+   4.5:1 threshold on every surface the app uses. Pick by the element's surface:
+   muted-on-light for the cream invitation, muted-on-dark for dark cards/admin. */
+@theme {
+  --color-muted-on-light: #6B5A4D;
+  --color-muted-on-dark: #B0A090;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* The guest app floats a bottom nav over the page (BottomNav, ~76 px plus the
+       safe area). Without this, "scroll this into view" — a focus jump, a Scroll to
+       RSVP tap — parks the target underneath it, and a tap at the button's own centre
+       lands on the nav. Harmless in the staff app, which has no bottom bar. */
+    scroll-padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button, a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+}
+
+/* Mobile safe area padding utilities */
+.pb-safe {
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+}
+.pt-safe {
+  padding-top: max(12px, env(safe-area-inset-top, 12px));
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+:root {
+  --wi-font-display: 'Cormorant Garamond Variable', Georgia, serif;
+}
+
+/* Hide native number spinners */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.font-display {
+  font-family: var(--wi-font-display, 'Cormorant Garamond Variable'), Georgia, serif;
+  font-feature-settings: 'cv01' on, 'calt' on;
+}
+
+.font-serif {
+  font-family: var(--wi-font-display, 'Cormorant Garamond Variable'), Georgia, serif;
+}
+
+.font-serif-italic {
+  font-family: var(--wi-font-display, 'Cormorant Garamond Variable'), Georgia, serif;
+  font-style: italic;
+}
+
+/* Apple HIG Glass & Material Physics */
+.apple-glass {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 24px -2px rgba(28, 23, 20, 0.04), 0 16px 40px -4px rgba(28, 23, 20, 0.06);
+}
+
+.apple-glass-dark {
+  background: rgba(25, 20, 17, 0.86);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.36);
+}
+
+.apple-specular {
+  position: relative;
+}
+.apple-specular::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  pointer-events: none;
+}
+
+/* Custom refined scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 118, 101, 0.25);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(140, 118, 101, 0.45);
+}
+
+/* Gentle Ken-Burns cinematic drift */
+@keyframes subtleKenBurns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.04) translate(-1%, -1%); }
+  100% { transform: scale(1) translate(0, 0); }
+}
+
+.animate-ken-burns {
+  animation: subtleKenBurns 18s ease-in-out infinite alternate;
+}
+
+/* Respect the OS "reduce motion" preference for CSS-driven motion. JS-driven
+   `motion` animations are handled globally by <MotionConfig reducedMotion="user">. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-ken-burns {
+    animation: none;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ========================================================================= */
+/* The thermal/guest-pass @media print block used to live here. Its only
+   referencing code was AdminThermalPrinterTab (deleted) — the live print paths are
+   the hidden iframe (printHtmlIsolated) and the canvas ticket printer, which carry
+   their own styles — so it is gone instead of shipping to both bundles. */
+
+/* Tailwind v4 scans the importing app; this file lives inside the shared package,
+   so point it at the package root ("../" is packages/shared/src). */
+@source "../";
+
+/* The reception iPad is used with a finger. A top-edge downward swipe triggers
+   the browser's pull-to-refresh, which RELOADS the kiosk mid-event and drops the
+   camera. Suppress it (and iOS rubber-banding) on the root scroller. */
+html, body {
+  overscroll-behavior-y: none;
+}

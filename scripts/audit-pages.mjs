@@ -86,8 +86,9 @@ for (const [label, width, height] of viewports) {
     sleep(1.4);
 
     if (isInvitation) {
+      // The flagship renders the vendored guest app, whose gate says something else.
       evalJs(
-        "(()=>{const b=[...document.querySelectorAll('button')].find(x=>x.textContent.includes('Open Invitation'));if(b)b.click();return 'ok'})()"
+        "(()=>{const b=[...document.querySelectorAll('button')].find(x=>/(Open|Enter) (Wedding )?Invitation|Enter Wedding/.test(x.textContent));if(b)b.click();return 'ok'})()"
       );
       sleep(0.8);
     }
@@ -109,13 +110,16 @@ for (const [label, width, height] of viewports) {
       }
       checked++;
 
+      // The guest-app template brings its own reveal system, not data-reveal wrappers.
+      const usesOwnReveals = evalJs("document.getElementById('guestbook-section') ? '1' : '0'") === '1';
+
       const problems = {
         hOverflow: report.hOverflow,
         textOverlap: report.textOverlap,
         clipped: report.clipped,
         lowContrast: report.lowContrast,
         coverCta: report.coverCta && !report.coverCta.visible ? report.coverCta : [],
-        reveal: isInvitation && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
+        reveal: isInvitation && !usesOwnReveals && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
         nested: report.nestedReveals > 0 ? { nested: report.nestedReveals } : [],
         smallTargets: report.smallTargets,
         // Cormorant is the invitation voice; marketing pages never use it, so the
