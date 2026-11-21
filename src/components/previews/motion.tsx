@@ -117,12 +117,12 @@ export const coverExits: Record<
   { to: TargetAndTransition; origin?: string }
 > = {
   fade: { to: { opacity: 0 } },
-  rise: { to: { opacity: 0, y: '-8%' } },
-  curtain: { to: { opacity: 0, y: '-100%' }, origin: 'top center' },
+  rise: { to: { opacity: 0, y: '-8%', scale: 0.99 } },
+  curtain: { to: { opacity: 0, y: '-100%', scale: 0.985 }, origin: 'top center' },
   zoom: { to: { opacity: 0, scale: 1.06 } },
   shrink: { to: { opacity: 0, scale: 0.94 } },
-  left: { to: { opacity: 0, x: '-100%' }, origin: 'left center' },
-  right: { to: { opacity: 0, x: '100%' }, origin: 'right center' },
+  left: { to: { opacity: 0, x: '-100%', scale: 0.99 }, origin: 'left center' },
+  right: { to: { opacity: 0, x: '100%', scale: 0.99 }, origin: 'right center' },
   flip: { to: { opacity: 0, rotateX: -92, transformPerspective: 1400 }, origin: 'top center' },
   unveil: { to: { opacity: 0, scaleY: 0 }, origin: 'top center' },
   // Both masked openings were clip-path animations, which the compositor cannot

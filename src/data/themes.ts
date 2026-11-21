@@ -160,7 +160,7 @@ export const themes: Theme[] = [
     type: { heading: serif, weight: 500, tracking: '0.01em', caps: false },
     variant: 'split',
     mood: 'Natural',
-    motion: { reveal: 'soft', hero: 'lift', nav: 'dot', coverExit: 'shrink', coverDuration: 0.5 },
+    motion: { reveal: 'soft', hero: 'lift', nav: 'dot', coverExit: 'iris', coverDuration: 0.55 },
     photo: '/photos/bamboo.webp',
   },
   {

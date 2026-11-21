@@ -80,13 +80,14 @@ export function HeroSlideshow({
   ratio,
   overlay,
   p,
-  t,
+  hero,
   children,
 }: {
   ratio: string;
   overlay: boolean;
   p: Palette;
-  t: Tokens;
+  /** Per-template image drift from heroMotions. */
+  hero: { to: import('motion/react').TargetAndTransition; duration: number };
   children?: React.ReactNode;
 }) {
   const [slide, setSlide] = useState(0);
@@ -109,10 +110,15 @@ export function HeroSlideshow({
           key={slide}
           src={current.src}
           alt={current.location}
-          initial={{ opacity: 0, scale: 1 }}
-          animate={{ opacity: 1, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1, x: 0, y: 0 }}
+          animate={{ opacity: 1, ...hero.to }}
           exit={{ opacity: 0 }}
-          transition={{ opacity: { duration: 0.9 }, scale: { duration: 8, ease: 'linear' } }}
+          transition={{
+            opacity: { duration: 0.9 },
+            scale: { duration: hero.duration, ease: 'linear' },
+            x: { duration: hero.duration, ease: 'linear' },
+            y: { duration: hero.duration, ease: 'linear' },
+          }}
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.1}

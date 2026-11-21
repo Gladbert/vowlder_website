@@ -146,7 +146,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
           {/* Hero */}
           <section className="relative">
             {t.heroOverlay ? (
-              <HeroSlideshow ratio={t.heroRatio} overlay p={p} t={t}>
+              <HeroSlideshow ratio={t.heroRatio} overlay p={p} hero={hero}>
                 <div className={`absolute inset-x-0 bottom-0 px-5 pb-6 ${t.align}`}>
                   <p className={t.label} style={{ color: p.accent }}>
                     Wedding Invitation
@@ -158,7 +158,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
                 </div>
               </HeroSlideshow>
             ) : (
-              <HeroSlideshow ratio={t.heroRatio} overlay={false} p={p} t={t} />
+              <HeroSlideshow ratio={t.heroRatio} overlay={false} p={p} hero={hero} />
             )}
 
             <div className={`${t.sectionPad} ${t.align} ${t.heroOverlay ? 'pt-2' : ''}`}>
