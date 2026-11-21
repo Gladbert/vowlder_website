@@ -21,6 +21,15 @@ const files = {
   shibuya: 'gallery_1791480221524_L5090442.webp',
   bamboo: 'japan_sepia_bamboo_1789399855253.webp',
   shrine: 'japan_sepia_shrine_1789399867599.webp',
+  // Extracted for the newer themes, so no two designs share a photograph.
+  pool1: 'hero_slide_2.webp',
+  pool2: 'hero_slide_3.webp',
+  pool3: 'hero_slide_4.webp',
+  pool4: 'gallery_1791480419015_L5050034.webp',
+  pool5: 'gallery_1791480440474_PXDS2650.webp',
+  pool6: 'gallery_1791480474336_L5090759.webp',
+  pool7: 'gallery_1791480611808_L5060417.webp',
+  pool8: 'prewedding_sunset_coast_1789399515265.webp',
 };
 
 mkdirSync(OUT, { recursive: true });
