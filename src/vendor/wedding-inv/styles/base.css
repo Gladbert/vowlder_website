@@ -153,7 +153,6 @@ input[type=number] {
 
 /* Tailwind v4 scans the importing app; this file lives inside the shared package,
    so point it at the package root ("../" is packages/shared/src). */
-@source "../";
 
 /* The reception iPad is used with a finger. A top-edge downward swipe triggers
    the browser's pull-to-refresh, which RELOADS the kiosk mid-event and drops the

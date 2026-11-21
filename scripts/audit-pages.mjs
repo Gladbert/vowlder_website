@@ -63,7 +63,24 @@ const evalJs = (code) => parsePayload(call('agent-browser', ['eval', code]));
 // The catalogue page lists every theme; the home page only teases six.
 const html = await fetch(`${base}/themes`).then((response) => response.text());
 const slugs = [...new Set([...html.matchAll(/\/themes\/([\w-]+)\//g)].map((m) => m[1]))];
-const pages = ['/', '/themes', '/packages', '/process', '/about', '/faq', '/custom', '/contact'];
+const pages = [
+  '/',
+  '/themes',
+  '/packages',
+  '/packages/basic',
+  '/packages/premium',
+  '/packages/signature',
+  '/process',
+  '/about',
+  '/faq',
+  '/guide',
+  '/guide/what-it-costs',
+  '/guide/sending-300-links',
+  '/custom',
+  '/contact',
+  '/privacy',
+  '/terms',
+];
 const routes = [...pages, ...slugs.map((slug) => `/themes/${slug}/`)];
 
 const started = Date.now();

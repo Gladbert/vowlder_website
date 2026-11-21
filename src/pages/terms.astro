@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/site/PageIntro.astro';
+import { WA_NUMBER } from '../data/themes';
+
+const items = [
+  {
+    heading: 'What you are buying',
+    body: [
+      'A digital wedding invitation: one web page, guest links, and the replies that come back from them, live for twelve months from the date the draft is approved.',
+      'Photography, printing, venue, catering, and domain registration are not included.',
+    ],
+  },
+  {
+    heading: 'Payment',
+    body: [
+      'Half at the start, half when the draft goes live. Bank transfer or e-wallet. There is no subscription and no renewal charge.',
+      'If you cancel before the first draft, we keep the first half. After the draft goes live, both halves are due.',
+    ],
+  },
+  {
+    heading: 'Edits',
+    body: [
+      'Two rounds of edits are included: one after the first draft, one after the second. A round means a batch of changes sent in one message, not one message per change.',
+      'After the two rounds, further changes are charged per round, quoted before we start.',
+    ],
+  },
+  {
+    heading: 'Guest links and replies',
+    body: [
+      'We generate the links and hand them over. What happens after that is delivery: sending them, chasing replies, and answering guests is yours.',
+      'Replies are stored for twelve months and then deleted. Export them before that if you want to keep them.',
+    ],
+  },
+  {
+    heading: 'Dates and changes',
+    body: [
+      'If the wedding date moves, we move the invitation with it once, at no charge. Further moves are treated as a new project.',
+      'If the venue changes after the draft is approved, that counts as an edit round.',
+    ],
+  },
+  {
+    heading: 'What we will not do',
+    body: [
+      'We will not publish your photographs as a portfolio piece without asking. We will not copy another studio\'s design wholesale. We will not promise search rankings or a virality that no invitation site controls.',
+    ],
+  },
+  {
+    heading: 'If something breaks',
+    body: [
+      'The invitation is a static page served from a CDN, so it stays up when our own tools do not. If something is genuinely broken on our side, we fix it the same day, including on the wedding day.',
+    ],
+  },
+];
+---
+
+<Base title="Terms · Vowlder" description="What a Vowlder package includes, how payment and edits work, and what happens if the date or venue changes.">
+  <main>
+    <PageIntro
+      eyebrow="Terms"
+      title="The short version, in full"
+      lede="What you get, when you pay, how many edits, and what happens if the date moves."
+      wide
+    />
+
+    <section class="mx-auto max-w-2xl px-5 pb-14 sm:px-8">
+      {
+        items.map((item, index) => (
+          <section class="border-t border-line pt-5 pb-6" data-rise style={`--i: ${index % 3}`}>
+            <h2 class="display-2">{item.heading}</h2>
+            {item.body.map((paragraph) => (
+              <p class="mt-3 text-[0.95rem] leading-[1.75] text-ink-soft">{paragraph}</p>
+            ))}
+          </section>
+        ))
+      }
+      <p class="border-t border-line pt-5 text-xs text-ink-soft">
+        Anything unclear? Ask on <a href={`https://wa.me/${WA_NUMBER}`} target="_blank" rel="noopener" class="underline underline-offset-4">WhatsApp</a> before you pay.
+      </p>
+    </section>
+  </main>
+</Base>

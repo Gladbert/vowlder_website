@@ -129,6 +129,29 @@ Two data files, one rule: **content and design never mix.**
 - **View transitions are on** (`<ClientRouter />`). Any inline script must re-run on `astro:page-load` and clean up its observers, or listeners stack after each navigation. `Base.astro` shows the pattern.
 - Every action carries the `press` / `press-active` utilities: `scale(0.985)` over 180 ms on one curve, disabled under reduced motion. Do not add hover animations that move layout.
 
+## The page map
+
+Ten top-level routes plus generated ones. A company site of this kind is expected to
+have all of them; if one is missing the site reads as a demo.
+
+| route | job |
+| --- | --- |
+| `/` | hero, what we do, six selected designs, custom band, contact |
+| `/themes` | the full catalogue, filters, "in every design" |
+| `/themes/[slug]` | the invitation itself, full size (23 generated) |
+| `/packages`, `/packages/[tier]` | three tiers, then one page each: what is in, what is not |
+| `/process` | four steps, what to send, the week itself |
+| `/custom` | the custom-design escape hatch, prefilled brief |
+| `/about` | who we are, four principles, what we do not do |
+| `/faq` | nine questions on native `<details>` |
+| `/guide`, `/guide/[slug]` | two written notes: what it costs, sending 300 links |
+| `/contact` | WhatsApp, email, custom brief, the basics |
+| `/privacy`, `/terms` | what data we hold, how long, payment, edits, date changes |
+| `/sitemap.xml`, `/robots.txt` | generated from the same data files |
+
+Skip link lives in `Base.astro`; the audit exempts `.sr-only` from the tap-target and
+clipping checks because that is the standard visually-hidden pattern.
+
 ## Conventions
 
 - UI copy is Indonesian; code, comments, and identifiers are English.

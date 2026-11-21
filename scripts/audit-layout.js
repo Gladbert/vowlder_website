@@ -93,6 +93,10 @@
 
   // Chrome lays out closed <details> content but paints nothing, so its rects sit on
   // top of the next summary. Treat that content as invisible.
+  // Tailwind's sr-only is the standard visually-hidden pattern (skip links reachable
+  // by keyboard). Its 1x1 box is not a defect.
+  const isSrOnly = (el) => !!el.closest('.sr-only');
+
   const inClosedDetails = (el) => {
     for (let node = el.parentElement; node; node = node.parentElement) {
       if (node.tagName !== 'DETAILS') continue;
@@ -178,7 +182,7 @@
 
   // 3. Text clipped by its own box
   for (const el of document.querySelectorAll('body *')) {
-    if (!visible(el)) continue;
+    if (!visible(el) || isSrOnly(el)) continue;
     const s = getComputedStyle(el);
     if (s.overflow === 'hidden' && el.clientHeight > 0 && el.scrollHeight > el.clientHeight + 3 && el.textContent.trim()) {
       if (el.getBoundingClientRect().height < 60) {
@@ -233,7 +237,7 @@
 
   // 5b. Tap targets: 44px is the floor for anything a thumb is expected to hit.
   for (const el of document.querySelectorAll('a[href], button, select, input, textarea, summary')) {
-    if (!visible(el)) continue;
+    if (!visible(el) || isSrOnly(el)) continue;
     const box = clippedRect(el);
     if (!box) continue;
     const tag = el.tagName.toLowerCase();
