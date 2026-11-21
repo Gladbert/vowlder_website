@@ -11,21 +11,30 @@ const { compact = false } = Astro.props;
 const tiers = [
   {
     tier: 'Basic' as const,
-    body: 'One page, one ceremony. RSVP, wishes, map, and the countdown.',
+    name: 'Invitation',
+    body: 'The page itself: both ceremonies, guest links, RSVP and the guest book. You send the links.',
   },
   {
     tier: 'Premium' as const,
-    body: 'Both ceremonies, a gallery, the prewedding film, save-the-date, and the full story.',
+    name: 'Managed',
+    body: 'Everything above, plus we run the guest list: WhatsApp broadcast, reply chasing, daily tally.',
   },
   {
     tier: 'Signature' as const,
-    body: 'Everything in Premium, plus a palette and typeface made for you. First in the queue.',
+    name: 'Full service',
+    body: 'Everything above, plus the door: QR check-in, table assignment, printed cards, staffed booths.',
   },
 ];
 
-const packages = tiers.map(({ tier, body }) => {
+const packages = tiers.map(({ tier, name, body }) => {
   const group = themes.filter((theme) => theme.tier === tier);
-  return { tier, body, price: rupiah(Math.min(...group.map((theme) => theme.price))), count: group.length };
+  return {
+    tier,
+    name: tiers.find((item) => item.tier === tier)?.name ?? tier,
+    body,
+    price: rupiah(Math.min(...group.map((theme) => theme.price))),
+    count: group.length,
+  };
 });
 ---
 
@@ -34,7 +43,7 @@ const packages = tiers.map(({ tier, body }) => {
     packages.map((pack, index) => (
       <div class={index === 0 ? 'sm:pr-6' : index === 1 ? 'sm:px-6' : 'sm:pl-6'}>
         <div class="border-t border-line pt-4 sm:border-0 sm:pt-5 sm:pb-5">
-          <p class="eyebrow">{pack.tier}</p>
+          <p class="eyebrow">{pack.name}</p>
           <p class="font-brand mt-2 text-3xl">{pack.price}</p>
           <p class="mt-1 text-xs text-ink-soft">{pack.count} designs</p>
           <p class:list={['lede mt-3', compact && 'sm:line-clamp-2']}>{pack.body}</p>

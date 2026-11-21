@@ -9,6 +9,7 @@ import envelopeBackArt from '../assets/envelope_back.webp';
 import envelopeFrontArt from '../assets/envelope_front.webp';
 import envelopeFlapArt from '../assets/envelope_top_flap.webp';
 import waxSealArt from '../assets/wax_seal.webp';
+import { assetUrl } from '../assets/url';
 
 interface OpeningCoverProps {
   guestName: string;
@@ -47,7 +48,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
     };
   }, []);
 
-  const activeLogoSrc = logoAsset;
+  const activeLogoSrc = assetUrl(logoAsset);
 
   const isDefaultGuest =
     !guestName ||
@@ -195,7 +196,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
             onClick={!isOpening && !isOpened ? handleOpenEnvelope : undefined}
           >
             <img loading="lazy"
-              src={envelopeBackArt}
+              src={assetUrl(envelopeBackArt)}
               alt=""
               aria-hidden="true"
               decoding="async"
@@ -388,7 +389,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
             style={{ zIndex: 30 }}
           >
             <img loading="lazy"
-              src={envelopeFrontArt}
+              src={assetUrl(envelopeFrontArt)}
               alt=""
               aria-hidden="true"
               decoding="async"
@@ -448,7 +449,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
                 {/* Flap art at its original proportions: full width, tip at its
                     natural depth, with the seal on the flap's point. */}
                 <img loading="lazy"
-                  src={envelopeFlapArt}
+                  src={assetUrl(envelopeFlapArt)}
                   alt=""
                   aria-hidden="true"
                   decoding="async"
@@ -466,7 +467,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
                   title="Click to break seal and open invitation"
                 >
                   <img loading="lazy"
-                    src={waxSealArt}
+                    src={assetUrl(waxSealArt)}
                     alt=""
                     aria-hidden="true"
                     decoding="async"
@@ -487,7 +488,7 @@ export const OpeningCover: React.FC<OpeningCoverProps> = ({
                 }}
               >
                 <img loading="lazy"
-                  src={envelopeFlapArt}
+                  src={assetUrl(envelopeFlapArt)}
                   alt=""
                   aria-hidden="true"
                   decoding="async"

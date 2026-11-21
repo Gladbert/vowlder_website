@@ -56,6 +56,8 @@ export const wedding = {
       transit: 'From Surabaya Gubeng station (East exit), about six minutes by car.',
       parking: 'Guest parking is in the hotel basement.',
       dressCode: 'Smart and neat. Immediate family will wear the agreed colours.',
+      dressCodeImage: '/photos/dresscode.webp',
+      venueImage: '/photos/venue-harris.webp',
       note: 'Please arrive twenty minutes before the ceremony starts.',
     },
     {
@@ -80,6 +82,8 @@ export const wedding = {
       transit: 'From Surabaya Gubeng station (East exit). Drop-off is at the hotel lobby.',
       parking: 'Guest parking is in the hotel basement.',
       dressCode: 'Men: suit and tie, no batik. Women: evening dress.',
+      dressCodeImage: '/photos/dresscode.webp',
+      venueImage: '/photos/venue-harris.webp',
       note: 'Please arrive fifteen minutes before the reception starts.',
     },
   ],
@@ -106,6 +110,8 @@ export const wedding = {
     transit: 'From Surabaya Gubeng station (East exit). Drop-off is at the hotel lobby.',
     parking: 'Guest parking is in the hotel basement.',
     dressCode: 'Men: suit and tie, no batik. Women: evening dress.',
+    dressCodeImage: '/photos/dresscode.webp',
+    venueImage: '/photos/venue-harris.webp',
     note: 'Please arrive fifteen minutes before the reception starts.',
   },
 

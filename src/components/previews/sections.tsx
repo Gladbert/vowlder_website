@@ -397,42 +397,33 @@ export function Schedule({ p, t, root, reveal }: Look) {
       <Reveal kind={reveal} root={root} delay={0.1} className="mt-4">
         <div className={`${t.card} ${t.radius}`} style={{ borderColor: p.line, background: p.paper }}>
           <p className={t.label} style={{ color: p.accent }}>
-            Venue
+            The venue
           </p>
-          <p className={`mt-2 ${t.body}`}>
-            {primary.venue}
+
+          <img
+            src={primary.venueImage}
+            alt=""
+            loading="lazy"
+            className={`mt-2 aspect-[16/10] w-full object-cover ${t.radius}`}
+            style={{ background: p.line }}
+          />
+
+          <h3 className={`mt-3 ${t.sectionTitle}`}>{primary.venue}</h3>
+          <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
+            {primary.room}
+          </p>
+          <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
+            {primary.address}
             <br />
-            <span style={{ color: p.soft }}>
-              {primary.address}, {primary.city}
-            </span>
+            {primary.city}
           </p>
 
-          {mapOpen ? (
-            <iframe
-              title={`Map to ${primary.venue}`}
-              src={primary.mapEmbedUrl}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className={`mt-3 h-44 w-full border ${t.radius}`}
-              style={{ borderColor: p.line }}
-            />
-          ) : (
-            <button
-              type="button"
-              onClick={() => setMapOpen(true)}
-              className={`mt-3 w-full ${t.buttonGhost}`}
-              style={{ borderColor: p.line, color: p.accent }}
-            >
-              Show the map
-            </button>
-          )}
-
-          <div className="mt-2 flex flex-wrap gap-2">
+          <div className="mt-3 grid grid-cols-2 gap-2">
             <a
               href={primary.mapsUrl}
               target="_blank"
               rel="noopener"
-              className={`flex-1 ${t.button} text-center`}
+              className={`flex items-center justify-center ${t.button}`}
               style={{ background: p.accent, color: p.on }}
             >
               Directions
@@ -441,19 +432,16 @@ export function Schedule({ p, t, root, reveal }: Look) {
               href={primary.wazeUrl}
               target="_blank"
               rel="noopener"
-              className={`flex-1 ${t.buttonGhost} text-center`}
+              className={`flex items-center justify-center ${t.buttonGhost}`}
               style={{ borderColor: p.line, color: p.accent }}
             >
               Waze
             </a>
-          </div>
-
-          <div className="mt-2 flex flex-wrap gap-2">
             <a
               href={googleCalendarUrl()}
               target="_blank"
               rel="noopener"
-              className={`flex-1 ${t.buttonGhost} text-center`}
+              className={`flex items-center justify-center ${t.buttonGhost}`}
               style={{ borderColor: p.line, color: p.accent }}
             >
               Save the date
@@ -461,20 +449,51 @@ export function Schedule({ p, t, root, reveal }: Look) {
             <button
               type="button"
               onClick={downloadIcs}
-              className={`flex-1 ${t.buttonGhost} text-center`}
+              className={`flex items-center justify-center ${t.buttonGhost}`}
               style={{ borderColor: p.line, color: p.accent }}
             >
               Calendar file
             </button>
           </div>
 
-          <div className={`mt-3 space-y-1.5 border-t pt-3 ${t.body}`} style={{ borderColor: p.line, color: p.soft }}>
-            <p>{primary.transit}</p>
-            <p>{primary.parking}</p>
+          {mapOpen ? (
+            <div className={`mt-3 overflow-hidden border ${t.radius}`} style={{ borderColor: p.line }}>
+              <iframe
+                title={`Map to ${primary.venue}`}
+                src={primary.mapEmbedUrl}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="block aspect-[4/3] w-full border-0 sm:aspect-video"
+              />
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setMapOpen(true)}
+              className={`mt-2 flex w-full items-center justify-center ${t.buttonGhost}`}
+              style={{ borderColor: p.line, color: p.accent }}
+            >
+              Show the map
+            </button>
+          )}
+
+          <ul className={`mt-3 space-y-1.5 border-t pt-3 ${t.body}`} style={{ borderColor: p.line, color: p.soft }}>
+            <li className="flex items-start gap-2">
+              <img
+                src={primary.dressCodeImage}
+                alt=""
+                loading="lazy"
+                className="mt-0.5 h-10 w-10 shrink-0 rounded-full object-cover"
+                style={{ background: p.line }}
+              />
+              <span>{primary.dressCode}</span>
+            </li>
+            <li>{primary.transit}</li>
+            <li>{primary.parking}</li>
             {wedding.events.map((event) => (
-              <p key={event.title}>{event.note}</p>
+              <li key={event.title}>{event.note}</li>
             ))}
-          </div>
+          </ul>
         </div>
       </Reveal>
 

@@ -18,6 +18,7 @@ import { haptics } from '../utils/haptics';
 import venueHarrisWatercolor from '../assets/venue_harris_gubeng.webp';
 import dresscodeFamily from '../assets/dresscode_family.webp';
 import dresscodeFriends from '../assets/dresscode_friends.webp';
+import { assetUrl } from '../assets/url';
 
 interface EventsSectionProps {
   onNotify?: (message: string, type?: 'success' | 'copy' | 'love') => void;
@@ -229,7 +230,7 @@ export const EventsSection: React.FC<EventsSectionProps> = ({
                   {/* Venue watercolor illustration */}
                   <div className="relative w-full mb-5 rounded-2xl overflow-hidden shadow-[0_6px_20px_rgba(28,23,20,0.06)]">
                     <img
-                      src={venueHarrisWatercolor}
+                      src={assetUrl(venueHarrisWatercolor)}
                       alt={`${eventItem.venue} watercolor illustration`}
                       loading="lazy"
                       decoding="async"
@@ -334,7 +335,7 @@ export const EventsSection: React.FC<EventsSectionProps> = ({
                             <span className="font-semibold text-[#1C1714] block">Dress Code</span>
                             <span className="text-[11px] text-[#6B5A4D] whitespace-pre-line">{eventItem.dressCode}</span>
                             <img
-                              src={dresscodePalette}
+                              src={assetUrl(dresscodePalette)}
                               alt="Dress code color palette reference"
                               loading="lazy"
                               decoding="async"

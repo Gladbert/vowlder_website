@@ -17,6 +17,7 @@ import { haptics } from '../utils/haptics';
 import { wishDate } from '../store/time';
 import { isAttending, isDeclined } from '../data/attendance';
 import logoAsset from '../assets/wedding_logo.png';
+import { assetUrl } from '../assets/url';
 
 interface GuestbookSectionProps {
   wishes: Wish[];
@@ -197,7 +198,8 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
 
   const hasExistingConfirmation = !!existingRSVP?.attendance && !isEditingExisting;
   // Wishes & RSVP are reserved for personal invitation links only.
-  const canWish = !!guestCode;
+  // Standalone build: there is no per-guest link, so anyone can leave a wish.
+  const canWish = true;
   // The server total (may exceed the locally-held page); falls back to local.
   const totalWishes = Math.max(wishes.length, wishesTotal ?? 0);
 
@@ -416,25 +418,25 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
             </div>
           ) : canWish && rsvpEditable !== false ? (
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Guest Name Field — locked: the name is fixed at link creation and
-                  is the identity the pass, the register and the door all use. */}
+              {/* Standalone build: there is no per-guest link, so the guest types
+                  their own name instead of it being locked at creation. */}
               <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-[#665548] block mb-1.5">
-                  Full Name
+                <label
+                  htmlFor="wish-guest-name"
+                  className="text-[11px] font-semibold uppercase tracking-wider text-[#665548] block mb-1.5"
+                >
+                  Your Name
                 </label>
                 <input
+                  id="wish-guest-name"
                   type="text"
-                  readOnly
-                  aria-readonly="true"
                   maxLength={80}
                   value={name}
-                  tabIndex={-1}
-                  placeholder="e.g., Alexander &amp; Partner"
-                  className="w-full h-11 px-3.5 rounded-xl bg-black/[0.03] border border-[#E2D5C6] text-base sm:text-xs text-[#4A3B30] cursor-not-allowed focus:outline-none"
+                  onChange={(event) => setName(event.target.value)}
+                  placeholder="e.g., Alexander & Partner"
+                  autoComplete="name"
+                  className="w-full h-11 px-3.5 rounded-xl bg-white border border-[#E2D5C6] text-base sm:text-xs text-[#4A3B30] focus:outline-none focus:ring-2 focus:ring-[#966A38]/30"
                 />
-                <p className="text-[10px] text-muted-on-light mt-1">
-                  Locked to your invitation. Need it changed? Contact the couple&apos;s team.
-                </p>
               </div>
 
               {/* Attendance toggle — first response only. An UPDATE is pax + message
@@ -744,7 +746,7 @@ export const GuestbookSection: React.FC<GuestbookSectionProps> = ({
               <div className="mt-4 p-5 rounded-2xl bg-gradient-to-br from-[#FAF5EC] via-[#F4EDE0] to-[#EAE0D0] border border-[#D5C2A5] text-center shadow-xs">
                 <div className="w-12 h-12 mx-auto mb-2.5 flex items-center justify-center">
                   <img
-                    src={logoAsset}
+                    src={assetUrl(logoAsset)}
                     alt="Gladbert & Monica Monogram"
                     loading="lazy"
                     decoding="async"

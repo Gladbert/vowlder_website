@@ -5,6 +5,7 @@ import { CoupleInfo } from '../types';
 import { COUPLE_INFO } from '../data/weddingData';
 import { WEDDING_TRACK } from '../utils/audioSynth';
 import vowlderName from '../assets/vowlder_name.png';
+import { assetUrl } from '../assets/url';
 
 interface FooterSectionProps {
   coupleInfo?: CoupleInfo;
@@ -75,7 +76,7 @@ export const FooterSection: React.FC<FooterSectionProps> = ({
                 className="inline-flex items-center p-[17px] -m-[17px] transition-opacity hover:opacity-75"
               >
                 <img
-                  src={vowlderName}
+                  src={assetUrl(vowlderName)}
                   alt="Vowlder"
                   width={256}
                   height={40}
