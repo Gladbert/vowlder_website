@@ -122,7 +122,9 @@ Two data files, one rule: **content and design never mix.**
 - `viewport: { root }` is mandatory: the invitation scrolls inside its own container, so a reveal without an explicit root never fires.
 - `once: true` everywhere. No loops, no attention-seeking motion, no bounce, no spin, no parallax tied to scroll.
 - One easing curve (`EASE`), 0.25–0.7 s, delays capped at ~0.15 s per group. `MotionConfig reducedMotion="user"` is set at the island root — respect it, never override with `transition` on a transform you want to force.
-- Hero slideshow: crossfade + a slow scale drift on the image. Never animate the image's layout box.
+- Hero slideshow: crossfade + a slow scale drift on the image. Never animate the image's layout box. It lives in `HeroSlideshow` so a slide change re-renders one component, not the whole invitation tree.
+- **Nothing animates a layout or paint property.** The two masked openings used to animate `clip-path`; both are now transforms (`iris` = `scale`, `blind` = `scaleX`). Verified at runtime: `clip-path: none`, `transform: matrix(...)` mid-flight.
+- The scroll spy is rAF-throttled and only calls `setActive` when the section actually changes, otherwise every scroll frame re-rendered every section.
 - **Marketing pages ship no island.** Scroll reveal is `data-rise` + one `IntersectionObserver` in `Base.astro`: 18px rise, 0.7 s, 70 ms stagger via `--i`, `once`, and off under `prefers-reduced-motion`. Header gains a hairline after 8px. The hero headline enters word by word (`.words`, CSS only, 60 ms stagger); the theme-name ribbon (`.ribbon`) drifts, pauses on hover, and stops under reduced motion.
 - **View transitions are on** (`<ClientRouter />`). Any inline script must re-run on `astro:page-load` and clean up its observers, or listeners stack after each navigation. `Base.astro` shows the pattern.
 - Every action carries the `press` / `press-active` utilities: `scale(0.985)` over 180 ms on one curve, disabled under reduced motion. Do not add hover animations that move layout.

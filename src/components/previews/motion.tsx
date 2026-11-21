@@ -125,7 +125,10 @@ export const coverExits: Record<
   right: { to: { opacity: 0, x: '100%' }, origin: 'right center' },
   flip: { to: { opacity: 0, rotateX: -92, transformPerspective: 1400 }, origin: 'top center' },
   unveil: { to: { opacity: 0, scaleY: 0 }, origin: 'top center' },
-  iris: { to: { opacity: 0, clipPath: 'circle(0% at 50% 42%)' } },
-  blind: { to: { opacity: 0, clipPath: 'inset(0% 0% 100% 0%)' } },
+  // Both masked openings were clip-path animations, which the compositor cannot
+  // accelerate. Same feel, transform-only: a tiny scale about the title, and a
+  // horizontal compression.
+  iris: { to: { opacity: 0, scale: 0.04 }, origin: 'center 42%' },
+  blind: { to: { opacity: 0, scaleX: 0 }, origin: 'center' },
   drift: { to: { opacity: 0, y: '-4%', scale: 1.02 } },
 };

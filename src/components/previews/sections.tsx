@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import type { RefObject } from 'react';
 import type { Palette } from '../../data/themes';
 import { wedding } from '../../data/wedding';
@@ -35,15 +36,22 @@ export function useSectionNav(ids: string[]) {
     if (container && target) container.scrollTo({ top: offsetIn(container, target), behavior: 'smooth' });
   };
 
+  const frame = useRef(0);
   const onScroll = () => {
-    const container = ref.current;
-    if (!container) return;
-    let current = ids[0];
-    for (const id of ids) {
-      const el = container.querySelector<HTMLElement>(`#${id}`);
-      if (el && offsetIn(container, el) <= container.scrollTop + 160) current = id;
-    }
-    setActive(current);
+    if (frame.current) return;
+    frame.current = requestAnimationFrame(() => {
+      frame.current = 0;
+      const container = ref.current;
+      if (!container) return;
+      let current = ids[0];
+      for (const id of ids) {
+        const el = container.querySelector<HTMLElement>(`#${id}`);
+        if (el && offsetIn(container, el) <= container.scrollTop + 160) current = id;
+      }
+      // Same section = same output. Setting it anyway re-rendered every section on
+      // every scroll frame.
+      setActive((prev) => (prev === current ? prev : current));
+    });
   };
 
   return { ref, active, goTo, onScroll };
@@ -64,6 +72,84 @@ export function Ornament({ p, root, centered = true }: { p: Palette; root?: RefO
       <Rule root={root} color={p.line} width="w-10" />
       <span className="h-1 w-1 rotate-45" style={{ background: p.accent }} />
       <Rule root={root} color={p.line} width="w-10" delay={0.12} />
+    </div>
+  );
+}
+
+export function HeroSlideshow({
+  ratio,
+  overlay,
+  p,
+  t,
+  children,
+}: {
+  ratio: string;
+  overlay: boolean;
+  p: Palette;
+  t: Tokens;
+  children?: React.ReactNode;
+}) {
+  const [slide, setSlide] = useState(0);
+  const length = wedding.heroSlides.length;
+
+  useEffect(() => {
+    if (length <= 1) return;
+    const id = window.setInterval(() => {
+      if (document.visibilityState === 'visible') setSlide((prev) => (prev + 1) % length);
+    }, 2000);
+    return () => window.clearInterval(id);
+  }, [length]);
+
+  const current = wedding.heroSlides[slide];
+
+  return (
+    <div className={`relative w-full overflow-hidden ${ratio}`} style={{ background: p.line }}>
+      <AnimatePresence initial={false}>
+        <motion.img
+          key={slide}
+          src={current.src}
+          alt={current.location}
+          initial={{ opacity: 0, scale: 1 }}
+          animate={{ opacity: 1, scale: 1.05 }}
+          exit={{ opacity: 0 }}
+          transition={{ opacity: { duration: 0.9 }, scale: { duration: 8, ease: 'linear' } }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={0.1}
+          onDragEnd={(_, info) => {
+            if (info.offset.x < -40) setSlide((prev) => (prev + 1) % length);
+            if (info.offset.x > 40) setSlide((prev) => (prev - 1 + length) % length);
+          }}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      </AnimatePresence>
+
+      {overlay ? (
+        <>
+          <div
+            className="absolute inset-0"
+            style={{ background: `linear-gradient(to top, ${p.bg} 4%, ${p.bg}b3 38%, ${p.bg}00 78%)` }}
+          />
+          {children}
+        </>
+      ) : (
+        <p className="absolute bottom-3 left-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white backdrop-blur">
+          {current.location}
+        </p>
+      )}
+
+      <div className="absolute bottom-3 right-3 flex gap-1.5" aria-hidden="true">
+        {wedding.heroSlides.map((item, index) => (
+          <span
+            key={item.src}
+            className="h-1 rounded-full transition-all duration-300"
+            style={{
+              width: index === slide ? 16 : 6,
+              background: index === slide ? p.ink : `${p.ink}59`,
+            }}
+          />
+        ))}
+      </div>
     </div>
   );
 }

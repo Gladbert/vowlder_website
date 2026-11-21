@@ -18,6 +18,7 @@ import {
 } from './icons';
 import {
   Countdown,
+  HeroSlideshow,
   Couple,
   Footer,
   Gallery,
@@ -59,13 +60,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
   const hero = heroMotions[motionSet.hero];
   const opening = coverExits[motionSet.coverExit];
   const openingDuration = motionSet.coverDuration ?? 0.55;
-  // The two clip-mask openings need their starting mask, or there is nothing to animate.
-  const openingClip =
-    motionSet.coverExit === 'iris'
-      ? { clipPath: 'circle(150% at 50% 42%)' }
-      : motionSet.coverExit === 'blind'
-        ? { clipPath: 'inset(0% 0% 0% 0%)' }
-        : {};
+
 
   const [guest] = useGuestName();
   const [opened, setOpened] = useState(false);
@@ -76,7 +71,6 @@ export default function Invitation({ theme }: { theme: Theme }) {
   const [rsvp, setRsvp] = useState<RsvpValue | null>(null);
   const audio = useInvitationAudio(theme.music ?? DEFAULT_TRACK);
   const navState = useSectionNav(nav.map((item) => item.id));
-  const [slide, setSlide] = useState(0);
   const progressRef = useRef<HTMLSpanElement>(null);
 
   const { groom, bride } = wedding.couple;
@@ -105,15 +99,6 @@ export default function Invitation({ theme }: { theme: Theme }) {
     };
   }, [lightbox, rsvpOpen, filmOpen, navState.ref]);
 
-  // Two-second slideshow, advanced by a timer the markup owns.
-  useEffect(() => {
-    if (wedding.heroSlides.length <= 1) return;
-    const id = window.setInterval(() => {
-      if (document.visibilityState === 'visible') setSlide((prev) => (prev + 1) % wedding.heroSlides.length);
-    }, 2000);
-    return () => window.clearInterval(id);
-  }, []);
-
   function open() {
     setOpened(true);
     audio.unlock();
@@ -139,49 +124,6 @@ export default function Invitation({ theme }: { theme: Theme }) {
     </>
   );
 
-  const heroImage = (
-    <AnimatePresence initial={false}>
-      <motion.img
-        key={slide}
-        src={wedding.heroSlides[slide].src}
-        alt={wedding.heroSlides[slide].location}
-        initial={{ opacity: 0, scale: 1, x: 0, y: 0 }}
-        animate={{ opacity: 1, ...hero.to }}
-        exit={{ opacity: 0 }}
-        transition={{
-          opacity: { duration: 0.9 },
-          scale: { duration: hero.duration, ease: 'linear' },
-          x: { duration: hero.duration, ease: 'linear' },
-          y: { duration: hero.duration, ease: 'linear' },
-        }}
-        drag={opened ? 'x' : false}
-        dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={0.12}
-        onDragEnd={(_, info) => {
-          if (info.offset.x < -40) setSlide((prev) => (prev + 1) % wedding.heroSlides.length);
-          if (info.offset.x > 40)
-            setSlide((prev) => (prev - 1 + wedding.heroSlides.length) % wedding.heroSlides.length);
-        }}
-        className="absolute inset-0 h-full w-full object-cover"
-      />
-    </AnimatePresence>
-  );
-
-  const heroDots = (
-    <div className="absolute bottom-3 right-3 flex gap-1.5" aria-hidden="true">
-      {wedding.heroSlides.map((item, index) => (
-        <span
-          key={item.src}
-          className="h-1 rounded-full transition-all duration-300"
-          style={{
-            width: index === slide ? 16 : 6,
-            background: index === slide ? p.ink : `${p.ink}59`,
-          }}
-        />
-      ))}
-    </div>
-  );
-
   return (
     <MotionConfig reducedMotion="user">
       <div className="relative h-full" style={{ background: p.bg, color: p.ink }}>
@@ -204,13 +146,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
           {/* Hero */}
           <section className="relative">
             {t.heroOverlay ? (
-              <div className={`relative w-full overflow-hidden ${t.heroRatio}`}>
-                {heroImage}
-                <div
-                  className="absolute inset-0"
-                  style={{ background: `linear-gradient(to top, ${p.bg} 4%, ${p.bg}b3 38%, ${p.bg}00 78%)` }}
-                />
-                {heroDots}
+              <HeroSlideshow ratio={t.heroRatio} overlay p={p} t={t}>
                 <div className={`absolute inset-x-0 bottom-0 px-5 pb-6 ${t.align}`}>
                   <p className={t.label} style={{ color: p.accent }}>
                     Wedding Invitation
@@ -220,15 +156,9 @@ export default function Invitation({ theme }: { theme: Theme }) {
                     {wedding.dateLabel}
                   </p>
                 </div>
-              </div>
+              </HeroSlideshow>
             ) : (
-              <div className={`relative w-full overflow-hidden ${t.heroRatio}`} style={{ background: p.line }}>
-                {heroImage}
-                {heroDots}
-                <p className="absolute bottom-3 left-3 rounded-full bg-black/65 px-2.5 py-1 text-[10px] tracking-[0.14em] uppercase text-white backdrop-blur">
-                  {wedding.heroSlides[slide].location}
-                </p>
-              </div>
+              <HeroSlideshow ratio={t.heroRatio} overlay={false} p={p} t={t} />
             )}
 
             <div className={`${t.sectionPad} ${t.align} ${t.heroOverlay ? 'pt-2' : ''}`}>
@@ -385,7 +315,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
         <AnimatePresence>
           {!opened && (
             <motion.div
-              initial={{ opacity: 1, ...openingClip }}
+              initial={{ opacity: 1, scale: 1, scaleX: 1 }}
               exit={{ ...opening.to, transition: { duration: openingDuration, ease: EASE } }}
               className={`absolute inset-0 z-40 flex flex-col ${
                 t.cover === 'plain' ? 'justify-center' : t.coverJustify
