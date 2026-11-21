@@ -58,7 +58,7 @@ const isActive = (href: string) => path === href.replace(/\/$/, '');
         <header class="sticky top-0 z-40 border-b border-line bg-cream/92 backdrop-blur">
           <div class="mx-auto max-w-6xl px-5 sm:px-8">
             <div class="flex h-14 items-center justify-between gap-4">
-              <a href="/" aria-label="Vowlder home" class="shrink-0">
+              <a href="/" aria-label="Vowlder home" class="flex min-h-[44px] shrink-0 items-center">
                 <img
                   src="/brand/vowlder-name.png"
                   alt="Vowlder"
@@ -73,7 +73,10 @@ const isActive = (href: string) => path === href.replace(/\/$/, '');
                   <a
                     href={link.href}
                     aria-current={isActive(link.href) ? 'page' : undefined}
-                    class:list={['hover:text-ink', isActive(link.href) ? 'text-ink' : 'text-ink-soft']}
+                    class:list={[
+                      'flex min-h-[40px] items-center transition-colors hover:text-ink',
+                      isActive(link.href) ? 'text-ink' : 'text-ink-soft',
+                    ]}
                   >
                     {link.label}
                   </a>
@@ -98,7 +101,7 @@ const isActive = (href: string) => path === href.replace(/\/$/, '');
                     href={link.href}
                     aria-current={isActive(link.href) ? 'page' : undefined}
                     class:list={[
-                      'hover:text-ink',
+                      'flex min-h-[44px] items-center transition-colors hover:text-ink',
                       isActive(link.href) ? 'text-ink underline underline-offset-4' : 'text-ink-soft',
                     ]}
                   >
@@ -141,7 +144,7 @@ const isActive = (href: string) => path === href.replace(/\/$/, '');
                       <a
                         href={link.href}
                         aria-current={isActive(link.href) ? 'page' : undefined}
-                        class="text-ink-soft hover:text-ink"
+                        class="flex min-h-[40px] items-center text-ink-soft hover:text-ink"
                       >
                         {link.label}
                       </a>

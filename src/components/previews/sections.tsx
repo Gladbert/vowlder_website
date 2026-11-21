@@ -4,7 +4,7 @@ import type { Palette } from '../../data/themes';
 import { wedding } from '../../data/wedding';
 import type { Tokens } from './tokens';
 import { useCountdown, useNextEventIso } from './hooks';
-import { Reveal, Rule } from './motion';
+import { Reveal, Rule, type RevealKind } from './motion';
 import { HeartIcon, PlayIcon } from './icons';
 import { downloadIcs, googleCalendarUrl } from '../../lib/calendar';
 
@@ -12,9 +12,8 @@ type Look = {
   p: Palette;
   t: Tokens;
   root: RefObject<HTMLDivElement | null>;
-  reveal: TokenReveal;
+  reveal: RevealKind;
 };
-type TokenReveal = import('./motion').RevealKind;
 
 export type RsvpValue = {
   name: string;
@@ -145,7 +144,7 @@ export function Couple({ p, t, root, reveal }: Look) {
                 <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
                   {person.birthOrder} of {person.parents}
                 </p>
-                <a href={person.instagram} target="_blank" rel="noopener" className={`mt-1 inline-block ${t.small}`} style={{ color: p.accent }}>
+                <a href={person.instagram} target="_blank" rel="noopener" className={`mt-1 inline-flex min-h-[44px] items-center ${t.small}`} style={{ color: p.accent }}>
                   Instagram
                 </a>
               </div>
@@ -174,7 +173,7 @@ export function Couple({ p, t, root, reveal }: Look) {
               >
                 {person.birthOrder} of {person.parents}
               </p>
-              <a href={person.instagram} target="_blank" rel="noopener" className={`mt-2 inline-block ${t.small}`} style={{ color: p.accent }}>
+              <a href={person.instagram} target="_blank" rel="noopener" className={`mt-2 inline-flex min-h-[44px] items-center ${t.small}`} style={{ color: p.accent }}>
                 Instagram
               </a>
             </Reveal>
@@ -471,7 +470,7 @@ export function Gallery({ p, t, root, reveal, onOpen }: Look & { onOpen: (index:
       aria-label={liked[index] ? `Remove your heart from ${wedding.gallery[index].title}` : `Heart ${wedding.gallery[index].title}`}
       className={`flex items-center gap-1 text-[10px] tabular-nums ${
         overlay
-          ? 'absolute bottom-2 right-2 rounded-full bg-black/55 px-2 py-1 text-white backdrop-blur'
+          ? 'absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-black/55 text-white backdrop-blur'
           : 'ml-2 inline-flex'
       }`}
       style={overlay ? undefined : { color: liked[index] ? p.accent : p.soft }}
@@ -778,7 +777,7 @@ export function Wishes({
                   onClick={() => like(wish.id)}
                   aria-pressed={wish.liked}
                   aria-label={wish.liked ? `Remove your heart from ${wish.name}` : `Heart the wish from ${wish.name}`}
-                  className="mt-0.5 flex shrink-0 items-center gap-1 text-[10px] tabular-nums"
+                  className="mt-0.5 flex min-h-[40px] min-w-[40px] shrink-0 items-center justify-center gap-1 text-[10px] tabular-nums"
                   style={{ color: wish.liked ? p.accent : p.soft }}
                 >
                   <HeartIcon filled={wish.liked} />

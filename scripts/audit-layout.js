@@ -13,6 +13,7 @@
     coverCta: null,
     revealNodes: 0,
     nestedReveals: 0,
+    smallTargets: [],
     fonts: {},
   };
 
@@ -229,6 +230,28 @@
   report.revealNodes = document.querySelectorAll('[data-reveal]').length;
   // Two reveals on the same subtree means two writers for one transform: they fight.
   report.nestedReveals = document.querySelectorAll('[data-reveal] [data-reveal]').length;
+
+  // 5b. Tap targets: 44px is the floor for anything a thumb is expected to hit.
+  for (const el of document.querySelectorAll('a[href], button, select, input, textarea, summary')) {
+    if (!visible(el)) continue;
+    const box = clippedRect(el);
+    if (!box) continue;
+    const tag = el.tagName.toLowerCase();
+    if (tag === 'input' || tag === 'textarea') continue;
+    // Inline links inside prose are exempt (WCAG 2.5.8): they cannot be 40px tall.
+    if (el.closest('p, li, blockquote, figcaption')) continue;
+    // Size from the raw box: a clipping ancestor can shave a pixel off the clipped
+    // box and turn a legitimate 40px row into a false positive.
+    const raw = el.getBoundingClientRect();
+    if (raw.height < 39.5 || raw.width < 24) {
+      report.smallTargets.push({
+        el: label(el),
+        w: Math.round(raw.width),
+        h: Math.round(raw.height),
+      });
+    }
+    if (report.smallTargets.length > 6) break;
+  }
 
   // 6. The cover gate's primary action must be fully visible without scrolling.
   const cta = [...document.querySelectorAll('button')].find((el) =>

@@ -32,11 +32,7 @@ const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
 
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="flex items-baseline justify-between gap-3">
-      <h3 class="font-brand text-lg leading-tight sm:mt-4 sm:text-2xl">
-        <a href={`/preview/${theme.slug}/`} class="hover:underline hover:underline-offset-4">
-          {theme.name}
-        </a>
-      </h3>
+      <h3 class="font-brand text-lg leading-tight sm:mt-4 sm:text-2xl">{theme.name}</h3>
       <p class="shrink-0 text-[13px] tabular-nums text-ink-soft sm:text-sm">{rupiah(theme.price)}</p>
     </div>
 
@@ -47,7 +43,7 @@ const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
     <div class="mt-auto flex flex-wrap gap-2 pt-2 sm:mt-4 sm:pt-0">
       <a
         href={`/preview/${theme.slug}/`}
-        class="flex min-h-[38px] items-center rounded-pill bg-ink px-4 text-xs font-medium text-cream hover:bg-ink-soft"
+        class="flex min-h-[40px] items-center rounded-pill bg-ink px-4 text-xs font-medium text-cream hover:bg-ink-soft"
       >
         Preview
       </a>
@@ -55,7 +51,7 @@ const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
         href={waLink(theme, previewUrl)}
         target="_blank"
         rel="noopener"
-        class="hidden min-h-[38px] items-center rounded-pill border border-ink/15 px-4 text-xs font-medium hover:border-ink/40 sm:flex"
+        class="hidden min-h-[40px] items-center rounded-pill border border-ink/15 px-4 text-xs font-medium hover:border-ink/40 sm:flex"
       >
         Order on WhatsApp
       </a>

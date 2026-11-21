@@ -57,7 +57,7 @@ export function downloadIcs() {
   const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'undangan-pernikahan.ics';
+  link.download = 'wedding-invitation.ics';
   document.body.append(link);
   link.click();
   link.remove();

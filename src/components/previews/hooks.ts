@@ -31,7 +31,7 @@ export function useGuestName(fallback = 'Dear Guest') {
 
 /**
  * iOS and Android both block programmatic playback. The first play() has to happen
- * inside the "Buka Undangan" tap, so the cover button calls unlock().
+ * inside the "Open Invitation" tap, so the cover button calls unlock().
  */
 export function useInvitationAudio(src?: string) {
   const ref = useRef<HTMLAudioElement | null>(null);

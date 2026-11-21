@@ -298,7 +298,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
             onClick={audio.toggle}
             aria-pressed={!audio.muted}
             aria-label={audio.muted ? 'Play music' : 'Pause music'}
-            className="absolute right-3 top-14 z-20 flex h-9 w-9 items-center justify-center rounded-full shadow-sm sm:top-3"
+            className="absolute right-3 top-14 z-20 flex h-11 w-11 items-center justify-center rounded-full shadow-sm sm:top-3"
             style={{ background: p.ink, color: p.bg }}
           >
             <MusicIcon muted={audio.muted} />

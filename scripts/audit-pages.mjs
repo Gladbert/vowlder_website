@@ -91,6 +91,7 @@ for (const [label, width, height] of viewports) {
         coverCta: report.coverCta && !report.coverCta.visible ? report.coverCta : [],
         reveal: isInvitation && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
         nested: report.nestedReveals > 0 ? { nested: report.nestedReveals } : [],
+        smallTargets: report.smallTargets,
         // Cormorant is the invitation voice; marketing pages never use it, so the
         // browser does not fetch it there.
         fonts: isInvitation ? Object.entries(report.fonts).filter(([, ok]) => !ok) : [],
