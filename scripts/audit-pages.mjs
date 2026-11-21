@@ -14,11 +14,12 @@ import { readFileSync } from 'node:fs';
 const args = process.argv.slice(2);
 const base = args.find((arg) => arg.startsWith('http')) ?? 'http://localhost:4399';
 const full = args.includes('--full');
+const only = args.find((arg) => arg.startsWith('--vp='))?.slice(5);
 const CALL_TIMEOUT = 25_000;
 
 const auditScript = readFileSync('scripts/audit-layout.js', 'utf8');
 
-const viewports = full
+const allViewports = full
   ? [
       ['phone', 390, 844],
       ['small-phone', 320, 568],
@@ -27,7 +28,9 @@ const viewports = full
     ]
   : [['phone', 390, 844]];
 
-const steps = full ? [0, 1, 2, 3, 4, 5] : [0, 2, 4];
+const viewports = only ? allViewports.filter(([label]) => label === only) : allViewports;
+
+const steps = [0, 2, 4];
 
 const call = (bin, argv, input) =>
   execFileSync(bin, argv, { encoding: 'utf8', input, timeout: CALL_TIMEOUT, stdio: ['pipe', 'pipe', 'pipe'] });

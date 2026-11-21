@@ -25,7 +25,7 @@ Run all four, in order, and stop on the first failure:
 
 1. `bunx astro check` — zero errors.
 2. `bun run build` — builds every route, including `/og/*.png`.
-3. `bun run dev` in another shell, then `node scripts/audit-pages.mjs http://localhost:4399` — ~90 s, phone viewport. Add `--full` for phone + small phone + landscape + desktop (~6 min). It fails on text overlap, horizontal overflow, clipped text, contrast under WCAG AA, a font that did not load, a cover CTA below the fold, a template with fewer than five reveals, or nested reveals. It prints progress, so a stuck browser looks different from a stuck script. Never `pkill -f "astro dev"` from a shell whose own command line contains that string: it kills the shell.
+3. `bun run dev` in another shell, then `node scripts/audit-pages.mjs http://localhost:4399` — ~2 min, phone viewport. Add `--full` for phone + small phone + landscape + desktop (~10 min), or `--full --vp=desktop` for one viewport (~2 min). It fails on text overlap, horizontal overflow, clipped text, contrast under WCAG AA, a font that did not load, a cover CTA below the fold, a template with fewer than five reveals, nested reveals, or a tap target under 40px (links inside prose are exempt). It prints progress, so a stuck browser looks different from a stuck script. Never `pkill -f "astro dev"` from a shell whose own command line contains that string: it kills the shell.
 4. Open the page yourself (`agent-browser open`, `agent-browser set viewport 390 844`, `agent-browser screenshot`) and look at it. The audit proves nothing overlaps; it cannot prove the design is good.
 
 Then run the **code-review skill** on the diff (`~/.pi/agent/skills/code-review/SKILL.md`) and fix what it flags before committing.
@@ -106,8 +106,8 @@ Two data files, one rule: **content and design never mix.**
 - **Audio never autoplays.** `<audio preload="none">` plus `play()` inside the "Buka Undangan" click (`useInvitationAudio`). iOS and Android both block anything else. No `music` field means no control is shown — do not ship a fake music button.
 - **`?to=` guest name**: read on mount, write back with `history.replaceState` (`useGuestName`). Default is `Tamu Undangan`.
 - **Mobile first.** Base styles target a 390px phone; add `sm:` / `lg:` only to widen. Preview screens are app-like: fixed `100svh` shell with an internal scroll container, so floating bars and the cover gate stay put.
-- **Assets**: photos go to `/public/photos` as WebP, max 1080px, quality ~78, under ~150 KB each. Preview payload stays under ~1.5 MB total. Move to R2 before the repo passes ~150 MB.
-- Fonts are self-hosted via `@fontsource-variable` (`Inter Variable` for UI, `Cormorant Garamond Variable` for display). No external font/CDN requests.
+- **Assets**: photos go to `/public/photos` as WebP, max 1080px, quality ~74, under ~150 KB each (1.1 MB total). `public/audio/ceremony.mp3` is 1.7 MB and the one deliberate exception: it is `preload="none"`, so it never touches first paint. Move to R2 before the repo passes ~150 MB.
+- Fonts are self-hosted via `@fontsource`: Archivo (body), Instrument Serif (company headings), Cormorant Garamond (inside the invitations). No external font or CDN request, no Inter.
 
 ## Motion
 
@@ -120,6 +120,8 @@ Two data files, one rule: **content and design never mix.**
 - `once: true` everywhere. No loops, no attention-seeking motion, no bounce, no spin, no parallax tied to scroll.
 - One easing curve (`EASE`), 0.25–0.7 s, delays capped at ~0.15 s per group. `MotionConfig reducedMotion="user"` is set at the island root — respect it, never override with `transition` on a transform you want to force.
 - Hero slideshow: crossfade + a slow scale drift on the image. Never animate the image's layout box.
+- **Marketing pages ship no island.** Scroll reveal is `data-rise` + one `IntersectionObserver` in `Base.astro`: 18px rise, 0.7 s, 70 ms stagger via `--i`, `once`, and off under `prefers-reduced-motion`. Header gains a hairline after 8px.
+- Every action carries the `press` / `press-active` utilities: `scale(0.985)` over 180 ms on one curve, disabled under reduced motion. Do not add hover animations that move layout.
 
 ## Conventions
 

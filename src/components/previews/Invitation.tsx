@@ -286,7 +286,7 @@ export default function Invitation({ theme }: { theme: Theme }) {
         <a
           href="/"
           aria-label="Back to the theme catalogue"
-          className="absolute top-3 left-3 z-20 hidden items-center gap-1.5 rounded-full px-3 py-2 text-[10px] tracking-[0.14em] uppercase shadow-sm sm:flex"
+          className="absolute top-3 left-3 z-20 hidden min-h-[40px] items-center gap-1.5 rounded-full px-3 text-[10px] tracking-[0.14em] uppercase shadow-sm sm:flex"
           style={{ background: p.ink, color: p.bg }}
         >
           <span aria-hidden="true">←</span> Themes
