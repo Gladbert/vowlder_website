@@ -90,9 +90,21 @@
     return { top, left, right, bottom, width: right - left, height: bottom - top };
   };
 
+  // Chrome lays out closed <details> content but paints nothing, so its rects sit on
+  // top of the next summary. Treat that content as invisible.
+  const inClosedDetails = (el) => {
+    for (let node = el.parentElement; node; node = node.parentElement) {
+      if (node.tagName !== 'DETAILS') continue;
+      const summary = node.querySelector(':scope > summary');
+      if (!node.open && !(summary && summary.contains(el))) return true;
+    }
+    return false;
+  };
+
   const visible = (el) => {
     const s = getComputedStyle(el);
     if (s.display === 'none' || s.visibility === 'hidden' || Number(s.opacity) < 0.05) return false;
+    if (inClosedDetails(el)) return false;
     return true;
   };
 

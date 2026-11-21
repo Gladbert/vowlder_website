@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/site/PageIntro.astro';
+import { customWaLink, WA_NUMBER } from '../data/themes';
+
+const channels = [
+  {
+    label: 'WhatsApp',
+    value: 'Fastest. Send the date and the venue.',
+    href: `https://wa.me/${WA_NUMBER}`,
+    external: true,
+  },
+  {
+    label: 'Email',
+    value: 'hello@vowlder.com',
+    href: 'mailto:hello@vowlder.com',
+    external: false,
+  },
+  {
+    label: 'Custom brief',
+    value: 'Prefilled message, three questions.',
+    href: customWaLink(),
+    external: true,
+  },
+];
+
+const facts = [
+  { label: 'Studio', value: 'Surabaya, Indonesia' },
+  { label: 'Reply time', value: 'One working day' },
+  { label: 'Working hours', value: 'Mon–Sat, 9am–8pm WIB' },
+  { label: 'Languages', value: 'English, Bahasa Indonesia' },
+];
+---
+
+<Base
+  title="Contact · Vowlder"
+  description="WhatsApp, email, or a prefilled custom brief. Vowlder replies within one working day."
+>
+  <main>
+    <PageIntro
+      eyebrow="Contact"
+      title="Tell us the date and the venue."
+      lede="One message is enough to start. No calls, no shared drives, no forms."
+    />
+
+    <section class="mx-auto max-w-6xl px-5 pb-12 sm:px-8">
+      <div class="divide-y divide-line border-y border-line">
+        {
+          channels.map((channel) => (
+            <a
+              href={channel.href}
+              target={channel.external ? '_blank' : undefined}
+              rel={channel.external ? 'noopener' : undefined}
+              class="group flex min-h-[68px] items-center justify-between gap-4 py-4"
+            >
+              <span>
+                <span class="block font-brand text-2xl leading-tight group-hover:underline group-hover:underline-offset-4">
+                  {channel.label}
+                </span>
+                <span class="mt-1 block text-sm text-ink-soft">{channel.value}</span>
+              </span>
+              <span aria-hidden="true" class="text-brass">→</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="border-t border-line bg-paper/50">
+      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <p class="eyebrow">The basics</p>
+        <dl class="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {
+            facts.map((fact) => (
+              <div class="border-t border-line pt-3">
+                <dt class="eyebrow">{fact.label}</dt>
+                <dd class="mt-1 text-sm">{fact.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="mt-8 max-w-lg text-sm leading-relaxed text-ink-soft">
+          Already know what you want? <a href="/packages" class="text-ink underline underline-offset-4">Check the packages</a>
+          {' '}or go straight to the <a href="/themes" class="text-ink underline underline-offset-4">catalogue</a>.
+        </p>
+      </div>
+    </section>
+  </main>
+</Base>

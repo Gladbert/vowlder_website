@@ -1,0 +1,50 @@
+---
+import { customWaLink, WA_NUMBER } from '../../data/themes';
+
+interface Props {
+  title?: string;
+  body?: string;
+}
+
+const {
+  title = 'Tell us the date and the venue.',
+  body = 'One message is enough to start. We answer within one working day, usually sooner.',
+} = Astro.props;
+---
+
+<section id="contact" class="bg-night text-on-night">
+  <div class="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
+    <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+      <div>
+        <p class="text-[11px] tracking-[0.16em] uppercase text-on-night/60">Contact</p>
+        <h2 class="display-1 mt-3 max-w-[22ch]">{title}</h2>
+        <p class="mt-4 max-w-md text-[0.95rem] leading-relaxed text-on-night/70">{body}</p>
+      </div>
+
+      <div class="flex flex-col gap-2.5 sm:flex-row sm:gap-3 lg:justify-end">
+        <a
+          href={`https://wa.me/${WA_NUMBER}`}
+          target="_blank"
+          rel="noopener"
+          class="flex min-h-[48px] items-center justify-center rounded-pill bg-on-night px-6 text-sm font-medium text-night hover:bg-white"
+        >
+          WhatsApp us
+        </a>
+        <a
+          href="mailto:hello@vowlder.com"
+          class="flex min-h-[48px] items-center justify-center rounded-pill border border-on-night/25 px-6 text-sm font-medium hover:border-on-night/60"
+        >
+          hello@vowlder.com
+        </a>
+      </div>
+    </div>
+
+    <p class="mt-8 border-t border-on-night/15 pt-5 text-xs text-on-night/50">
+      Prefer a design of your own?{' '}
+      <a href={customWaLink()} target="_blank" rel="noopener" class="underline underline-offset-4 hover:text-on-night">
+        Start a custom brief
+      </a>
+      .
+    </p>
+  </div>
+</section>

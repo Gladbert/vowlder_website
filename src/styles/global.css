@@ -15,12 +15,14 @@
   --font-brand: 'Instrument Serif', 'Iowan Old Style', 'Times New Roman', serif;
   --font-display: 'Cormorant Garamond Variable', Georgia, 'Times New Roman', serif;
 
-  --color-cream: #fbf9f5;
-  --color-paper: #f4f0e8;
-  --color-ink: #1a1917;
-  --color-ink-soft: #5c574f;
-  --color-brass: #6f5b3e;
-  --color-line: #e3dcd1;
+  --color-cream: #faf8f3;
+  --color-paper: #f1ede4;
+  --color-ink: #191714;
+  --color-ink-soft: #57524a;
+  --color-brass: #6e5a3c;
+  --color-line: #e7e1d7;
+  --color-night: #16140f;
+  --color-on-night: #f3efe6;
 
   --radius-card: 1rem;
   --radius-pill: 999px;
@@ -89,6 +91,29 @@
   color: var(--color-ink-soft);
 }
 
+/* Site reveal. Templates use motion/react; the marketing pages use this so no
+   island ships to them. Stagger with style="--i: 2". */
+@layer base {
+  [data-rise] {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+  [data-rise].is-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* One grade across every thumbnail, so eighteen suppliers of photography look like
+   one studio. */
+@utility photo-grade {
+  filter: saturate(0.94) contrast(1.03) brightness(1.01);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -98,5 +123,9 @@
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+  [data-rise] {
+    opacity: 1;
+    transform: none;
   }
 }

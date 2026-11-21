@@ -1,0 +1,26 @@
+---
+interface Step {
+  title: string;
+  body: string;
+}
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<ol class="divide-y divide-line border-y border-line">
+  {
+    steps.map((step, index) => (
+      <li class="grid gap-1.5 py-5 sm:grid-cols-[3rem_1fr] sm:gap-6">
+        <span class="text-xs tabular-nums text-brass">0{index + 1}</span>
+        <div>
+          <h3 class="text-base font-medium">{step.title}</h3>
+          <p class="lede mt-1 max-w-xl">{step.body}</p>
+        </div>
+      </li>
+    ))
+  }
+</ol>

@@ -47,9 +47,11 @@ const parsePayload = (raw) => {
 
 const evalJs = (code) => parsePayload(call('agent-browser', ['eval', code]));
 
-const html = await fetch(base).then((response) => response.text());
+// The catalogue page lists every theme; the home page only teases six.
+const html = await fetch(`${base}/themes`).then((response) => response.text());
 const slugs = [...new Set([...html.matchAll(/\/preview\/([\w-]+)\//g)].map((m) => m[1]))];
-const routes = ['/', '/custom', ...slugs.map((slug) => `/preview/${slug}/`)];
+const pages = ['/', '/themes', '/packages', '/process', '/about', '/faq', '/custom', '/contact'];
+const routes = [...pages, ...slugs.map((slug) => `/preview/${slug}/`)];
 
 const started = Date.now();
 const failures = [];
@@ -89,7 +91,9 @@ for (const [label, width, height] of viewports) {
         coverCta: report.coverCta && !report.coverCta.visible ? report.coverCta : [],
         reveal: isInvitation && report.revealNodes < 5 ? { nodes: report.revealNodes } : [],
         nested: report.nestedReveals > 0 ? { nested: report.nestedReveals } : [],
-        fonts: Object.entries(report.fonts).filter(([, ok]) => !ok),
+        // Cormorant is the invitation voice; marketing pages never use it, so the
+        // browser does not fetch it there.
+        fonts: isInvitation ? Object.entries(report.fonts).filter(([, ok]) => !ok) : [],
       };
 
       const count = Object.values(problems).reduce((n, list) => n + list.length, 0);

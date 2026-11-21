@@ -5,9 +5,11 @@ import { wedding } from '../data/wedding';
 interface Props {
   theme: Theme;
   class?: string;
+  /** Narrow list thumbnail: drop the date and the call to action, keep the type. */
+  compact?: boolean;
 }
 
-const { theme, class: className = '' } = Astro.props;
+const { theme, class: className = '', compact = false } = Astro.props;
 const { palette, type } = theme;
 const { groom, bride } = wedding.couple;
 ---
@@ -25,7 +27,7 @@ const { groom, bride } = wedding.couple;
     )
   }
 
-  <div class="flex min-h-0 flex-1 flex-col justify-between p-4">
+  <div class:list={['flex min-h-0 flex-1 flex-col justify-between', compact ? 'p-2.5' : 'p-4']}>
     <div
       class="flex items-center justify-between text-[9px] tracking-[0.2em] uppercase"
       style={`color:${palette.accent}`}
@@ -34,7 +36,7 @@ const { groom, bride } = wedding.couple;
       <span>{theme.tier}</span>
     </div>
 
-    <div class="py-3 text-center">
+    <div class:list={['text-center', compact ? 'py-1' : 'py-3']}>
       {
         !theme.photo && (
           <>
@@ -57,7 +59,7 @@ const { groom, bride } = wedding.couple;
       </p>
     </div>
 
-    <div class="text-center">
+    <div class:list={['text-center', compact && 'hidden']}>
       <p class="truncate text-[9px] tracking-[0.14em] uppercase opacity-55">{wedding.shortDate}</p>
       <span
         class="mt-2 inline-block rounded-full px-2.5 py-1 text-[8.5px] tracking-[0.14em] whitespace-nowrap uppercase"

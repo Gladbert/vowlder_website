@@ -11,37 +11,54 @@ const { theme } = Astro.props;
 const previewUrl = new URL(`/preview/${theme.slug}/`, Astro.site).href;
 ---
 
-<article data-theme-card data-category={theme.category} class="flex flex-col">
+{/*
+  Phone: a list row, because comparing 20 designs needs name and price on the same
+  line, not a grid of tall thumbnails. Tablet and up: a card, where there is room
+  for the blurb and both actions.
+*/}
+<article
+  data-theme-card
+  data-category={theme.category}
+  class="group relative flex gap-4 sm:block"
+>
   <a
     href={`/preview/${theme.slug}/`}
-    class="block transition-transform duration-300 hover:-translate-y-1"
     aria-label={`Open the ${theme.name} preview`}
+    class="block w-[5.5rem] shrink-0 transition-transform duration-300 sm:w-auto sm:hover:-translate-y-1"
   >
-    <ThemeThumb theme={theme} class="aspect-[9/16]" />
+    <ThemeThumb theme={theme} compact class="aspect-[3/4] sm:!hidden" />
+    <ThemeThumb theme={theme} class="hidden aspect-[9/16] sm:flex" />
   </a>
 
-  <div class="mt-4 flex items-baseline justify-between gap-3">
-    <h3 class="font-brand text-xl leading-tight sm:text-2xl">{theme.name}</h3>
-    <p class="shrink-0 text-sm tabular-nums text-ink-soft">{rupiah(theme.price)}</p>
-  </div>
+  <div class="flex min-w-0 flex-1 flex-col">
+    <div class="flex items-baseline justify-between gap-3">
+      <h3 class="font-brand text-lg leading-tight sm:mt-4 sm:text-2xl">
+        <a href={`/preview/${theme.slug}/`} class="hover:underline hover:underline-offset-4">
+          {theme.name}
+        </a>
+      </h3>
+      <p class="shrink-0 text-[13px] tabular-nums text-ink-soft sm:text-sm">{rupiah(theme.price)}</p>
+    </div>
 
-  <p class="mt-1 eyebrow">{theme.category} · {theme.mood}</p>
-  <p class="mt-2 text-sm leading-relaxed text-ink-soft">{theme.blurb}</p>
+    <p class="eyebrow mt-1">{theme.category} · {theme.mood}</p>
 
-  <div class="mt-4 flex flex-wrap gap-2">
-    <a
-      href={`/preview/${theme.slug}/`}
-      class="flex min-h-[38px] items-center rounded-pill border border-ink/15 px-4 text-xs font-medium hover:border-ink/40"
-    >
-      Live preview
-    </a>
-    <a
-      href={waLink(theme, previewUrl)}
-      target="_blank"
-      rel="noopener"
-      class="flex min-h-[38px] items-center rounded-pill bg-ink px-4 text-xs font-medium text-cream hover:bg-ink-soft"
-    >
-      Order on WhatsApp
-    </a>
+    <p class="mt-1.5 hidden text-sm leading-relaxed text-ink-soft sm:mt-2 sm:block">{theme.blurb}</p>
+
+    <div class="mt-auto flex flex-wrap gap-2 pt-2 sm:mt-4 sm:pt-0">
+      <a
+        href={`/preview/${theme.slug}/`}
+        class="flex min-h-[38px] items-center rounded-pill bg-ink px-4 text-xs font-medium text-cream hover:bg-ink-soft"
+      >
+        Preview
+      </a>
+      <a
+        href={waLink(theme, previewUrl)}
+        target="_blank"
+        rel="noopener"
+        class="hidden min-h-[38px] items-center rounded-pill border border-ink/15 px-4 text-xs font-medium hover:border-ink/40 sm:flex"
+      >
+        Order on WhatsApp
+      </a>
+    </div>
   </div>
 </article>

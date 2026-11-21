@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/site/PageIntro.astro';
+import ContactCta from '../components/site/ContactCta.astro';
+import { themes } from '../data/themes';
+
+const principles = [
+  {
+    title: 'One invitation, many skins',
+    body: `Every theme is the same invitation underneath: ${themes.length} ways to present it. That is why a change to a date or a name happens once, not ${themes.length} times.`,
+  },
+  {
+    title: 'Built for a phone, first',
+    body: 'Guests open the link on a phone, standing up, in a queue. Every page is laid out for a 390px screen before it is checked on a laptop.',
+  },
+  {
+    title: 'No dark patterns',
+    body: 'No countdown that creates fake urgency, no subscription on a wedding invitation, no "premium" wall between you and your own RSVP list.',
+  },
+  {
+    title: 'The photographs stay yours',
+    body: 'We resize and compress, we never sell them, and twelve months later the page is archived rather than recycled.',
+  },
+];
+
+const notIncluded = [
+  'Photography, videography, or printing',
+  'A mobile app: the invitation is a link, on purpose',
+  'Guest tracking we can resell to anyone else',
+];
+---
+
+<Base
+  title="About · Vowlder"
+  description="Vowlder is a small studio in Surabaya building digital wedding invitations: one web page per couple, sent as a link."
+>
+  <main>
+    <PageIntro
+      eyebrow="About"
+      title="A small studio, one invitation at a time"
+      lede="Vowlder is a small studio in Surabaya. We design and build digital wedding invitations, and we keep the price and the timeline in plain sight."
+      wide
+    />
+
+    <section class="mx-auto max-w-6xl px-5 pb-12 sm:px-8">
+      <div class="grid gap-8 border-t border-line pt-7 lg:grid-cols-[1fr_1fr] lg:gap-16">
+        <div class="space-y-4 text-[0.95rem] leading-relaxed text-ink-soft">
+          <p>
+            We started by building an invitation for our own wedding. It needed a countdown, two
+            ceremonies, a map that worked on an old Android phone, and a way to collect replies without
+            asking 300 people to fill in a form twice.
+          </p>
+          <p>
+            What came out of that is the thing we sell now: one page, laid out for a phone, with the
+            guest name already inside the link. The catalogue is that page in different clothes.
+          </p>
+          <p>
+            We are deliberately small. One couple at a time, replies answered by the person who built the
+            page, no account manager in between.
+          </p>
+        </div>
+
+        <ul class="divide-y divide-line border-y border-line">
+          {
+            principles.map((item) => (
+              <li class="py-4">
+                <h2 class="text-base font-medium">{item.title}</h2>
+                <p class="lede mt-1">{item.body}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <section class="border-t border-line bg-paper/50">
+      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <p class="eyebrow">What we do not do</p>
+        <h2 class="display-2 mt-2">Three things, so nobody is surprised</h2>
+        <ul class="mt-6 grid gap-3 sm:grid-cols-3">
+          {
+            notIncluded.map((item) => (
+              <li class="border-t border-line pt-3 text-sm leading-relaxed">{item}</li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <ContactCta title="Questions before you order?" body="Ask anything. We would rather answer twice than have you guess." />
+  </main>
+</Base>

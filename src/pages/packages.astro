@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/site/PageIntro.astro';
+import Packages from '../components/site/Packages.astro';
+import ContactCta from '../components/site/ContactCta.astro';
+import { WA_NUMBER } from '../data/themes';
+
+const included = [
+  'Both ceremonies, or one if that is all you have',
+  'Guest links with the name already inside',
+  'RSVP collected and reported daily',
+  'Gallery, film link, save-the-date, and the map',
+  'Twelve months live, two rounds of edits',
+];
+
+const notes = [
+  {
+    title: 'What is not included',
+    body: 'Photography, printing, and venue costs. We only build the invitation, and we will tell you if you are about to pay for something you do not need.',
+  },
+  {
+    title: 'How payment works',
+    body: 'Half at the start, half when the draft goes live. Bank transfer or e-wallet. No subscription and no renewal.',
+  },
+  {
+    title: 'If the date moves',
+    body: 'We move the invitation with it, once, at no charge. After a year the page is archived, and can be restored on request.',
+  },
+];
+---
+
+<Base
+  title="Packages · Vowlder"
+  description="Three packages for a digital wedding invitation: Basic, Premium, Signature. One payment, twelve months live, two rounds of edits."
+>
+  <main>
+    <PageIntro
+      eyebrow="Packages"
+      title="Three ways to do this"
+      lede="Prices are per invitation, paid once. If your date moves, we move the invitation with it."
+    />
+
+    <section class="mx-auto max-w-6xl px-5 pb-12 sm:px-8">
+      <Packages />
+
+      <div class="mt-8 grid gap-8 sm:grid-cols-[0.8fr_1.2fr] sm:gap-12">
+        <div>
+          <p class="eyebrow">Every package</p>
+          <ul class="mt-3 divide-y divide-line border-y border-line text-sm">
+            {
+              included.map((item) => (
+                <li class="flex items-start gap-3 py-3">
+                  <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brass" />
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="divide-y divide-line border-y border-line">
+          {
+            notes.map((note) => (
+              <div class="py-4">
+                <h2 class="text-base font-medium">{note.title}</h2>
+                <p class="lede mt-1 max-w-xl">{note.body}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <p class="mt-8 max-w-lg text-sm leading-relaxed text-ink-soft">
+        Not sure which one? Send the date and the venue, and we will tell you which package covers it.
+        No upsell.
+      </p>
+
+      <a
+        href={`https://wa.me/${WA_NUMBER}`}
+        target="_blank"
+        rel="noopener"
+        class="mt-6 inline-flex min-h-[48px] items-center rounded-pill bg-ink px-6 text-sm font-medium text-cream hover:bg-ink-soft"
+      >
+        Ask about a package
+      </a>
+    </section>
+
+    <ContactCta />
+  </main>
+</Base>

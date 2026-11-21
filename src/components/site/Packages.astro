@@ -1,0 +1,45 @@
+---
+import { rupiah, themes } from '../../data/themes';
+
+interface Props {
+  /** Compact drops the three descriptions to a single line each. */
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
+
+const tiers = [
+  {
+    tier: 'Basic' as const,
+    body: 'One page, one ceremony. RSVP, wishes, map, and the countdown.',
+  },
+  {
+    tier: 'Premium' as const,
+    body: 'Both ceremonies, a gallery, the prewedding film, save-the-date, and the full story.',
+  },
+  {
+    tier: 'Signature' as const,
+    body: 'Everything in Premium, plus a palette and typeface made for you. First in the queue.',
+  },
+];
+
+const packages = tiers.map(({ tier, body }) => {
+  const group = themes.filter((theme) => theme.tier === tier);
+  return { tier, body, price: rupiah(Math.min(...group.map((theme) => theme.price))), count: group.length };
+});
+---
+
+<div class="grid gap-6 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-line sm:border-y sm:border-line">
+  {
+    packages.map((pack, index) => (
+      <div class={index === 0 ? 'sm:pr-6' : index === 1 ? 'sm:px-6' : 'sm:pl-6'}>
+        <div class="border-t border-line pt-4 sm:border-0 sm:pt-5 sm:pb-5">
+          <p class="eyebrow">{pack.tier}</p>
+          <p class="font-brand mt-2 text-3xl">{pack.price}</p>
+          <p class="mt-1 text-xs text-ink-soft">{pack.count} designs</p>
+          <p class:list={['lede mt-3', compact && 'sm:line-clamp-2']}>{pack.body}</p>
+        </div>
+      </div>
+    ))
+  }
+</div>

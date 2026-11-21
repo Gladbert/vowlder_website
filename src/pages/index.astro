@@ -2,8 +2,8 @@
 import Base from '../layouts/Base.astro';
 import ThemeCard from '../components/ThemeCard.astro';
 import ThemeThumb from '../components/ThemeThumb.astro';
-import { categories, includedFeatures, rupiah, themes, WA_NUMBER } from '../data/themes';
-import { wedding } from '../data/wedding';
+import ContactCta from '../components/site/ContactCta.astro';
+import { rupiah, themes, WA_NUMBER } from '../data/themes';
 
 const [featured] = themes;
 const fromPrice = rupiah(Math.min(...themes.map((theme) => theme.price)));
@@ -12,86 +12,33 @@ const services = [
   {
     title: 'The invitation',
     body: 'One page per couple: both ceremonies, the venue, the map, your story, a gallery, RSVP, and a guest book. Laid out for a phone, because that is where it will be opened.',
+    href: '/themes',
+    cta: 'See the designs',
   },
   {
     title: 'The guest list',
-    body: 'Every guest gets their own link, so their name is already on the invitation. Replies and wishes come back to us, and we send you the tally every day until the ceremony.',
+    body: 'Every guest gets their own link, so their name is already on the invitation. Replies come back to us, and we send you the tally daily until the ceremony.',
+    href: '/packages',
+    cta: 'What it costs',
   },
   {
     title: 'The day itself',
     body: 'The page stays live through the reception. You get a check-in list for the door, and printed QR cards if you would rather not ask people to queue.',
-  },
-];
-
-const steps = [
-  { title: 'Pick a theme', body: 'Open two or three previews on your own phone and pick one. Colours and type can still move.' },
-  { title: 'Send the details', body: 'Names, dates, venue, parents, photos, and the running order. WhatsApp is fine. No form to fill in.' },
-  { title: 'Review the draft', body: 'You get a private link within two or three working days. Two rounds of edits are included.' },
-  { title: 'Send it out', body: 'We generate the guest links and you share them one by one. Replies start coming in that evening.' },
-];
-
-const tiers = [
-  {
-    tier: 'Basic' as const,
-    body: 'One page, one ceremony. RSVP, wishes, map, and the countdown.',
-  },
-  {
-    tier: 'Premium' as const,
-    body: 'Both ceremonies, a gallery, the prewedding film, save-the-date, and the full story.',
-  },
-  {
-    tier: 'Signature' as const,
-    body: 'Everything in Premium, plus a palette and typeface made for you. First in the queue.',
-  },
-];
-
-const packages = tiers.map(({ tier, body }) => {
-  const group = themes.filter((theme) => theme.tier === tier);
-  return {
-    tier,
-    body,
-    price: rupiah(Math.min(...group.map((theme) => theme.price))),
-    count: group.length,
-  };
-});
-
-const faqs = [
-  {
-    q: 'How long does it take?',
-    a: 'Two to three working days from the moment we have your details and photos. Signature themes can be quicker if the queue is empty.',
-  },
-  {
-    q: 'Do guests need to install anything?',
-    a: 'No. It is a web page. It opens in the browser that is already on their phone, including older Android devices.',
-  },
-  {
-    q: 'How do guests receive the invitation?',
-    a: 'One link per guest, sent over WhatsApp. The guest name comes from the link, so nobody has to type their own name.',
-  },
-  {
-    q: 'Can we change the wording?',
-    a: 'Yes. Two rounds of edits are included with every package. After that we charge per round, which we will tell you upfront.',
-  },
-  {
-    q: 'What happens to the RSVPs?',
-    a: 'They land in our dashboard, not in your personal chat. You get the tally every day, and a final list the morning of the reception.',
-  },
-  {
-    q: 'Can it live on our own domain?',
-    a: 'Yes. We can put the invitation on your domain, or use a short link we provide. Either way it stays up for twelve months.',
+    href: '/process',
+    cta: 'How it runs',
   },
 ];
 ---
 
 <Base
   title="Vowlder · Digital wedding invitations, built in Surabaya"
-  description="Vowlder builds wedding invitations as a single web page: one link per guest, both ceremonies, RSVP, gallery, and a guest book. From Rp 175,000, one payment."
+  description="Wedding invitations as a single web page: one link per guest, both ceremonies, RSVP, gallery, guest book. From Rp 175,000, one payment."
 >
   <main>
     <!-- Hero -->
-    <section class="mx-auto max-w-6xl px-5 pt-10 pb-14 sm:px-8 sm:pt-16 sm:pb-20">
+    <section class="mx-auto max-w-6xl px-5 pt-10 pb-12 sm:px-8 sm:pt-16 sm:pb-20">
       <div class="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16">
-        <div>
+        <div data-rise>
           <p class="eyebrow">Digital invitations · Surabaya</p>
           <h1 class="display-1 mt-4 max-w-[18ch]">
             Invitations that arrive as a link, not an envelope.
@@ -103,7 +50,7 @@ const faqs = [
 
           <div class="mt-7 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
             <a
-              href="#themes"
+              href="/themes"
               class="flex min-h-[48px] items-center justify-center rounded-pill bg-ink px-6 text-sm font-medium text-cream hover:bg-ink-soft"
             >
               See the {themes.length} themes
@@ -134,7 +81,7 @@ const faqs = [
           </dl>
         </div>
 
-        <div class="lg:justify-self-end">
+        <div data-rise style="--i: 1" class="lg:justify-self-end">
           <a href={`/preview/${featured.slug}/`} class="mx-auto block w-[15rem] sm:w-[18rem]">
             <ThemeThumb theme={featured} class="aspect-[9/17] shadow-[0_30px_70px_-45px_rgba(26,25,23,0.6)]" />
             <span class="mt-3 block text-center text-xs text-ink-soft">
@@ -152,11 +99,17 @@ const faqs = [
         <div class="mt-6 divide-y divide-line border-y border-line">
           {
             services.map((service, index) => (
-              <div class="grid gap-2 py-6 sm:grid-cols-[7rem_1fr] sm:gap-8">
+              <div class="grid gap-2 py-6 sm:grid-cols-[7rem_1fr] sm:gap-8" data-rise style={`--i: ${index + 1}`}>
                 <span class="text-xs tabular-nums text-brass">0{index + 1}</span>
                 <div>
                   <h2 class="display-2">{service.title}</h2>
                   <p class="lede mt-2 max-w-xl">{service.body}</p>
+                  <a
+                    href={service.href}
+                    class="mt-3 inline-flex min-h-[32px] items-center text-sm text-ink-soft underline underline-offset-4 hover:text-ink"
+                  >
+                    {service.cta}
+                  </a>
                 </div>
               </div>
             ))
@@ -165,104 +118,32 @@ const faqs = [
       </div>
     </section>
 
-    <!-- Catalogue -->
-    <section id="themes" class="scroll-mt-20 border-t border-line">
+    <!-- Catalogue teaser -->
+    <section class="border-t border-line">
       <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between" data-rise>
           <div>
-            <p class="eyebrow">The catalogue</p>
-            <h2 class="display-2 mt-2">{themes.length} designs, one invitation</h2>
+            <p class="eyebrow">Selected designs</p>
+            <h2 class="display-2 mt-2">Six of the {themes.length}</h2>
           </div>
-          <p class="lede max-w-sm">
-            Every theme runs the same invitation: {wedding.couple.groom.nickname} &amp;
-            {wedding.couple.bride.nickname}, {wedding.event.dateLabel}. Only the colour, type, and
-            layout change.
-          </p>
+          <a
+            href="/themes"
+            class="inline-flex min-h-[40px] items-center text-sm text-ink-soft underline underline-offset-4 hover:text-ink"
+          >
+            See the whole catalogue
+          </a>
         </div>
 
-        <div class="-mx-5 mt-6 overflow-x-auto px-5 pb-1 sm:mx-0 sm:overflow-visible sm:px-0">
-          <div class="flex gap-2" role="group" aria-label="Filter themes by category">
-            <button
-              type="button"
-              data-filter="All"
-              aria-pressed="true"
-              class="min-h-[38px] shrink-0 rounded-pill border border-ink px-4 text-xs font-medium tracking-wide whitespace-nowrap">All</button
-            >
-            {
-              categories.map((category) => (
-                <button
-                  type="button"
-                  data-filter={category}
-                  aria-pressed="false"
-                  class="min-h-[38px] shrink-0 rounded-pill border border-ink/15 px-4 text-xs font-medium tracking-wide whitespace-nowrap hover:border-ink/40"
-                >
-                  {category}
-                </button>
-              ))
-            }
-          </div>
+        <div class="mt-6 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-12 lg:grid-cols-3">
+          {themes.slice(0, 6).map((theme) => <ThemeCard theme={theme} />)}
         </div>
-
-        <div
-          id="theme-grid"
-          class="mt-8 grid grid-cols-2 gap-x-4 gap-y-9 sm:gap-x-7 sm:gap-y-12 lg:grid-cols-3"
-        >
-          {themes.map((theme) => <ThemeCard theme={theme} />)}
-        </div>
-
-        <p id="theme-empty" class="mt-9 hidden text-sm text-ink-soft">Nothing in this category yet.</p>
-
-        <div class="mt-10 border-t border-line pt-6">
-          <p class="eyebrow">In every design</p>
-          <ul class="mt-3 grid gap-x-8 gap-y-2 text-sm sm:grid-cols-2 lg:grid-cols-4">
-            {
-              includedFeatures.map((item) => (
-                <li class="flex gap-2.5 leading-relaxed">
-                  <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-brass" />
-                  <span>{item}</span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Packages -->
-    <section id="packages" class="scroll-mt-20 border-t border-line bg-paper/50">
-      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
-        <p class="eyebrow">Packages</p>
-        <h2 class="display-2 mt-2">Three ways to do this</h2>
-        <p class="lede mt-3 max-w-md">
-          Prices are per invitation, paid once. If your date moves, we move the invitation with it.
-        </p>
-
-        <div class="mt-8 grid gap-6 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-line sm:border-y sm:border-line">
-          {
-            packages.map((pack, index) => (
-              <div class={index === 0 ? 'sm:pr-6' : index === 1 ? 'sm:px-6' : 'sm:pl-6'}>
-                <div class="border-t border-line pt-4 sm:border-0 sm:pt-5 sm:pb-5">
-                  <p class="eyebrow">{pack.tier}</p>
-                  <p class="display-2 mt-2">{pack.price}</p>
-                  <p class="mt-1 text-xs text-ink-soft">{pack.count} designs</p>
-                  <p class="lede mt-3">{pack.body}</p>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-
-        <p class="mt-6 max-w-lg text-sm leading-relaxed text-ink-soft">
-          Not sure which one? Send us the date and the venue, and we will tell you which package
-          covers it. No upsell.
-        </p>
       </div>
     </section>
 
     <!-- Custom -->
-    <section class="border-t border-line">
+    <section class="border-t border-line bg-paper/50">
       <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
-        <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16">
+        <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16" data-rise>
           <div>
             <p class="eyebrow">Not in the catalogue</p>
             <h2 class="display-2 mt-2 max-w-[22ch]">We will build one around your palette.</h2>
@@ -274,7 +155,7 @@ const faqs = [
               href="/custom"
               class="mt-6 inline-flex min-h-[48px] items-center rounded-pill border border-ink/20 px-6 text-sm font-medium hover:border-ink/50"
             >
-              See how a custom design works
+              How a custom design works
             </a>
           </div>
 
@@ -296,113 +177,6 @@ const faqs = [
       </div>
     </section>
 
-    <!-- How it works -->
-    <section id="how-it-works" class="scroll-mt-20 border-t border-line">
-      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
-        <p class="eyebrow">How it works</p>
-        <h2 class="display-2 mt-2">Four steps, about a week</h2>
-
-        <ol class="mt-7 divide-y divide-line border-y border-line">
-          {
-            steps.map((step, index) => (
-              <li class="grid gap-1.5 py-5 sm:grid-cols-[3rem_1fr] sm:gap-6">
-                <span class="text-xs tabular-nums text-brass">0{index + 1}</span>
-                <div>
-                  <h3 class="text-base font-medium">{step.title}</h3>
-                  <p class="lede mt-1 max-w-xl">{step.body}</p>
-                </div>
-              </li>
-            ))
-          }
-        </ol>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="scroll-mt-20 border-t border-line bg-paper/50">
-      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
-        <p class="eyebrow">Questions</p>
-        <h2 class="display-2 mt-2">The ones we get most</h2>
-
-        <div class="mt-6 divide-y divide-line border-y border-line">
-          {
-            faqs.map((faq) => (
-              <details class="group py-4">
-                <summary class="flex min-h-[32px] cursor-pointer list-none items-start justify-between gap-4">
-                  <h3 class="text-base font-medium">{faq.q}</h3>
-                  <span
-                    aria-hidden="true"
-                    class="mt-1 shrink-0 text-lg leading-none text-brass transition-transform duration-200 group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p class="lede mt-2 max-w-xl">{faq.a}</p>
-              </details>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact -->
-    <section id="contact" class="scroll-mt-20 border-t border-line">
-      <div class="mx-auto max-w-6xl px-5 py-12 sm:px-8 sm:py-16">
-        <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-          <div>
-            <p class="eyebrow">Contact</p>
-            <h2 class="display-1 mt-3 max-w-[20ch]">Tell us the date and the venue.</h2>
-            <p class="lede mt-4 max-w-md">
-              One message is enough to start. We answer within one working day, usually sooner.
-            </p>
-          </div>
-
-          <div class="flex flex-col gap-2.5 sm:flex-row sm:gap-3 lg:justify-end">
-            <a
-              href={`https://wa.me/${WA_NUMBER}`}
-              target="_blank"
-              rel="noopener"
-              class="flex min-h-[48px] items-center justify-center rounded-pill bg-ink px-6 text-sm font-medium text-cream hover:bg-ink-soft"
-            >
-              WhatsApp us
-            </a>
-            <a
-              href="mailto:hello@vowlder.com"
-              class="flex min-h-[48px] items-center justify-center rounded-pill border border-ink/20 px-6 text-sm font-medium hover:border-ink/50"
-            >
-              hello@vowlder.com
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+    <ContactCta />
   </main>
 </Base>
-
-<script>
-  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
-  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-theme-card]'));
-  const empty = document.getElementById('theme-empty');
-
-  for (const button of buttons) {
-    button.addEventListener('click', () => {
-      const filter = button.dataset.filter ?? 'All';
-      let visible = 0;
-
-      for (const card of cards) {
-        const show = filter === 'All' || card.dataset.category === filter;
-        card.hidden = !show;
-        if (show) visible++;
-      }
-
-      for (const other of buttons) {
-        const active = other === button;
-        other.setAttribute('aria-pressed', String(active));
-        other.classList.toggle('border-ink', active);
-        other.classList.toggle('border-ink/15', !active);
-      }
-
-      empty?.classList.toggle('hidden', visible > 0);
-    });
-  }
-</script>

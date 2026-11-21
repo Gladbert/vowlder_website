@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+import PageIntro from '../components/site/PageIntro.astro';
+import Steps from '../components/site/Steps.astro';
+import ContactCta from '../components/site/ContactCta.astro';
+
+const steps = [
+  { title: 'Pick a theme', body: 'Open two or three previews on your own phone and pick one. Colours and type can still move.' },
+  { title: 'Send the details', body: 'Names, dates, venue, parents, photos, and the running order. WhatsApp is fine. No form to fill in.' },
+  { title: 'Review the draft', body: 'You get a private link within two or three working days. Two rounds of edits are included.' },
+  { title: 'Send it out', body: 'We generate the guest links and you share them one by one. Replies start coming in that evening.' },
+];
+
+const send = [
+  'Wedding date, and the date you actually need the invitation',
+  'Venue, city, and how many guests you expect',
+  'Names as they should appear, plus both sets of parents',
+  'Six to twelve photos, originals if you have them',
+  'Anything you have seen and liked',
+];
+
+const timeline = [
+  { day: 'Day 0', body: 'You send the details. We confirm availability and the price.' },
+  { day: 'Day 1–3', body: 'Draft built. Your palette, both ceremonies, the full page.' },
+  { day: 'Day 4–5', body: 'You send notes. We adjust. One more round if needed.' },
+  { day: 'Day 6', body: 'Guest links handed over, RSVP open.' },
+  { day: 'The reception', body: 'We watch the RSVP list with you and send the final tally that morning.' },
+];
+---
+
+<Base
+  title="How it works · Vowlder"
+  description="Four steps and about a week: pick a theme, send the details, review the draft, send out the guest links."
+>
+  <main>
+    <PageIntro
+      eyebrow="Process"
+      title="Four steps, about a week"
+      lede="No briefing calls, no shared drives, no forms. A message with the details is enough to start."
+    />
+
+    <section class="mx-auto max-w-6xl px-5 pb-12 sm:px-8">
+      <Steps steps={steps} />
+    </section>
+
+    <section class="border-t border-line">
+      <div class="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:px-8 sm:py-14 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div>
+          <p class="eyebrow">Before you write</p>
+          <h2 class="display-2 mt-2">Five things to have ready.</h2>
+          <p class="lede mt-3 max-w-sm">
+            Missing some of them? Write anyway. We would rather start early than wait for a perfect brief.
+          </p>
+        </div>
+
+        <ol class="divide-y divide-line border-y border-line">
+          {
+            send.map((item, index) => (
+              <li class="grid gap-1 py-3.5 text-sm leading-relaxed sm:grid-cols-[2rem_1fr] sm:gap-4">
+                <span class="tabular-nums text-brass">{index + 1}.</span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <section class="border-t border-line bg-paper/50">
+      <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
+        <p class="eyebrow">The week itself</p>
+        <h2 class="display-2 mt-2">What happens after you say yes</h2>
+
+        <ol class="mt-7 divide-y divide-line border-y border-line">
+          {
+            timeline.map((item) => (
+              <li class="grid gap-1 py-4 sm:grid-cols-[8rem_1fr] sm:gap-6">
+                <span class="text-xs tracking-[0.08em] uppercase text-brass">{item.day}</span>
+                <p class="lede max-w-xl">{item.body}</p>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </section>
+
+    <ContactCta title="Ready when you are." />
+  </main>
+</Base>
