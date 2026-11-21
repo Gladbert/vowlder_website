@@ -1,0 +1,41 @@
+---
+interface Props {
+  variant?: 'block' | 'inline';
+}
+
+const { variant = 'block' } = Astro.props;
+
+const items = [
+  { title: 'Open the invitation', body: 'The cover is a gate. Tapping it is also what starts the music, since browsers block sound until a tap.' },
+  { title: 'Swipe the opening photo', body: 'Four photographs crossfade on their own. Drag sideways to move faster.' },
+  { title: 'Tap any gallery photo', body: 'It opens full screen with its caption and location. Escape or tap the dark area to close.' },
+  { title: 'Heart a photo or a wish', body: 'Counted on your device only, and it says so. Nothing is posted anywhere.' },
+  { title: 'Confirm attendance', body: 'A sheet with name, optional phone and a guest count. It reports back inline, clearly labelled as a preview.' },
+  { title: 'Open the map', body: 'The Google map loads only when asked, so nothing third-party arrives before you want it.' },
+  { title: 'Save the date', body: 'Adds both ceremonies to Google Calendar, or downloads one .ics file with two events.' },
+  { title: 'Use the tabs', body: 'Six tabs at the bottom jump between sections and track where you are as you scroll.' },
+];
+---
+
+<div
+  class:list={[
+    'rounded-card border border-line bg-paper/60',
+    variant === 'inline' ? 'p-4' : 'p-5',
+  ]}
+>
+  <p class="eyebrow">What you can try</p>
+  <p class="mt-2 text-xs leading-relaxed text-ink-soft">
+    Everything below works. It is wired to local state, so nothing is sent to the couple.
+  </p>
+
+  <dl class="mt-4 divide-y divide-line border-t border-line">
+    {
+      items.map((item) => (
+        <div class="py-2.5">
+          <dt class="text-[13px] font-medium">{item.title}</dt>
+          <dd class="mt-0.5 text-xs leading-relaxed text-ink-soft">{item.body}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>

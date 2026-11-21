@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import GuestTester from '../../components/GuestTester.astro';
+import TryPanel from '../../components/site/TryPanel.astro';
 import Invitation from '../../components/previews/Invitation';
 import ThemeThumb from '../../components/ThemeThumb.astro';
 import { includedFeatures, rupiah, themes, waLink } from '../../data/themes';
@@ -87,10 +88,9 @@ const others = themes.filter((item) => item.slug !== theme.slug).slice(0, 3);
           <GuestTester variant="card" id="card" />
         </div>
 
-        <p class="mt-6 max-w-sm rounded-xl border border-line bg-paper/70 p-3.5 text-xs leading-relaxed text-ink-soft lg:mt-4">
-          Tap <span class="font-medium text-ink">Open Invitation</span> to go in. The name you enter
-          above goes straight into the invitation, and the link can be sent to your partner.
-        </p>
+        <div class="mt-6 lg:mt-4">
+          <TryPanel />
+        </div>
 
         <div class="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
           <a

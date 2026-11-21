@@ -9,7 +9,7 @@ interface Props {
 const { eyebrow, title, lede, wide = false } = Astro.props;
 ---
 
-<header class="mx-auto max-w-6xl px-5 pt-10 pb-8 sm:px-8 sm:pt-16 sm:pb-12">
+<header class="mx-auto max-w-6xl px-5 pt-10 pb-8 sm:px-8 sm:pt-16 sm:pb-12" data-rise>
   <p class="eyebrow">{eyebrow}</p>
   <h1 class={`display-1 mt-3 ${wide ? 'max-w-[26ch]' : 'max-w-[20ch]'}`}>{title}</h1>
   {lede && <p class="lede mt-4 max-w-lg">{lede}</p>}

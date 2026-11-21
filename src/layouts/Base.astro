@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import { WA_NUMBER } from '../data/themes';
 
 interface Props {
@@ -50,6 +51,7 @@ const isActive = (href: string) => path === href.replace(/\/$/, '');
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <meta name="theme-color" content="#fbf9f5" />
+    <ClientRouter />
     <slot name="head" />
   </head>
   <body class="min-h-[100svh]">
@@ -181,17 +183,25 @@ const isActive = (href: string) => path === href.replace(/\/$/, '');
       )
     }
     <script>
-      // Site chrome only: reveal-on-scroll and a header that gains a hairline once
-      // the page moves. No island, no framework.
-      const header = document.querySelector('header');
-      const onScroll = () => {
-        header?.classList.toggle('shadow-[0_1px_0_0_var(--color-line)]', window.scrollY > 8);
-      };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive: true });
+      // Site chrome only: reveal-on-scroll and a header hairline. No island, no
+      // framework. Re-runs after every view transition, so listeners never stack.
+      let observers: IntersectionObserver[] = [];
 
-      const targets = document.querySelectorAll('[data-rise]');
-      if (targets.length) {
+      function initChrome() {
+        for (const observer of observers) observer.disconnect();
+        observers = [];
+
+        const header = document.querySelector('header');
+        const onScroll = () => {
+          header?.classList.toggle('shadow-[0_1px_0_0_var(--color-line)]', window.scrollY > 8);
+        };
+        onScroll();
+        window.removeEventListener('scroll', onScroll);
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        const targets = document.querySelectorAll('[data-rise]:not(.is-in)');
+        if (!targets.length) return;
+
         const observer = new IntersectionObserver(
           (entries) => {
             for (const entry of entries) {
@@ -203,7 +213,11 @@ const isActive = (href: string) => path === href.replace(/\/$/, '');
           { rootMargin: '0px 0px -8% 0px', threshold: 0.08 }
         );
         for (const target of targets) observer.observe(target);
+        observers.push(observer);
       }
+
+      initChrome();
+      document.addEventListener('astro:page-load', initChrome);
     </script>
   </body>
 </html>
