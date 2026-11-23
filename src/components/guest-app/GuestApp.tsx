@@ -26,7 +26,6 @@ import type { ToastState } from '../../vendor/wedding-inv/ui/DynamicIslandToast'
 import { weddingMusic } from '../../vendor/wedding-inv/utils/audioSynth';
 import { wedding } from '../../data/wedding';
 import ErrorBoundary from '../previews/ErrorBoundary';
-import '@fontsource-variable/cormorant-garamond';
 import '../../vendor/wedding-inv/styles/base.css';
 
 const SECTIONS = ['hero-section', 'couple-section', 'story-section', 'events-section', 'gallery-section', 'guestbook-section'];
