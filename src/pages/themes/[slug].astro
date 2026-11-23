@@ -102,23 +102,45 @@ const invitationUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
 </Base>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('[data-try-toggle]');
-  const sheet = document.querySelector<HTMLElement>('[data-try-sheet]');
-  const close = document.querySelector<HTMLButtonElement>('[data-try-close]');
+  // Re-bound on every navigation, with the previous page's listeners aborted first.
+  // Without the AbortController, each visit to a theme stacked another keydown
+  // handler on window.
+  let controller = new AbortController();
 
-  function setOpen(open: boolean) {
-    if (!sheet || !toggle) return;
-    sheet.hidden = !open;
-    toggle.setAttribute('aria-expanded', String(open));
-    document.body.style.overflow = open ? 'hidden' : '';
+  function bindSheet() {
+    controller.abort();
+    controller = new AbortController();
+    const { signal } = controller;
+
+    const toggle = document.querySelector<HTMLButtonElement>('[data-try-toggle]');
+    const sheet = document.querySelector<HTMLElement>('[data-try-sheet]');
+    const close = document.querySelector<HTMLButtonElement>('[data-try-close]');
+    if (!toggle || !sheet) return;
+
+    const setOpen = (open: boolean) => {
+      sheet.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+
+    toggle.addEventListener('click', () => setOpen(sheet.hasAttribute('hidden')), { signal });
+    close?.addEventListener('click', () => setOpen(false), { signal });
+    sheet.addEventListener(
+      'click',
+      (event) => {
+        if (event.target === sheet) setOpen(false);
+      },
+      { signal }
+    );
+    window.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.key === 'Escape') setOpen(false);
+      },
+      { signal }
+    );
   }
 
-  toggle?.addEventListener('click', () => setOpen(sheet ? sheet.hasAttribute('hidden') : false));
-  close?.addEventListener('click', () => setOpen(false));
-  sheet?.addEventListener('click', (event) => {
-    if (event.target === sheet) setOpen(false);
-  });
-  window.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') setOpen(false);
-  });
+  bindSheet();
+  document.addEventListener('astro:page-load', bindSheet);
 </script>

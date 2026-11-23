@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MotionConfig, motion } from 'motion/react';
+import { MotionConfig } from 'motion/react';
 import { Share2 } from 'lucide-react';
 import { OpeningCover } from '../../vendor/wedding-inv/ui/OpeningCover';
 import { HeroSection } from '../../vendor/wedding-inv/ui/HeroSection';
@@ -61,8 +61,8 @@ export default function GuestApp() {
   const [activeSection, setActiveSection] = useState(SECTIONS[0]);
   const [viewMode, setViewMode] = useState<'mobile' | 'fluid'>('mobile');
   const [isDesktop, setIsDesktop] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const scroller = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
 
   const showToast = useCallback((message: string, type: 'success' | 'copy' | 'love' = 'copy') => {
     setToast({ id: `toast-${Date.now()}`, message, type });
@@ -99,7 +99,10 @@ export default function GuestApp() {
       ticking = true;
       requestAnimationFrame(() => {
         const max = host.scrollHeight - host.clientHeight;
-        setScrollProgress(max > 0 ? (host.scrollTop / max) * 100 : 0);
+        const ratio = max > 0 ? Math.min(1, host.scrollTop / max) : 0;
+        // Direct style write: a scroll-linked state update re-rendered every section
+        // in the vendored tree on every frame.
+        if (progressRef.current) progressRef.current.style.transform = `scaleX(${ratio})`;
 
         const marker = host.scrollTop + 220;
         for (const id of SECTIONS) {
@@ -201,10 +204,10 @@ export default function GuestApp() {
       <div ref={scroller} className="relative h-full overflow-y-auto bg-[#F3EFEA] text-[#1C1714]">
         {opened && (
           <div className="pointer-events-none sticky top-0 z-50 -mb-1 h-1 bg-black/[0.04]">
-            <motion.div
+            <div
+              ref={progressRef}
               className="h-full w-full origin-left bg-[#966A38]"
-              style={{ scaleX: scrollProgress / 100 }}
-              transition={{ ease: 'linear', duration: 0.1 }}
+              style={{ transform: 'scaleX(0)' }}
             />
           </div>
         )}

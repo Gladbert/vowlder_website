@@ -30,7 +30,7 @@ const packages = tiers.map(({ tier, name, body }) => {
   const group = themes.filter((theme) => theme.tier === tier);
   return {
     tier,
-    name: tiers.find((item) => item.tier === tier)?.name ?? tier,
+    name,
     body,
     price: rupiah(Math.min(...group.map((theme) => theme.price))),
     count: group.length,
