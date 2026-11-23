@@ -14,6 +14,7 @@
     revealNodes: 0,
     nestedReveals: 0,
     smallTargets: [],
+    overlapChrome: [],
     fonts: {},
   };
 
@@ -255,6 +256,46 @@
       });
     }
     if (report.smallTargets.length > 6) break;
+  }
+
+  // 5c. Floating UI must not stack on itself: two fixed/absolute layers covering more
+  // than a fifth of the smaller one is a collision, even when neither holds text.
+  const chrome = [];
+  for (const el of document.querySelectorAll('a, button, nav, header')) {
+    if (!visible(el)) continue;
+    const s = getComputedStyle(el);
+    if (s.position !== 'fixed' && s.position !== 'absolute' && s.position !== 'sticky') continue;
+    // Only auto-layered chrome is compared. Content scrolling under an opaque bottom nav
+    // is the design, not a collision.
+    const z = Number.parseInt(s.zIndex, 10);
+    if (!Number.isFinite(z) || z < 10) continue;
+    // A transparent wrapper paints nothing, so it cannot look stacked even when its
+    // box overlaps. Judge what a person sees.
+    const alpha = (() => {
+      const m = s.backgroundColor.match(/[\d.]+/g);
+      return m && m.length === 4 ? Number(m[3]) : 1;
+    })();
+    const border = ['Top', 'Right', 'Bottom', 'Left'].reduce(
+      (sum, side) => sum + (Number.parseFloat(s[`border${side}Width`]) || 0),
+      0
+    );
+    if (alpha < 0.05 && border === 0) continue;
+    const r = el.getBoundingClientRect();
+    if (r.width < 24 || r.height < 18) continue;
+    chrome.push({ el, r });
+  }
+  for (let i = 0; i < chrome.length; i++) {
+    for (let j = i + 1; j < chrome.length; j++) {
+      const a = chrome[i], b = chrome[j];
+      if (a.el.contains(b.el) || b.el.contains(a.el)) continue;
+      const x = Math.min(a.r.right, b.r.right) - Math.max(a.r.left, b.r.left);
+      const y = Math.min(a.r.bottom, b.r.bottom) - Math.max(a.r.top, b.r.top);
+      if (x <= 2 || y <= 2) continue;
+      const smaller = Math.min(a.r.width * a.r.height, b.r.width * b.r.height);
+      if (x * y < smaller * 0.2) continue;
+      report.overlapChrome.push({ a: label(a.el), b: label(b.el), area: Math.round(x * y) });
+      if (report.overlapChrome.length > 6) break;
+    }
   }
 
   // 6. The cover gate's primary action must be fully visible without scrolling.

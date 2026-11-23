@@ -240,7 +240,7 @@ function GuestAppBody() {
             type="button"
             onClick={handleShare}
             aria-label="Share this invitation"
-            className="fixed left-3 top-[calc(env(safe-area-inset-top,0px)+12px)] z-40 flex h-11 min-h-[44px] items-center gap-1.5 rounded-full border border-white/[0.14] bg-[#1A1412]/85 px-3.5 text-xs font-medium text-[#FAF8F5] backdrop-blur-xl transition-colors hover:bg-[#1A1412] sm:top-4 sm:left-4"
+            className="fixed bottom-[4.75rem] right-3 z-40 flex h-11 min-h-[44px] items-center gap-1.5 rounded-full border border-white/[0.14] bg-[#1A1412]/85 px-3.5 text-xs font-medium text-[#FAF8F5] shadow-lg backdrop-blur-xl transition-colors hover:bg-[#1A1412]"
           >
             <Share2 className="h-3.5 w-3.5 text-[#E6D4C1]" aria-hidden="true" />
             <span>Share</span>
