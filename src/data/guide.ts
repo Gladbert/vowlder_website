@@ -17,7 +17,7 @@ export const guides: Guide[] = [
       'A breakdown of what you pay for in an Indonesian digital wedding invitation, what drives the price up, and where the money is usually wasted.',
     readingMinutes: 5,
     updated: 'December 2026',
-    lede: 'Prices in this market run from Rp 50,000 to Rp 2,000,000 for what looks like the same product. Here is what separates them.',
+    lede: 'Prices in this market run from Rp 50,000 to Rp 5,000,000 for what looks like the same product. Here is what separates them.',
     sections: [
       {
         heading: 'The floor: template and link',
@@ -29,7 +29,7 @@ export const guides: Guide[] = [
       {
         heading: 'The middle: guest links and replies',
         body: [
-          'The moment each guest gets their own link, someone has to generate, store, and deduplicate a few hundred of them, and replies have to land somewhere a human can read. That is the jump from Rp 150,000 to Rp 400,000, and it is the only jump most couples actually need.',
+          'The moment each guest gets their own link, someone has to generate, store, and deduplicate a few hundred of them, and replies have to land somewhere a human can read. That is the jump from roughly Rp 300,000 to Rp 800,000, and it is the only jump most couples actually need.',
           'Ask how replies arrive. If the answer is "in your WhatsApp", you are doing the spreadsheet work yourself at 11pm.',
         ],
       },

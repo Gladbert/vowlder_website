@@ -98,7 +98,7 @@ export const themes: Theme[] = [
     name: 'Gladbert & Monica',
     category: 'Minimalist',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'The template we used at the real wedding: cream, gold, and burgundy, with an order of sections that has already survived a room full of guests.',
     palette: {
@@ -118,11 +118,11 @@ export const themes: Theme[] = [
     photo: '/photos/cover.webp',
   },
   {
-    slug: 'kyoto-sepia',
-    name: 'Kyoto Sepia',
+    slug: 'sepia',
+    name: 'Sepia',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Left-aligned editorial. Numbered sections, big type, photographs in a strip. For couples who would rather not have ornaments.',
     palette: {
@@ -141,11 +141,11 @@ export const themes: Theme[] = [
     photo: '/photos/kyoto.webp',
   },
   {
-    slug: 'floral-garden',
-    name: 'Floral Garden',
+    slug: 'kenanga',
+    name: 'Kenanga',
     category: 'Floral',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Sage and white, rounded cards, the two of you side by side. For a garden ceremony or a villa weekend.',
     palette: {
@@ -164,11 +164,11 @@ export const themes: Theme[] = [
     photo: '/photos/bamboo.webp',
   },
   {
-    slug: 'oriental-red-gold',
-    name: 'Oriental Red Gold',
+    slug: 'merah',
+    name: 'Merah',
     category: 'Oriental',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Deep red and gold, double frame, wide capitals. For teapai, sangjit, and an evening reception.',
     palette: {
@@ -191,7 +191,7 @@ export const themes: Theme[] = [
     name: 'Art Deco',
     category: 'Classic',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Black and old gold, thin rules, oversized section numbers. Suits a ballroom with the lights turned down.',
     palette: {
@@ -210,11 +210,11 @@ export const themes: Theme[] = [
     photo: '/photos/hero1.webp',
   },
   {
-    slug: 'cotton-blush',
-    name: 'Cotton Blush',
+    slug: 'kapas',
+    name: 'Kapas',
     category: 'Floral',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Pale blush and terracotta, rounded cards, plenty of empty space. For a morning ceremony and a small reception.',
     palette: {
@@ -233,11 +233,11 @@ export const themes: Theme[] = [
     photo: '/photos/lake.webp',
   },
   {
-    slug: 'midnight-noir',
-    name: 'Midnight Noir',
+    slug: 'legam',
+    name: 'Legam',
     category: 'Classic',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Charcoal and silver, editorial type, almost no ornament. For couples who want an invitation with no colour at all.',
     palette: {
@@ -256,11 +256,11 @@ export const themes: Theme[] = [
     photo: '/photos/shibuya.webp',
   },
   {
-    slug: 'pressed-linen',
-    name: 'Pressed Linen',
+    slug: 'linen',
+    name: 'Linen',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Poster layout: a full photograph, a solid colour band, big left-aligned type, one-column gallery. The most room for pictures.',
     palette: {
@@ -279,11 +279,11 @@ export const themes: Theme[] = [
     photo: '/photos/groom.webp',
   },
   {
-    slug: 'amber-dusk',
-    name: 'Amber Dusk',
+    slug: 'ambar',
+    name: 'Ambar',
     category: 'Classic',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Your names sit on the photograph inside a thin frame, with wide capitals. For an evening reception under low light.',
     palette: {
@@ -302,11 +302,11 @@ export const themes: Theme[] = [
     photo: '/photos/bride.webp',
   },
   {
-    slug: 'linen-minimal',
-    name: 'Linen Minimal',
+    slug: 'kapur',
+    name: 'Kapur',
     category: 'Minimalist',
     tier: 'Basic',
-    price: 175_000,
+    price: 350_000,
     blurb:
       'The shortest version: a monogram instead of portraits, a three-column gallery, no ornament.',
     palette: {
@@ -324,11 +324,11 @@ export const themes: Theme[] = [
     motion: { reveal: 'right', hero: 'still', nav: 'underline', coverExit: 'fade', coverDuration: 0.4 },
   },
   {
-    slug: 'temu-rasa',
-    name: 'Temu Rasa',
+    slug: 'rasa',
+    name: 'Rasa',
     category: 'Floral',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Round portraits, italic headings, soft cards. Fits a morning ceremony or a reception at home.',
     palette: {
@@ -351,7 +351,7 @@ export const themes: Theme[] = [
     name: 'Pusaka',
     category: 'Traditional',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Deep green and old gold, round portraits, italic headings. For a traditional ceremony that still feels quiet.',
     palette: {
@@ -370,11 +370,11 @@ export const themes: Theme[] = [
     photo: '/photos/shrine.webp',
   },
   {
-    slug: 'minang-gadang',
-    name: 'Minang Gadang',
+    slug: 'gadang',
+    name: 'Gadang',
     category: 'Traditional',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Maroon and old brass, double frame, wide capitals. For a baralek with a long run of events.',
     palette: {
@@ -393,11 +393,11 @@ export const themes: Theme[] = [
     photo: '/photos/couple.webp',
   },
   {
-    slug: 'pantai-sore',
-    name: 'Pantai Sore',
+    slug: 'sore',
+    name: 'Sore',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Sea green and sand, full-bleed photographs, a one-column gallery. For a ceremony by the water.',
     palette: {
@@ -416,11 +416,11 @@ export const themes: Theme[] = [
     photo: '/photos/fuji.webp',
   },
   {
-    slug: 'sino-angpao',
-    name: 'Sino Angpao',
+    slug: 'angpao',
+    name: 'Angpao',
     category: 'Oriental',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Deep red, gold, and a seal. The gift block becomes angpao, with wide capitals for teapai and sangjit.',
     palette: {
@@ -441,11 +441,11 @@ export const themes: Theme[] = [
     photo: '/photos/candid.webp',
   },
   {
-    slug: 'imlek-modern',
-    name: 'Imlek Modern',
+    slug: 'imlek',
+    name: 'Imlek',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Clean cream with a vermilion accent and a single character. Chinese-Indonesian without a wall of red.',
     palette: {
@@ -466,11 +466,11 @@ export const themes: Theme[] = [
     photo: '/photos/hero1.webp',
   },
   {
-    slug: 'teapai-emas',
-    name: 'Teapai Emas',
+    slug: 'teapai',
+    name: 'Teapai',
     category: 'Oriental',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Dark brown and gold, round portraits, italic headings. For teapai and sangjit at home.',
     palette: {
@@ -495,7 +495,7 @@ export const themes: Theme[] = [
     name: 'Sinar',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'A rail down the page: round portraits, a swipeable gallery, cards that stay out of the way. For a small ceremony that still wants photographs.',
     palette: {
@@ -518,7 +518,7 @@ export const themes: Theme[] = [
     name: 'Lontar',
     category: 'Traditional',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Indigo and copper, a ledger of rows instead of cards, full-bleed photographs. Reads like a printed programme, not a page.',
     palette: {
@@ -537,11 +537,11 @@ export const themes: Theme[] = [
     photo: '/photos/kyoto.webp',
   },
   {
-    slug: 'riviera',
-    name: 'Riviera',
+    slug: 'teluk',
+    name: 'Teluk',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'White walls, an azure accent, photographs half a step brighter. For a ceremony near water or a long lunch that turns into a reception.',
     palette: {
@@ -560,11 +560,11 @@ export const themes: Theme[] = [
     photo: '/photos/lake.webp',
   },
   {
-    slug: 'atelier',
-    name: 'Atelier',
+    slug: 'kertas',
+    name: 'Kertas',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'A studio sheet: near-white paper, tight type, one signal red. No ornament, nothing to distract from the names.',
     palette: {
@@ -583,11 +583,11 @@ export const themes: Theme[] = [
     photo: '/photos/fuji.webp',
   },
   {
-    slug: 'terracotta',
-    name: 'Terracotta',
+    slug: 'terakota',
+    name: 'Terakota',
     category: 'Traditional',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Clay, sand, and late afternoon light. Built for a ceremony in a courtyard where the photographs are already warm.',
     palette: {
@@ -606,11 +606,11 @@ export const themes: Theme[] = [
     photo: '/photos/candid.webp',
   },
   {
-    slug: 'monochrome',
-    name: 'Monochrome',
+    slug: 'kelabu',
+    name: 'Kelabu',
     category: 'Classic',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Newspaper rules, black on off-white, section numbers doing the ornament. For couples who want the photographs to carry everything.',
     palette: {
@@ -629,11 +629,11 @@ export const themes: Theme[] = [
     photo: '/photos/pool7.webp',
   },
   {
-    slug: 'celadon',
-    name: 'Celadon',
+    slug: 'seladon',
+    name: 'Seladon',
     category: 'Floral',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Glazed green and bone white, quieter than a flower theme. Rounded cards, a swipeable gallery, photographs that stay pale.',
     palette: {
@@ -652,11 +652,11 @@ export const themes: Theme[] = [
     photo: '/photos/pool1.webp',
   },
   {
-    slug: 'nocturne',
-    name: 'Nocturne',
+    slug: 'malam',
+    name: 'Malam',
     category: 'Classic',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Plum and lilac at night, names set over the photograph. Slow by design: almost nothing moves until you do.',
     palette: {
@@ -675,11 +675,11 @@ export const themes: Theme[] = [
     photo: '/photos/pool2.webp',
   },
   {
-    slug: 'salt-flat',
-    name: 'Salt Flat',
+    slug: 'garam',
+    name: 'Garam',
     category: 'Minimalist',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Sand, salt, and a horizon. A poster layout with one column of photographs, for a ceremony held outdoors with the light behind you.',
     palette: {
@@ -702,7 +702,7 @@ export const themes: Theme[] = [
     name: 'Kintsugi',
     category: 'Classic',
     tier: 'Signature',
-    price: 650_000,
+    price: 1_500_000,
     blurb:
       'Ink brown and gold, ruled like a ledger, with the story set in tight rows. Built for couples who want no ornament at all.',
     palette: {
@@ -721,11 +721,11 @@ export const themes: Theme[] = [
     photo: '/photos/pool4.webp',
   },
   {
-    slug: 'marigold',
-    name: 'Marigold',
+    slug: 'kenikir',
+    name: 'Kenikir',
     category: 'Floral',
     tier: 'Premium',
-    price: 425_000,
+    price: 750_000,
     blurb:
       'Warm cream and saffron, round portraits, italic headings. The most cheerful of the soft designs without being loud about it.',
     palette: {
@@ -744,11 +744,11 @@ export const themes: Theme[] = [
     photo: '/photos/pool5.webp',
   },
   {
-    slug: 'basalt',
-    name: 'Basalt',
+    slug: 'batu',
+    name: 'Batu',
     category: 'Minimalist',
     tier: 'Basic',
-    price: 175_000,
+    price: 350_000,
     blurb:
       'Stone grey and bone, square corners, a monogram instead of portraits. The plainest, fastest design in the catalogue.',
     palette: {
