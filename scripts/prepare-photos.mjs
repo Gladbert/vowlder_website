@@ -1,7 +1,7 @@
 // One-off asset prep: pull the real wedding photos out of the Wedding-inv guest app,
 // downscale to 1080px WebP so the whole portfolio stays small.
 // Read-only on the source repo. Run: node scripts/prepare-photos.mjs
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import sharp from 'sharp';
 
@@ -53,4 +53,19 @@ for (const [name, file] of Object.entries(files)) {
       thumb.size / 1024
     )} KB ${thumb.width}x${thumb.height}`
   );
+}
+
+// Every photo in /public/photos needs a 480px variant, including the ones copied in
+// from elsewhere (the venue watercolour and the dress code). Missing one shows up as a
+// 404 in the venue block of every template.
+for (const file of readdirSync(OUT)) {
+  if (!file.endsWith('.webp')) continue;
+  const name = file.replace('.webp', '');
+  const target = join(THUMB, file);
+  if (readdirSync(THUMB).includes(file)) continue;
+  const info = await sharp(join(OUT, file))
+    .resize({ width: 480, withoutEnlargement: true })
+    .webp({ quality: 72, effort: 6 })
+    .toFile(target);
+  console.log(`${name}.webp  thumb backfilled  ${Math.round(info.size / 1024)} KB`);
 }
