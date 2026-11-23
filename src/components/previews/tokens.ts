@@ -26,7 +26,7 @@ export type Tokens = {
   couple: 'stack' | 'columns' | 'monogram';
   photoRatio: string;
   photoShape: 'square' | 'circle';
-  story: 'timeline' | 'centered';
+  story: 'timeline' | 'centered' | 'cards';
   scheduleStyle: 'cards' | 'timeline' | 'list';
   galleryStyle: 'grid' | 'rail' | 'full';
   button: string;

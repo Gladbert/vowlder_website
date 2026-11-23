@@ -57,7 +57,8 @@ export default function Invitation({ theme }: { theme: Theme }) {
 }
 
 function InvitationBody({ theme }: { theme: Theme }) {
-  const t = variants[theme.variant];
+  // Variant gives the baseline; the template can swap individual sections.
+  const t = { ...variants[theme.variant], ...theme.layout };
   const p = theme.palette;
 
   const motionSet: ThemeMotion = theme.motion ?? {

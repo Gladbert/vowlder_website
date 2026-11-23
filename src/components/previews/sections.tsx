@@ -528,7 +528,36 @@ export function Story({ p, t, root, reveal }: Look) {
         </SectionLabel>
       </Reveal>
 
-      {t.story === 'timeline' ? (
+      {t.story === 'cards' && (
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          {wedding.story.map((item, index) => (
+            <Reveal key={item.year} kind={reveal} root={root} delay={index * 0.06}>
+              <figure className={`overflow-hidden ${t.radius}`} style={{ background: p.line }}>
+                <img
+                  src={thumbOf(item.photo)}
+                  alt=""
+                  width="480"
+                  height="480"
+                  loading="lazy"
+                  decoding="async"
+                  className="aspect-square w-full object-cover"
+                />
+                <figcaption className="p-3" style={{ background: p.paper }}>
+                  <span className={`${t.small} tabular-nums`} style={{ color: p.accent }}>
+                    {item.year}
+                  </span>
+                  <h3 className={`mt-1 ${t.sectionTitle}`}>{item.title}</h3>
+                  <p className={`mt-1 ${t.body}`} style={{ color: p.soft }}>
+                    {item.narrative}
+                  </p>
+                </figcaption>
+              </figure>
+            </Reveal>
+          ))}
+        </div>
+      )}
+
+      {t.story === 'timeline' && (
         <ol className="mt-5 space-y-7">
           {wedding.story.map((item, index) => (
             <li key={item.year} className="border-l pl-4" style={{ borderColor: p.line }}>
@@ -559,7 +588,9 @@ export function Story({ p, t, root, reveal }: Look) {
             </li>
           ))}
         </ol>
-      ) : (
+      )}
+
+      {t.story === 'centered' && (
         <ol className="mt-6 space-y-7">
           {wedding.story.map((item, index) => (
             <li key={item.year} className={`${t.align} ${t.ornament ? '' : 'border-t pt-5'}`} style={{ borderColor: p.line }}>
