@@ -9,7 +9,8 @@
 // Every browser call has a timeout, and progress is printed, so a hung browser
 // cannot look like a hung script.
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 
 const args = process.argv.slice(2);
 const base = args.find((arg) => arg.startsWith('http')) ?? 'http://localhost:4399';
@@ -61,6 +62,41 @@ const parsePayload = (raw) => {
 const evalJs = (code) => parsePayload(call('agent-browser', ['eval', code]));
 
 // The catalogue page lists every theme; the home page only teases six.
+// Static preflight: every asset a built page references must exist in dist/. This is the
+// check that would have caught 56 broken venue images before they reached production.
+const distAssets = () => {
+  if (!existsSync('dist')) return null;
+  const pages = [];
+  (function walk(dir) {
+    for (const entry of readdirSync(dir)) {
+      const path = join(dir, entry);
+      if (statSync(path).isDirectory()) walk(path);
+      else if (path.endsWith('.html')) pages.push(path);
+    }
+  })('dist');
+
+  const missing = new Set();
+  for (const page of pages) {
+    const html = readFileSync(page, 'utf8');
+    for (const match of html.matchAll(/(?:src|href)="(\/(?:photos|audio|brand|og|_astro)\/[^"]+)"/g)) {
+      const target = join('dist', match[1]);
+      if (!existsSync(target)) missing.add(`${page.replace('dist', '')} -> ${match[1]}`);
+    }
+  }
+
+  return { pages: pages.length, missing: [...missing] };
+};
+
+const preflight = distAssets();
+if (preflight) {
+  if (preflight.missing.length) {
+    console.log(`\n✗ ${preflight.missing.length} missing asset reference(s) across ${preflight.pages} built pages`);
+    for (const item of preflight.missing.slice(0, 12)) console.log('  ', item);
+    process.exit(1);
+  }
+  console.log(`preflight: ${preflight.pages} built pages, every asset reference resolves`);
+}
+
 const html = await fetch(`${base}/themes`).then((response) => response.text());
 const slugs = [...new Set([...html.matchAll(/\/themes\/([\w-]+)\//g)].map((m) => m[1]))];
 const pages = [
