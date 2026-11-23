@@ -5,6 +5,7 @@ import TryPanel from '../../components/site/TryPanel.astro';
 import Invitation from '../../components/previews/Invitation';
 import GuestApp from '../../components/guest-app/GuestApp';
 import { themes, waLink } from '../../data/themes';
+import { wedding } from '../../data/wedding';
 
 export function getStaticPaths() {
   return themes.map((theme) => ({ params: { slug: theme.slug }, props: { theme } }));
@@ -26,6 +27,13 @@ const invitationUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
   description={`${theme.name}: ${theme.blurb}`}
   image={`/og/${theme.slug}.png`}
 >
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    href={isGuestApp ? '/photos/cover.webp' : wedding.heroSlides[0].src}
+    fetchpriority="high"
+  />
   <div class="min-h-[100svh] bg-paper">
     <main class="relative mx-auto h-[100svh] w-full max-w-[560px] overflow-hidden bg-paper sm:border-x sm:border-line">
       {isGuestApp ? <GuestApp client:load /> : <Invitation theme={theme} client:load />}

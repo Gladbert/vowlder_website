@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { RefObject } from 'react';
-import type { Palette } from '../../data/themes';
+import { thumbOf, type Palette } from '../../data/themes';
 import { wedding } from '../../data/wedding';
 import type { Tokens } from './tokens';
 import { useCountdown, useNextEventIso } from './hooks';
@@ -122,6 +122,9 @@ export function HeroSlideshow({
             x: { duration: hero.duration, ease: 'linear' },
             y: { duration: hero.duration, ease: 'linear' },
           }}
+          loading={slide === 0 ? 'eager' : 'lazy'}
+          fetchPriority={slide === 0 ? 'high' : 'auto'}
+          decoding="async"
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.1}
@@ -404,9 +407,12 @@ export function Schedule({ p, t, root, reveal }: Look) {
           </p>
 
           <img
-            src={primary.venueImage}
+            src={thumbOf(primary.venueImage)}
             alt=""
+            width="480"
+            height="300"
             loading="lazy"
+            decoding="async"
             className={`mt-2 aspect-[16/10] w-full object-cover ${t.radius}`}
             style={{ background: p.line }}
           />
@@ -483,9 +489,12 @@ export function Schedule({ p, t, root, reveal }: Look) {
           <ul className={`mt-3 space-y-1.5 border-t pt-3 ${t.body}`} style={{ borderColor: p.line, color: p.soft }}>
             <li className="flex items-start gap-2">
               <img
-                src={primary.dressCodeImage}
+                src={thumbOf(primary.dressCodeImage)}
                 alt=""
+                width="80"
+                height="80"
                 loading="lazy"
+                decoding="async"
                 className="mt-0.5 h-10 w-10 shrink-0 rounded-full object-cover"
                 style={{ background: p.line }}
               />
@@ -526,9 +535,12 @@ export function Story({ p, t, root, reveal }: Look) {
               <Reveal kind={reveal} root={root} delay={index * 0.07}>
                 <div className="flex items-start gap-3">
                   <img
-                    src={item.photo}
+                    src={thumbOf(item.photo)}
                     alt=""
+                    width="128"
+                    height="128"
                     loading="lazy"
+                    decoding="async"
                     className={`h-16 w-16 shrink-0 object-cover ${t.radius === 'rounded-full' ? 'rounded-full' : t.radius}`}
                     style={{ background: p.line }}
                   />
@@ -639,9 +651,12 @@ export function Gallery({
                   className="block w-full text-left"
                 >
                   <img
-                    src={photo.photo}
+                    src={thumbOf(photo.photo)}
                     alt={photo.title}
+                    width="480"
+                    height="720"
                     loading="lazy"
+                    decoding="async"
                     className={`${t.galleryRatio} w-full object-cover`}
                   />
                 </button>
@@ -666,9 +681,12 @@ export function Gallery({
                     className="block w-full"
                   >
                     <img
-                      src={photo.photo}
+                      src={thumbOf(photo.photo)}
                       alt={photo.title}
+                      width="480"
+                      height="720"
                       loading="lazy"
+                      decoding="async"
                       className={`${t.galleryRatio} w-full object-cover`}
                     />
                   </button>
@@ -700,7 +718,15 @@ export function Gallery({
                   aria-label={`View photo: ${photo.title}`}
                   className="block w-full"
                 >
-                  <img src={photo.photo} alt={photo.title} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                  <img
+                    src={thumbOf(photo.photo)}
+                    alt={photo.title}
+                    width="480"
+                    height="360"
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-[4/3] w-full object-cover"
+                  />
                 </button>
                 <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-black/55 px-3 py-2.5 text-[11px] text-white">
                   {photo.title}
@@ -725,9 +751,12 @@ export function Gallery({
           aria-label="Play the prewedding film"
         >
           <img
-            src="/photos/cover.webp"
+            src={thumbOf('/photos/cover.webp')}
             alt=""
+            width="480"
+            height="300"
             loading="lazy"
+            decoding="async"
             className="aspect-[16/10] w-full object-cover opacity-85"
           />
           <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/55 text-white">

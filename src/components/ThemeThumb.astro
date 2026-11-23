@@ -1,5 +1,6 @@
 ---
 import type { Theme } from '../data/themes';
+import { thumbOf } from '../data/themes';
 import { wedding } from '../data/wedding';
 
 interface Props {
@@ -20,7 +21,15 @@ const { groom, bride } = wedding.couple;
   {
     theme.photo && (
       <div class="relative h-[46%] shrink-0 overflow-hidden">
-        <img src={theme.photo} alt="" loading="lazy" class="photo-grade h-full w-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]" />
+        <img
+          src={thumbOf(theme.photo)}
+          alt=""
+          width="480"
+          height="720"
+          loading="lazy"
+          decoding="async"
+          class="photo-grade h-full w-full object-cover transition-transform duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+        />
       </div>
     )
   }

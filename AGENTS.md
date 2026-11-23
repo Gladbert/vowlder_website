@@ -110,7 +110,8 @@ Two data files, one rule: **content and design never mix.**
 - **Audio never autoplays.** `<audio preload="none">` plus `play()` inside the "Buka Undangan" click (`useInvitationAudio`). iOS and Android both block anything else. No `music` field means no control is shown — do not ship a fake music button.
 - **`?to=` guest name**: read on mount, write back with `history.replaceState` (`useGuestName`). Default is `Tamu Undangan`.
 - **Mobile first.** Base styles target a 390px phone; add `sm:` / `lg:` only to widen. Preview screens are app-like: fixed `100svh` shell with an internal scroll container, so floating bars and the cover gate stay put.
-- **Assets**: photos go to `/public/photos` as WebP, max 1080px, quality ~74, under ~150 KB each (1.1 MB total). `public/audio/ceremony.mp3` is 1.7 MB and the one deliberate exception: it is `preload="none"`, so it never touches first paint. Move to R2 before the repo passes ~150 MB.
+- **Assets**: photos go to `/public/photos` as WebP, max 1080px, quality ~74, under ~150 KB each, plus a 480px card variant in `/public/photos/thumbs` (532 KB for the whole set). Cards, gallery grids, story thumbs, the venue watercolour and the film poster load the thumb; only the lightbox and the hero use the full file. `thumbOf()` in `themes.ts` rewrites the path, so there is one rule and no duplicated URLs.
+- **Measured page weight** (production build, cold): home 120 KB, catalogue 76 KB, a theme page 284 KB (was 658 KB before thumbnails). `public/audio/ceremony.mp3` is 1.7 MB and the one deliberate exception: it is `preload="none"`, so it never touches first paint. Move to R2 before the repo passes ~150 MB.
 - Fonts are self-hosted via `@fontsource`: Archivo (body), Instrument Serif (company headings), Cormorant Garamond (inside the invitations). No external font or CDN request, no Inter.
 
 ## Motion

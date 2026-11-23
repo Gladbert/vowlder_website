@@ -787,4 +787,7 @@ export function customWaLink() {
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;
 }
 
+/** Cards load the 480px variant; the invitation itself uses the full file. */
+export const thumbOf = (photo: string) => photo.replace('/photos/', '/photos/thumbs/');
+
 export const rupiah = (n: number) => `Rp ${n.toLocaleString('en-US')}`;

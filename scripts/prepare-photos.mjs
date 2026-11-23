@@ -7,6 +7,8 @@ import sharp from 'sharp';
 
 const SRC = '/home/gladbert/gladbert/Wedding-inv/apps/guest/dist/src/assets/images';
 const OUT = 'public/photos';
+// Cards never need more than ~480px; the invitation uses the full 1080px file.
+const THUMB = 'public/photos/thumbs';
 
 const files = {
   cover: 'cover_background.webp',
@@ -33,6 +35,7 @@ const files = {
 };
 
 mkdirSync(OUT, { recursive: true });
+mkdirSync(THUMB, { recursive: true });
 
 for (const [name, file] of Object.entries(files)) {
   const out = join(OUT, `${name}.webp`);
@@ -40,5 +43,14 @@ for (const [name, file] of Object.entries(files)) {
     .resize({ width: 1080, withoutEnlargement: true })
     .webp({ quality: 74, effort: 6 })
     .toFile(out);
-  console.log(`${name}.webp  ${Math.round(info.size / 1024)} KB  ${info.width}x${info.height}`);
+  const thumb = await sharp(join(SRC, file))
+    .resize({ width: 480, withoutEnlargement: true })
+    .webp({ quality: 72, effort: 6 })
+    .toFile(join(THUMB, `${name}.webp`));
+
+  console.log(
+    `${name}.webp  ${Math.round(info.size / 1024)} KB  ${info.width}x${info.height}  · thumb ${Math.round(
+      thumb.size / 1024
+    )} KB ${thumb.width}x${thumb.height}`
+  );
 }

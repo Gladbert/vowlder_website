@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
+import '@fontsource-variable/cormorant-garamond';
 import type { Theme } from '../../data/themes';
 import { wedding } from '../../data/wedding';
 import { useGuestName, useInvitationAudio } from './hooks';
