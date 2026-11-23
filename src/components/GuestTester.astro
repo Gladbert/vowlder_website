@@ -72,22 +72,27 @@ const inputId = `guest-name-${id}`;
       if (!input) continue;
       input.value = initial;
 
+      // One history write and one event per pause, not per keystroke.
+      let pending = 0;
       input.addEventListener('input', () => {
-        const name = input.value.trim();
-
-        const url = new URL(location.href);
-        if (name) url.searchParams.set('to', name);
-        else url.searchParams.delete('to');
-        history.replaceState({}, '', url);
-
-        window.dispatchEvent(
-          new CustomEvent('vowlder:guest', { detail: name || 'Dear Guest' })
-        );
-
+        window.clearTimeout(pending);
         for (const other of roots) {
           const twin = other.querySelector<HTMLInputElement>('input');
           if (twin && twin !== input) twin.value = input.value;
         }
+
+        pending = window.setTimeout(() => {
+          const name = input.value.trim();
+
+          const url = new URL(location.href);
+          if (name) url.searchParams.set('to', name);
+          else url.searchParams.delete('to');
+          history.replaceState({}, '', url);
+
+          window.dispatchEvent(
+            new CustomEvent('vowlder:guest', { detail: name || 'Dear Guest' })
+          );
+        }, 180);
       });
 
       root.querySelector('[data-copy]')?.addEventListener('click', () => {

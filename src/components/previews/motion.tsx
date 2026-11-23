@@ -4,6 +4,11 @@ import { motion, type TargetAndTransition } from 'motion/react';
 /** One easing curve for the whole catalogue: fast out, no overshoot, no bounce. */
 export const EASE = [0.22, 1, 0.36, 1] as const;
 
+/** A reveal fires when a twelfth of the block is visible; a rule at 40%. */
+const REVEAL_AMOUNT = 0.12;
+const RULE_AMOUNT = 0.4;
+const REVEAL_DURATION = 0.55;
+
 export type RevealKind = 'rise' | 'fade' | 'soft' | 'slide' | 'right' | 'drop' | 'unfold';
 export type HeroMotion = 'drift' | 'pan' | 'lift' | 'still';
 export type NavMotion = 'underline' | 'dot' | 'pill';
@@ -59,7 +64,7 @@ export function Reveal({
   root,
   kind = 'rise',
   delay = 0,
-  duration = 0.55,
+  duration = REVEAL_DURATION,
   className,
   style,
   children,
@@ -73,7 +78,7 @@ export function Reveal({
       style={kind === 'unfold' ? { ...style, transformOrigin: 'top center' } : style}
       initial={preset.from}
       whileInView={preset.to}
-      viewport={{ root: root as RefObject<Element> | undefined, once: true, amount: 0.12 }}
+      viewport={{ root: root as RefObject<Element> | undefined, once: true, amount: REVEAL_AMOUNT }}
       transition={{ duration, delay, ease: EASE }}
     >
       {children}
@@ -101,7 +106,7 @@ export function Rule({
       style={{ background: color, transformOrigin: 'left center' }}
       initial={{ scaleX: 0 }}
       whileInView={{ scaleX: 1 }}
-      viewport={{ root: root as RefObject<Element> | undefined, once: true, amount: 0.4 }}
+      viewport={{ root: root as RefObject<Element> | undefined, once: true, amount: RULE_AMOUNT }}
       transition={{ duration: 0.7, delay, ease: EASE }}
     />
   );

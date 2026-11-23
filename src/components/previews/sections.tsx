@@ -76,6 +76,9 @@ export function Ornament({ p, root, centered = true }: { p: Palette; root?: RefO
   );
 }
 
+/** Two seconds per slide: the cadence the original guest app used. */
+const SLIDESHOW_MS = 2000;
+
 export function HeroSlideshow({
   ratio,
   overlay,
@@ -97,7 +100,7 @@ export function HeroSlideshow({
     if (length <= 1) return;
     const id = window.setInterval(() => {
       if (document.visibilityState === 'visible') setSlide((prev) => (prev + 1) % length);
-    }, 2000);
+    }, SLIDESHOW_MS);
     return () => window.clearInterval(id);
   }, [length]);
 

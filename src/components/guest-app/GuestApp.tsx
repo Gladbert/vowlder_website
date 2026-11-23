@@ -25,6 +25,7 @@ import type { GalleryPhoto, RSVPRecord, Wish } from '../../vendor/wedding-inv/ty
 import type { ToastState } from '../../vendor/wedding-inv/ui/DynamicIslandToast';
 import { weddingMusic } from '../../vendor/wedding-inv/utils/audioSynth';
 import { wedding } from '../../data/wedding';
+import ErrorBoundary from '../previews/ErrorBoundary';
 import '../../vendor/wedding-inv/styles/base.css';
 
 const SECTIONS = ['hero-section', 'couple-section', 'story-section', 'events-section', 'gallery-section', 'guestbook-section'];
@@ -36,6 +37,14 @@ const AVATAR_COLORS = ['#966A38', '#7D6B8F', '#4C7A65', '#A85B4B', '#5B6F8A'];
  * state, and nothing is sent anywhere.
  */
 export default function GuestApp() {
+  return (
+    <ErrorBoundary label="Guest app">
+      <GuestAppBody />
+    </ErrorBoundary>
+  );
+}
+
+function GuestAppBody() {
   const [opened, setOpened] = useState(false);
   const [guestName, setGuestName] = useState('Honoured Guest');
   const [paxCount, setPaxCount] = useState(2);

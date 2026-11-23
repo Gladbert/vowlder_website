@@ -5,6 +5,7 @@ import { wedding } from '../../data/wedding';
 import { useGuestName, useInvitationAudio } from './hooks';
 import { variants } from './tokens';
 import { EASE, coverExits, heroMotions } from './motion';
+import ErrorBoundary from './ErrorBoundary';
 import type { ThemeMotion } from '../../data/themes';
 import RsvpSheet from './RsvpSheet';
 import {
@@ -48,6 +49,14 @@ const nav = [
  * `theme.palette`, motion from `theme.motion`, content from wedding.ts.
  */
 export default function Invitation({ theme }: { theme: Theme }) {
+  return (
+    <ErrorBoundary label={`Invitation (${theme.slug})`}>
+      <InvitationBody theme={theme} />
+    </ErrorBoundary>
+  );
+}
+
+function InvitationBody({ theme }: { theme: Theme }) {
   const t = variants[theme.variant];
   const p = theme.palette;
 

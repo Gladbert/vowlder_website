@@ -26,8 +26,7 @@ const previewUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
     aria-label={`Open the ${theme.name} preview`}
     class="block w-[5.5rem] shrink-0 transition-transform duration-300 sm:w-auto sm:hover:-translate-y-1"
   >
-    <ThemeThumb theme={theme} compact class="aspect-[3/4] sm:!hidden" />
-    <ThemeThumb theme={theme} class="hidden aspect-[9/16] sm:flex" />
+    <ThemeThumb theme={theme} class="aspect-[3/4] sm:aspect-[9/16]" />
   </a>
 
   <div class="flex min-w-0 flex-1 flex-col">
