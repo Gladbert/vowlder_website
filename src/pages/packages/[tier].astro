@@ -133,7 +133,7 @@ const from = rupiah(Math.min(...designs.map((theme) => theme.price)));
       <div class="mx-auto max-w-6xl px-5 py-10 sm:px-8 sm:py-14">
         <p class="eyebrow">{designs.length} designs in {pack.name}</p>
         <div class="mt-5 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-7 sm:gap-y-12 lg:grid-cols-3">
-          {designs.map((theme) => <ThemeCard theme={theme} />)}
+          {designs.map((theme) => <ThemeCard theme={theme} level={2} />)}
         </div>
       </div>
     </section>

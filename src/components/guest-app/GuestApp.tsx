@@ -256,7 +256,7 @@ function GuestAppBody() {
           />
 
           <main
-            className={`relative mx-auto w-full overflow-x-hidden pb-28 transition-all duration-500 ease-out ${
+            className={`relative mx-auto w-full overflow-x-hidden pb-28 transition-[max-width,border-radius,box-shadow] duration-500 ease-out ${
               viewMode === 'mobile' && isDesktop
                 ? 'my-6 max-w-[430px] rounded-[36px] border border-[#DDD0C0] bg-[#FAF8F5] shadow-[0_25px_70px_rgba(28,22,17,0.14)]'
                 : 'max-w-xl bg-[#FAF8F5] shadow-xs'

@@ -5,9 +5,12 @@ import ThemeThumb from './ThemeThumb.astro';
 
 interface Props {
   theme: Theme;
+  /** 2 when the grid sits directly under the page h1, 3 when a section heading precedes it. */
+  level?: 2 | 3;
 }
 
-const { theme } = Astro.props;
+const { theme, level = 3 } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3';
 const previewUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
 ---
 
@@ -31,7 +34,7 @@ const previewUrl = new URL(`/themes/${theme.slug}/`, Astro.site).href;
 
   <div class="flex min-w-0 flex-1 flex-col">
     <div class="flex items-baseline justify-between gap-3">
-      <h3 class="font-brand text-lg leading-tight sm:mt-4 sm:text-2xl">{theme.name}</h3>
+      <Heading class="font-brand text-lg leading-tight sm:mt-4 sm:text-2xl">{theme.name}</Heading>
       <p class="shrink-0 text-[13px] tabular-nums text-ink-soft sm:text-sm">{rupiah(theme.price)}</p>
     </div>
 

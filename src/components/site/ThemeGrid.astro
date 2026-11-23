@@ -45,7 +45,7 @@ const shown = limit ? themes.slice(0, limit) : themes;
     !limit && 'mt-8',
   ]}
 >
-  {shown.map((theme) => <ThemeCard theme={theme} />)}
+  {shown.map((theme) => <ThemeCard theme={theme} level={2} />)}
 </div>
 
 <p id="theme-empty" class="mt-9 hidden text-sm text-ink-soft">Nothing in this category yet.</p>

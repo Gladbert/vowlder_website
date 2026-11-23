@@ -44,7 +44,7 @@ const packages = tiers.map(({ tier, name, body }) => {
       <div class={index === 0 ? 'sm:pr-6' : index === 1 ? 'sm:px-6' : 'sm:pl-6'}>
         <div class="border-t border-line pt-4 sm:border-0 sm:pt-5 sm:pb-5">
           <p class="eyebrow">{pack.name}</p>
-          <p class="font-brand mt-2 text-3xl">{pack.price}</p>
+          <p class="font-brand mt-2 text-3xl tabular-nums">{pack.price}</p>
           <p class="mt-1 text-xs text-ink-soft">{pack.count} designs</p>
           <p class:list={['lede mt-3', compact && 'sm:line-clamp-2']}>{pack.body}</p>
         </div>

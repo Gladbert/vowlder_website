@@ -29,7 +29,7 @@ export const wedding = {
   greeting:
     "By God's grace, we would like to invite you to the wedding of our son and daughter.",
   quote: {
-    text: "We're not getting married because we have it all figured out. We're doing it because we want to figure it out together.",
+    text: "We'’e not getting married because we have it all figured out. We'’e doing it because we want to figure it out together.",
     by: 'From the two of us',
   },
 
@@ -199,7 +199,7 @@ export const wedding = {
     },
     {
       title: 'A Place of Our Own',
-      caption: "Perhaps home isn't where we are, but who we're with.",
+      caption: "Perhaps home isn’t where we are, but who we'’e with.",
       location: 'Shibuya, Japan',
       photo: '/photos/shrine.webp',
     },

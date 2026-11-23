@@ -80,6 +80,8 @@ What those rules landed on for Vowlder:
 - **Shape**: `rounded-pill` for actions, `rounded-card` for surfaces, square for invitation internals that the template asks for. No radius soup.
 - **Density**: mobile first, 5px-free spacing, 44px minimum tap targets, `min-h-[48px]` on primary actions.
 - **Rhythm**: every section starts with an `eyebrow`, then `display-2`, then one `lede` paragraph. Not more.
+- **Typography details** (web-design-guidelines): typographic apostrophes (`’`) in all visible copy, tabular figures on prices and timers, `autoComplete` on every text input, `width`/`height` or a fixed-aspect container on every image, and no `transition-all` — name the properties.
+- **Heading order**: `ThemeCard`, `Steps` and `Faq` take a `level` or declare one, so a listing under the page `h1` starts at `h2` and never skips a level. A checker over `dist/**/*.html` asserts it (`h(N)` never jumps by more than one).
 
 Persist decisions here rather than in code comments, so the next session does not re-invent them.
 

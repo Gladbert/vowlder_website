@@ -6,9 +6,11 @@ interface Step {
 
 interface Props {
   steps: Step[];
+  level?: 2 | 3;
 }
 
-const { steps } = Astro.props;
+const { steps, level = 3 } = Astro.props;
+const Heading = `h${level}` as 'h2' | 'h3';
 ---
 
 <ol class="divide-y divide-line border-y border-line">
@@ -17,7 +19,7 @@ const { steps } = Astro.props;
       <li class="grid gap-1.5 py-5 sm:grid-cols-[3rem_1fr] sm:gap-6">
         <span class="text-xs tabular-nums text-brass">0{index + 1}</span>
         <div>
-          <h3 class="text-base font-medium">{step.title}</h3>
+          <Heading class="text-base font-medium">{step.title}</Heading>
           <p class="lede mt-1 max-w-xl">{step.body}</p>
         </div>
       </li>

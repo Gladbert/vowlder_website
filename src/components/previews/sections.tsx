@@ -154,7 +154,7 @@ export function HeroSlideshow({
         {wedding.heroSlides.map((item, index) => (
           <span
             key={item.src}
-            className="h-1 rounded-full transition-all duration-300"
+            className="h-1 rounded-full transition-[width,background-color] duration-300"
             style={{
               width: index === slide ? 16 : 6,
               background: index === slide ? p.ink : `${p.ink}59`,
@@ -925,6 +925,7 @@ export function Wishes({
             onChange={(event) => setName(event.target.value)}
             placeholder={guest}
             maxLength={40}
+            autoComplete="name"
             className={`mt-1 min-h-[40px] w-full border px-2.5 py-2 text-[13px] ${t.radius}`}
             style={{ borderColor: p.line, background: p.bg, color: p.ink }}
           />

@@ -770,7 +770,7 @@ export const themes: Theme[] = [
 
 export function waLink(theme: Theme, previewUrl?: string) {
   const lines = [
-    `Hi Vowlder, I'd like to order the *${theme.name}* theme (${theme.tier}, Rp ${theme.price.toLocaleString('en-US')}).`,
+    `Hi Vowlder, I’d like to order the *${theme.name}* theme (${theme.tier}, Rp ${theme.price.toLocaleString('en-US')}).`,
   ];
   if (previewUrl) lines.push(`Preview I was looking at: ${previewUrl}`);
   return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(lines.join('\n'))}`;

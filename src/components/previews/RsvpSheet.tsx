@@ -112,7 +112,7 @@ export default function RsvpSheet({ p, t, guest, initial, onSave, onClose }: Pro
                 color: attendance === option ? p.on : p.accent,
               }}
             >
-              {option === 'hadir' ? 'Attending' : "Can't make it"}
+              {option === 'hadir' ? 'Attending' : "Can’t make it"}
             </button>
           ))}
         </div>
